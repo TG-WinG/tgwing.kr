@@ -14,6 +14,7 @@ interface FormInputProps {
   type?: string
   placeholder?: string
   pattern?: RegExp
+  error?: boolean
   className?: string
 }
 
@@ -33,10 +34,14 @@ const FormInputStyle = {
     font-size: 15px;
         
     padding-left: 20px;
+    
+    &[data-error="true"] {
+      border-color: ${Color.Red};
+    }
   `
 }
 
-const FormInput: FC<FormInputProps> = ({ name, type, placeholder, pattern, className }) => (
+const FormInput: FC<FormInputProps> = ({ name, type, placeholder, pattern, error, className }) => (
   <div className={className}>
     <label
       htmlFor={name}
@@ -52,6 +57,7 @@ const FormInput: FC<FormInputProps> = ({ name, type, placeholder, pattern, class
       pattern={pattern?.source}
       required
       css={FormInputStyle.input}
+      data-error={error}
     />
   </div>
 )
@@ -102,12 +108,12 @@ const LoginStyle = {
 }
 
 export const Login: FC = () => {
-  const [ , setIsFailed ] = useState(false)
+  const [ isFailed , setIsFailed ] = useState(false)
   const login = useLogin()
 
   return (
     <div css={LoginStyle.page}>
-      <Panel css={LoginStyle.panel} showsBackwardButton>
+      <Panel css={[LoginStyle.panel, isFailed && css`border-color: ${Color.Red};`]} showsBackwardButton>
         <main>
           <h1 css={LoginStyle.title}>환영합니다!</h1>
 
@@ -123,12 +129,14 @@ export const Login: FC = () => {
               name='studentId'
               placeholder='학번을 입력해주세요.'
               pattern={/\d{10}/}
+              error={isFailed}
               css={css`margin-bottom: 20px;`}
             />
             <FormInput
               name='studentId'
               type='password'
               placeholder='비밀번호를 입력해주세요.'
+              error={isFailed}
               css={css`margin-bottom: 32px;`}
             />
 
