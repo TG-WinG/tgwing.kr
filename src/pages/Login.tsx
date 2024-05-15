@@ -2,8 +2,6 @@ import { FC, useState } from 'react'
 import { css } from '@emotion/react'
 import { Link } from 'wouter'
 
-//import '@emotion/react/types/css-prop'
-
 import { Panel } from '../components/Panel.tsx'
 
 import { useLogin } from '../auth.tsx'
