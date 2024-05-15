@@ -116,7 +116,7 @@ export const Login: FC = () => {
             onSubmit={event => {
               event.preventDefault()
 
-              login(new FormData(event.currentTarget)).then(setIsFailed)
+              login(new FormData(event.currentTarget)).then(success => setIsFailed(!success))
             }}
           >
             <FormInput name='studentId' placeholder='학번을 입력해주세요.' pattern={/\d{10}/} css={css`margin-bottom: 20px;`} />
