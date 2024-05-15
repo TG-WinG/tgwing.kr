@@ -4,4 +4,5 @@ export const enum Color {
   LightGrey = '#D9D9D9',
   DarkGrey = '#737373',
   MiddleGrey = '#959595',
+  Red = 'red',
 }
