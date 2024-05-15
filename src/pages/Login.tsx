@@ -128,7 +128,7 @@ export const Login: FC = () => {
           <nav>
             <Link href='/reset-password' css={[LoginStyle.link, css`margin-left: 96px;`]}>비밀번호 재설정</Link>
             <img css={LoginStyle.sectionBar} src={sectionBarImg} />
-            <Link href='/reset-password' css={LoginStyle.link}>회원가입</Link>
+            <Link href='/register' css={LoginStyle.link}>회원가입</Link>
           </nav>
         </main>
       </Panel>
