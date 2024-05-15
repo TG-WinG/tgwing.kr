@@ -11,6 +11,7 @@ import sectionBarImg from '../assets/section-bar.png'
 
 interface FormInputProps {
   name: string
+  label: string
   type?: string
   placeholder?: string
   pattern?: RegExp
@@ -41,13 +42,13 @@ const FormInputStyle = {
   `
 }
 
-const FormInput: FC<FormInputProps> = ({ name, type, placeholder, pattern, error, className }) => (
+const FormInput: FC<FormInputProps> = ({ name, label, type, placeholder, pattern, error, className }) => (
   <div className={className}>
     <label
       htmlFor={name}
       css={FormInputStyle.label}
     >
-      학번
+      {label}
     </label>
     <input
       id={name}
@@ -127,6 +128,7 @@ export const Login: FC = () => {
           >
             <FormInput
               name='studentId'
+              label='학번'
               placeholder='학번을 입력해주세요.'
               pattern={/\d{10}/}
               error={isFailed}
@@ -134,6 +136,7 @@ export const Login: FC = () => {
             />
             <FormInput
               name='studentId'
+              label='비밀번호'
               type='password'
               placeholder='비밀번호를 입력해주세요.'
               error={isFailed}
