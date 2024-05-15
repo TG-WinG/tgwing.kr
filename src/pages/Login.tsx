@@ -119,8 +119,18 @@ export const Login: FC = () => {
               login(new FormData(event.currentTarget)).then(success => setIsFailed(!success))
             }}
           >
-            <FormInput name='studentId' placeholder='학번을 입력해주세요.' pattern={/\d{10}/} css={css`margin-bottom: 20px;`} />
-            <FormInput name='studentId' type='password' placeholder='비밀번호를 입력해주세요.' css={css`margin-bottom: 32px;`} />
+            <FormInput
+              name='studentId'
+              placeholder='학번을 입력해주세요.'
+              pattern={/\d{10}/}
+              css={css`margin-bottom: 20px;`}
+            />
+            <FormInput
+              name='studentId'
+              type='password'
+              placeholder='비밀번호를 입력해주세요.'
+              css={css`margin-bottom: 32px;`}
+            />
 
             <button css={LoginStyle.loginButton}>로그인</button>
           </form>
