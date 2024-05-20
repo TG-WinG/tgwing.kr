@@ -17,7 +17,7 @@ const Banner = () => {
     >
       <div
         css={css`
-          width: 1200px;
+          width: 1280px;
           margin: 0 auto;
         `}
       >
