@@ -1,13 +1,13 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route } from 'wouter'
 import TechBlog from './pages/TechBlog'
 
 function App() {
   return (
-    <Routes>
-      <Route path='/' element={<div>Hello World!</div>} />
-      <Route path='/blog' element={<TechBlog />} />
-    </Routes>
+    <>
+      <Route path='/' component={TechBlog} />
+      <Route path='/blog' component={TechBlog} />
+    </>
   )
 }
 
