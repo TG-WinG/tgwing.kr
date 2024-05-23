@@ -2,6 +2,7 @@ import React from 'react'
 import Editor from '../posting/Editor'
 import { css } from '@emotion/react'
 import TextBox from '../components/TextBox'
+import Button from '../components/Button'
 
 const Posting: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const Posting: React.FC = () => {
         placeholder='제목을 입력해주세요.'
       />
       <Editor />
+      <Button color='#DADCE2' text='다음' margin='80px 0 0 auto' />
     </div>
   )
 }
