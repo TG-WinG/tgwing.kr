@@ -5,9 +5,10 @@ interface ButtonProps {
   color: string
   text: string
   margin?: string
+  onClick?: () => void
 }
 
-const Button: React.FC<ButtonProps> = ({ color, text, margin }) => {
+const Button: React.FC<ButtonProps> = ({ color, text, margin, onClick }) => {
   return (
     <div
       css={css`
@@ -26,6 +27,7 @@ const Button: React.FC<ButtonProps> = ({ color, text, margin }) => {
           font-size: 20px;
           color: #fff;
         `}
+        onClick={onClick}
       >
         {text}
       </button>
