@@ -1,11 +1,18 @@
 import React from 'react'
-import ReactQuill from 'react-quill'
+import Editor from '../posting/Editor'
+import { css } from '@emotion/react'
 
 const Posting: React.FC = () => {
   return (
-    <>
-      <ReactQuill />
-    </>
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      `}
+    >
+      <Editor />
+    </div>
   )
 }
 
