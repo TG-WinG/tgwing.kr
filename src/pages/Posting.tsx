@@ -131,6 +131,61 @@ const Posting: React.FC = () => {
           </div>
         </div>
       )}
+      {page === 2 && (
+        <div
+          css={css`
+            width: 1440px;
+            height: 662px;
+            margin: 214px auto 0 auto;
+            border: 1px solid #dadce2;
+            border-radius: 32px;
+            padding: 0 72px;
+          `}
+        >
+          <p
+            css={css`
+              font-size: 30px;
+              font-weight: 600;
+              margin-top: 98px;
+            `}
+          >
+            미리보기
+          </p>
+          <p
+            css={css`
+              color: #9d9fa7;
+            `}
+          >
+            아래와 같이 업로드 됩니다.
+          </p>
+          <div
+            css={css`
+              margin-top: 56px;
+            `}
+          >
+            이건 list에서 쓴 컴포넌트 박으면 될듯
+          </div>
+          <div
+            css={css`
+              display: flex;
+              justify-content: flex-end;
+            `}
+          >
+            <Button
+              color='#DADCE2'
+              text='이전'
+              margin='80px 0 0 auto'
+              onClick={() => setPage(0)}
+            />
+            <Button
+              color='#DADCE2'
+              text='완료'
+              margin='80px 0 0 19px'
+              onClick={() => setPage(2)}
+            />
+          </div>
+        </div>
+      )}
     </>
   )
 }
