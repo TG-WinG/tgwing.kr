@@ -4,7 +4,7 @@ import { Link } from 'wouter'
 
 import { Panel } from '../components/Panel.tsx'
 
-import { useLogin } from '../auth.tsx'
+import { useLogin } from './auth.tsx'
 
 import { Color } from '../platte.ts'
 import sectionBarImg from '../assets/section-bar.png'
