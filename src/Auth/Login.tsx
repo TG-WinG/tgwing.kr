@@ -29,7 +29,7 @@ const FormInputStyle = {
     font-size: 15px;
   `,
   input: css`
-    border: 2px solid ${Color.DarkGrey2};
+    border: 2px solid ${Color.DarkGrey};
     border-radius: 24px;
         
     width: 100%;
@@ -95,10 +95,10 @@ const LoginStyle = {
     height: 48px;
     width: 100%;
                 
-    background-color: ${Color.LightGrey2};
-    color: ${Color.DarkGrey2};
+    background-color: ${Color.LightGrey};
+    color: ${Color.DarkGrey};
     
-    border: 1px solid ${Color.LightGrey2};
+    border: 1px solid ${Color.LightGrey};
     border-radius: 24px;
                 
     font-size: 15px;
@@ -107,7 +107,7 @@ const LoginStyle = {
     margin-bottom: 20px;
   `,
   link: css`
-    color: ${Color.DarkGrey2};
+    color: ${Color.DarkGrey};
     font-size: 15px;
     text-decoration: none;
   `,
