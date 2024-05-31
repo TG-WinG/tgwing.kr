@@ -88,7 +88,7 @@ export const Login: FC = () => {
               placeholder='학번을 입력해주세요.'
               pattern={/\d{10}/}
               required
-              errorMessage="학번을 다시 확인해주세요."
+              errorMessage='학번을 다시 확인해주세요.'
               css={css`margin-bottom: 20px;`}
             />
             <LabelledInput
