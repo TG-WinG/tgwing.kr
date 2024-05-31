@@ -8,6 +8,7 @@ import { useLogin } from './auth.tsx'
 
 import { Color } from '../platte.ts'
 import sectionBarImg from '../assets/section-bar.png'
+import { BackwardButton } from '../components/BackwardButton.tsx'
 
 interface FormInputProps {
   name: string
@@ -76,6 +77,13 @@ const LoginStyle = {
     width: 780px;
     height: 536px;
   `,
+  backwardButton: css`
+    position: relative;
+    bottom: 37px;
+    right: 50px;
+    
+    width: 16px;
+  `,
   title: css`
     font-size: 30px;
     
@@ -114,8 +122,9 @@ export const Login: FC = () => {
 
   return (
     <div css={LoginStyle.page}>
-      <Panel css={[LoginStyle.panel, isFailed && css`border-color: ${Color.Red};`]} showsBackwardButton>
+      <Panel css={[LoginStyle.panel, isFailed && css`border-color: ${Color.Red};`]}>
         <main>
+          <BackwardButton css={LoginStyle.backwardButton} />
           <h1 css={LoginStyle.title}>환영합니다!</h1>
 
           {/* @TODO: Refactor form definition with new React 19 form primitives */}
