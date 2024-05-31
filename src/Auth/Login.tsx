@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { css } from '@emotion/react'
 import { Link } from 'wouter'
 
@@ -9,62 +9,7 @@ import { useLogin } from './auth.tsx'
 import { Color } from '../platte.ts'
 import sectionBarImg from '../assets/section-bar.png'
 import { BackwardButton } from '../components/BackwardButton.tsx'
-
-interface FormInputProps {
-  name: string
-  label: string
-  type?: string
-  placeholder?: string
-  pattern?: RegExp
-  error?: boolean
-  className?: string
-}
-
-const FormInputStyle = {
-  label: css`
-    display: block;
-    
-    margin-left: 20px;
-    
-    font-size: 15px;
-  `,
-  input: css`
-    border: 2px solid ${Color.DarkGrey};
-    border-radius: 24px;
-        
-    width: 100%;
-    height: 48px;
-        
-    font-size: 15px;
-        
-    padding: 16px 0px 15px 20px;
-    
-    &[data-error="true"] {
-      border-color: ${Color.Red};
-    }
-  `
-}
-
-const FormInput: FC<FormInputProps> = ({ name, label, type, placeholder, pattern, error, className }) => (
-  <div className={className}>
-    <label
-      htmlFor={name}
-      css={FormInputStyle.label}
-    >
-      {label}
-    </label>
-    <input
-      id={name}
-      name={name}
-      type={type}
-      placeholder={placeholder}
-      pattern={pattern?.source}
-      required
-      css={FormInputStyle.input}
-      data-error={error}
-    />
-  </div>
-)
+import { LabelledInput } from '../components/LabelledInput.tsx'
 
 const LoginStyle = {
   page: css`
@@ -119,12 +64,11 @@ const LoginStyle = {
 }
 
 export const Login: FC = () => {
-  const [ isFailed , setIsFailed ] = useState(false)
   const login = useLogin()
 
   return (
     <div css={LoginStyle.page}>
-      <Panel css={[LoginStyle.panel, isFailed && css`border-color: ${Color.Red};`]}>
+      <Panel css={LoginStyle.panel}>
         <main>
           <BackwardButton css={LoginStyle.backwardButton} />
           <h1 css={LoginStyle.title}>환영합니다!</h1>
@@ -134,21 +78,25 @@ export const Login: FC = () => {
             onSubmit={event => {
               event.preventDefault()
 
-              login(new FormData(event.currentTarget)).then(success => setIsFailed(!success))
+              //@TODO: Add failure notification
+              login(new FormData(event.currentTarget))
             }}
           >
-            <FormInput
+            <LabelledInput
               name='studentId'
               label='학번'
               placeholder='학번을 입력해주세요.'
               pattern={/\d{10}/}
+              required
+              errorMessage="학번을 다시 확인해주세요."
               css={css`margin-bottom: 20px;`}
             />
-            <FormInput
+            <LabelledInput
               name='studentId'
               label='비밀번호'
               type='password'
               placeholder='비밀번호를 입력해주세요.'
+              required
               css={css`margin-bottom: 32px;`}
             />
 
