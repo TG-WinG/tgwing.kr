@@ -3,6 +3,7 @@ import { Color } from '../platte.ts'
 import { FC, useState } from 'react'
 
 import errorImg from '../assets/error.jpg'
+import discardImg from '../assets/discard.png'
 
 interface LabelledInputProps {
   name: string
@@ -43,6 +44,17 @@ const LabelledInputStyle = {
       border-color: ${Color.Red};
     }
   `,
+  discardButton: css`
+    display: inline-block;
+    
+    position: relative;
+    bottom: 34px;
+    left: 450px;
+    
+    object-fit: cover;
+    
+    cursor: pointer;
+  `,
   errorMessage: css`
     color: ${Color.Red};
     
@@ -59,6 +71,7 @@ const LabelledInputStyle = {
 }
 
 export const LabelledInput: FC<LabelledInputProps> = ({ name, label, pattern, className, errorMessage, ...inputProps }) => {
+  const [ input, setInput ] = useState('')
   const [ isValid, setValidity ] = useState(true)
 
   return (
@@ -72,18 +85,33 @@ export const LabelledInput: FC<LabelledInputProps> = ({ name, label, pattern, cl
       <input
         id={name}
         name={name}
+        value={input}
         pattern={pattern?.source}
         css={LabelledInputStyle.input}
         data-valid={isValid}
-        onChange={event => pattern && setValidity(pattern.test(event.target.value))}
+        onChange={({ target: { value }}) => {
+          setInput(value)
+          setValidity(Boolean(pattern?.test(value)))
+        }}
         {...inputProps}
       />
       {
+        input &&
+        <img
+          src={discardImg}
+          css={LabelledInputStyle.discardButton}
+          onClick={event => {
+            event.preventDefault()
+            setInput('')
+          }}
+        />
+      }
+      {
         !isValid && errorMessage &&
-          <div css={LabelledInputStyle.errorMessage}>
-            <img src={errorImg} css={LabelledInputStyle.errorIcon} />
-            <span>{errorMessage}</span>
-          </div>
+        <div css={LabelledInputStyle.errorMessage}>
+          <img src={errorImg} css={LabelledInputStyle.errorIcon} />
+          <span>{errorMessage}</span>
+        </div>
       }
     </div>
   )
