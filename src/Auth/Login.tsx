@@ -24,10 +24,12 @@ const FormInputStyle = {
   label: css`
     display: block;
     
+    margin-left: 20px;
+    
     font-size: 15px;
   `,
   input: css`
-    border: 1px solid ${Color.Black};
+    border: 2px solid ${Color.DarkGrey2};
     border-radius: 24px;
         
     width: 100%;
@@ -35,7 +37,7 @@ const FormInputStyle = {
         
     font-size: 15px;
         
-    padding-left: 20px;
+    padding: 16px 0px 15px 20px;
     
     &[data-error="true"] {
       border-color: ${Color.Red};
@@ -93,10 +95,10 @@ const LoginStyle = {
     height: 48px;
     width: 100%;
                 
-    background-color: ${Color.LightGrey};
-    color: ${Color.DarkGrey};
+    background-color: ${Color.LightGrey2};
+    color: ${Color.DarkGrey2};
     
-    border: 1px solid ${Color.LightGrey};
+    border: 1px solid ${Color.LightGrey2};
     border-radius: 24px;
                 
     font-size: 15px;
@@ -105,7 +107,7 @@ const LoginStyle = {
     margin-bottom: 20px;
   `,
   link: css`
-    color: ${Color.MiddleGrey};
+    color: ${Color.DarkGrey2};
     font-size: 15px;
     text-decoration: none;
   `,
