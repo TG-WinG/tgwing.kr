@@ -2,6 +2,11 @@ import { FC, ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { css } from '@emotion/react'
 
+import { Panel } from './Panel.tsx'
+
+import { Color } from '../platte.ts'
+import closeIcon from '../assets/close.png'
+
 interface Props {
   onClose?: () => void
   children: ReactNode
@@ -20,9 +25,28 @@ const ModalStyle = {
   `,
   popup: css`
     position: absolute;
-    top: 50vh;
+    top: 250px;
     left: 50vw;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
+    
+    padding: 80px 120px;
+    
+    background-color: ${Color.White};
+  `,
+  closeButton: css`
+    position: absolute;
+    top: 32px;
+    right: 32px;
+  
+    background-image: url(${closeIcon});
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: transparent;
+    border: none;
+    
+    
+    width: 16px;
+    height: 16px;
   `
 }
 
@@ -30,14 +54,15 @@ const ModalStyle = {
 // In addition, it is tricky to use <dialog> well in React.
 
 export const Modal: FC<Props> = ({ onClose, children, className }) => createPortal(
-  <div css={ModalStyle.background} onClick={onClose}>
-    <div
-      css={ModalStyle.popup}
-      className={className}
-      onClick={event => event.stopPropagation()}
-    >
-      {children}
-    </div>
+  // We can't use Event#eventPhase since React incorrectly implemented it in SyntheticEvents: https://github.com/facebook/react/issues/9783
+  <div
+    css={ModalStyle.background}
+    onClick={onClose && (event => event.currentTarget === event.target && onClose())}
+  >
+    <Panel css={ModalStyle.popup} className={className}>
+      <button css={ModalStyle.closeButton} onClick={onClose} />
+      { children }
+    </Panel>
   </div>,
   document.getElementById('modal')!
 )
