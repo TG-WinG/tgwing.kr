@@ -1,5 +1,4 @@
 import { createContext, useContext, FC, ReactNode, useState } from 'react'
-import { useLocation } from 'wouter'
 
 import { z } from 'zod'
 
@@ -62,21 +61,12 @@ export function useLogout(): () => Promise<boolean> {
   }
 }
 
-export function useRegister(): (user: Omit<User, 'profilePicture'> & { password: string }) => Promise<boolean> {
-  const [ , setLocation ] = useLocation()
+//@TODO: Discriminate registration failures.
+export async function register(user: Omit<User, 'profilePicture'> & { password: string }): Promise<boolean> {
+  const response = await fetch('register', {
+    method: 'POST',
+    body: JSON.stringify(user)
+  })
 
-  return async user => {
-    const response = await fetch('register', {
-      method: 'POST',
-      body: JSON.stringify(user)
-    })
-
-    if (response.ok) {
-      setLocation('/login')
-
-      return true
-    } else {
-      return false
-    }
-  }
+  return response.ok
 }
