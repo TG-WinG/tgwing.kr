@@ -4,6 +4,7 @@ import { css } from '@emotion/react'
 
 import { Panel } from './Panel.tsx'
 
+import { imageButtonBase } from './ImageButton.tsx'
 import { Color } from '../platte.ts'
 import closeIcon from '../assets/close.png'
 
@@ -34,16 +35,11 @@ const ModalStyle = {
     background-color: ${Color.White};
   `,
   closeButton: css`
+    ${imageButtonBase(closeIcon)}
+  
     position: absolute;
     top: 32px;
     right: 32px;
-  
-    background-image: url(${closeIcon});
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-color: transparent;
-    border: none;
-    
     
     width: 16px;
     height: 16px;
