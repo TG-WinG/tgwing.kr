@@ -30,6 +30,7 @@ export function useCredential() {
   return useContext(Auth)[0]
 }
 
+//@TODO: Discriminate login failures.
 export function useLogin(): (loginFormData: FormData) => Promise<boolean> {
   const [ , setCredential ] = useContext(Auth)
 
