@@ -9,7 +9,7 @@ interface Props {
 
 const PanelBackgroundStyle = css`
   border-radius: 16px;
-  box-shadow: 0px 0px 16px ${Color.Black}1A;
+  box-shadow: 0px 0px 16px ${Color.Black}4D;
 `
 
 export const Panel: FC<Props> = ({ children, className}) => (
