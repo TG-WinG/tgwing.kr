@@ -9,7 +9,6 @@ interface Props {
 
 const PanelBackgroundStyle = css`
   padding: 77px 140px 77px 140px;
-  border: 1px solid ${Color.LightGrey}CC;
   border-radius: 32px;
   box-shadow: 1px 1px 20px ${Color.Black}1A;
 `
