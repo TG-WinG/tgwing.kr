@@ -19,6 +19,7 @@ interface Props {
   disabled?: boolean
   type?: string
   placeholder?: string
+  required?: boolean
 }
 
 const InputBoxStyle = {
@@ -75,7 +76,7 @@ const InputBoxStyle = {
       border-width: 1.5px;
     }
     
-    :invalid {
+    :invalid:not(:focus)[data-is-touched="true"] {
       border-width: 1.5px;
       border-color: ${Color.Red};
     }
@@ -115,13 +116,13 @@ const InputBoxStyle = {
     top: 46px;
     left: 90%;
     
-    #${inputId}:invalid:not(:focus) ~ & {
+    #${inputId}:invalid:not(:focus)[data-is-touched="true"] ~ & {
       display: inline-block;
       
       content: url(${errorIcon});
     }
     
-    #${inputId}:valid:not(:focus):not([value=""]) ~ & {
+    #${inputId}:valid:not(:focus):not([value=""])[data-is-touched="true"] ~ & {
       display: inline-block;
       
       content: url(${successIcon});
@@ -130,16 +131,16 @@ const InputBoxStyle = {
   errorMessage: (inputId: string) => css`
     display: none;
     
-    #${inputId}:invalid:not(:focus) ~ &:not(:empty) {
+    #${inputId}:invalid:not(:focus)[data-is-touched="true"] ~ &:not(:empty) {
       display: inline;
       color: ${Color.Red};
     }
   `
 }
 
-//@TODO: Implement sensible 'required' attribute
 export const InputBox: FC<Props> = ({ name, label, detailedLabel, className, pattern, errorMessage, ...props }) => {
   const [ input, setInput ] = useState('')
+  const [ isTouched, setIsTouched ] = useState(false)
 
   return (
     <label css={InputBoxStyle.inputBoxContainer} className={className}>
@@ -154,6 +155,8 @@ export const InputBox: FC<Props> = ({ name, label, detailedLabel, className, pat
         pattern={pattern?.source}
         css={InputBoxStyle.input}
         onChange={({target: {value}}) => setInput(value)}
+        onFocus={() => setIsTouched(true)}
+        data-is-touched={isTouched}
         {...props}
       />
       <img css={InputBoxStyle.statusIcon(name)} />
