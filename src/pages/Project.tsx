@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { css } from '@emotion/react'
 import Banner from '../components/Banner'
 
 import Background from '../assets/project_background.png'
+import { Color } from '../platte'
 
-const items = Array(9).fill({
+const items = Array(8).fill({
+  thumbnail: Background,
   title: 'TG Project No.1',
   description: '한줄짜리 설명 들어가면됩니다. 첫줄짧아지고 올...',
-  tag: 'App',
+  tag: 'APP',
 })
 
 const containerStyle = css`
@@ -20,24 +22,27 @@ const containerStyle = css`
 
 const itemStyle = css`
   width: 300px;
-  border: 1px solid black;
+  height: 280px;
   border-radius: 4px;
 `
 
 const imageStyle = css`
   width: 100%;
-  height: auto;
-  border-radius: 8px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
 `
 
 const titleStyle = css`
-  margin-top: 8px;
-  font-size: 18px;
+  margin-top: 14px;
+  margin-left: 10px;
+  font-weight: 500;
   font-weight: bold;
 `
 
 const descriptionStyle = css`
-  margin-top: 4px;
+  margin-top: 6px;
+  margin-left: 10px;
   font-size: 14px;
   color: #666;
 `
@@ -79,11 +84,11 @@ const buttonStyle = css`
   display: flex;
   align-items: center;
   padding: 8px 16px;
-  border: 1px solid rgba(161, 163, 173, 1);
+  border: 1px solid ${Color.Primary};
   border-radius: 20px;
   background-color: white;
   font-size: 16px;
-  color: rgba(161, 163, 173, 1);
+  color: ${Color.Primary};
   cursor: pointer;
   transition: background-color 0.2s;
 
@@ -92,7 +97,7 @@ const buttonStyle = css`
   }
 `
 
-const Project = () => {
+const Project: FC = () => {
   return (
     <>
       <Banner
@@ -123,7 +128,7 @@ const Project = () => {
       <div css={containerStyle}>
         {items.map((item, index) => (
           <div key={index} css={itemStyle}>
-            <div css={imageStyle}></div>
+            <img src={item.thumbnail} css={imageStyle} />
             <div css={titleStyle}>
               {item.title} <span css={spanStyle}>{item.tag}</span>
             </div>
