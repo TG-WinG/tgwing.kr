@@ -1,4 +1,8 @@
+import React from 'react'
 import { css } from '@emotion/react'
+import Banner from '../components/Banner'
+
+import Background from '../assets/project_background.png'
 
 const items = Array(9).fill({
   title: 'TG Project No.1',
@@ -90,36 +94,12 @@ const buttonStyle = css`
 
 const Project = () => {
   return (
-      <div
-        css={css`
-          width: 100%;
-          height: 168px;
-          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-          padding-top: 60px;
-        `}
-      >
-        <div
-          css={css`
-            width: 944px;
-            margin: 0 auto;
-          `}
-        >
-          <p
-            css={css`
-              font-size: 32px;
-            `}
-          >
-            Project
-          </p>
-          <p
-            css={css`
-              font-size: 20px;
-            `}
-          >
-            혁신적인 스타트업 아이디어: 성공을 위한 핵심 전략
-          </p>
-        </div>
-      </div>
+    <>
+      <Banner
+        background={Background}
+        title='Project'
+        subTitle='혁신적인 스타트업 아이디오: 성공을 위한 핵심 전략'
+      />
 
       <div css={topContainerStyle}>
         <div css={categoriesStyle}>
@@ -151,6 +131,7 @@ const Project = () => {
           </div>
         ))}
       </div>
+    </>
   )
 }
 

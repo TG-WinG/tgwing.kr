@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { FC } from 'react'
 
 import { css } from '@emotion/react'
-import Background from '../assets/blog_background.png'
 
-const Banner = () => {
+type TBanner = {
+  background: string
+  title: string
+  subTitle: string
+}
+
+const Banner: FC<TBanner> = ({ background, title, subTitle }) => {
   return (
     <div
       css={css`
@@ -13,7 +18,7 @@ const Banner = () => {
         flex-direction: column;
         justify-content: end;
         padding-bottom: 60px;
-        background-image: url(${Background});
+        background-image: url(${background});
         background-size: cover;
         background-position: center;
         color: #fff;
@@ -28,17 +33,17 @@ const Banner = () => {
         <p
           css={css`
             font-size: 32px;
-            font-weight: 700;
+            font-weight: 600;
           `}
         >
-          Tech-Blog
+          {title}
         </p>
         <p
           css={css`
             font-size: 20px;
           `}
         >
-          짧은 설명 한 줄 짜리 어쩌고 효과적인 의사소통을 위한 비언어적 신호
+          {subTitle}
         </p>
       </div>
     </div>
