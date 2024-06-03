@@ -18,12 +18,12 @@ const Button: React.FC<ButtonProps> = ({ color, text, margin, onClick }) => {
       <button
         css={css`
           background: ${color};
-          width: 99px;
+          width: 200px;
           height: 48px;
           margin: ${margin};
           right: 0;
           border: 0;
-          border-radius: 29.5px;
+          border-radius: 8px;
           font-size: 20px;
           color: #fff;
         `}

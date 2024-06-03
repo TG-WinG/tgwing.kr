@@ -18,8 +18,8 @@ const Editor: React.FC = () => {
     <>
       <ReactQuill
         style={{
-          width: '1296px',
-          height: '600px',
+          width: '942px',
+          height: '500px',
         }}
         modules={modules}
       />

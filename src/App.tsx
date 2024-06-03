@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <Route path='/' component={TechBlog} />
-      <Route path='/blog' component={TechBlog} />
+      <Route path='/posting' component={Posting} />
       <Route path='/post' component={Post} />
     </>
   )

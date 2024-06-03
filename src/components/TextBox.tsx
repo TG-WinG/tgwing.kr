@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
 import React from 'react'
+import { Color } from '../platte'
 
 interface TextBoxProps {
   height?: string
@@ -7,6 +8,7 @@ interface TextBoxProps {
   fontSize?: string
   padding?: string
   placeholder?: string
+  position?: string
 }
 
 const TextBox: React.FC<TextBoxProps> = ({
@@ -15,6 +17,7 @@ const TextBox: React.FC<TextBoxProps> = ({
   fontSize,
   padding,
   placeholder,
+  position,
 }) => {
   return (
     <input
@@ -22,10 +25,11 @@ const TextBox: React.FC<TextBoxProps> = ({
         width: 100%;
         height: ${height};
         border: 0;
-        border-bottom: 3px solid #c4c6cc;
+        border-bottom: 1px solid ${Color.Gray300};
         margin: ${margin};
         font-size: ${fontSize};
         padding: ${padding};
+        position: ${position};
       `}
       placeholder={placeholder}
     />
