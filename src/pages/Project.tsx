@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 
 const items = Array(9).fill({
@@ -91,7 +90,6 @@ const buttonStyle = css`
 
 const Project = () => {
   return (
-    <>
       <div
         css={css`
           width: 100%;
@@ -153,7 +151,6 @@ const Project = () => {
           </div>
         ))}
       </div>
-    </>
   )
 }
 
