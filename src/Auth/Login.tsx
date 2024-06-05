@@ -94,9 +94,9 @@ export const LoginModal: FC<Props> = ({ context, ...props}) => {
           <InputBox
             name="schoolId"
             label="학번"
-            placeholder='학번을 입력해주세요.'
+            placeholder='학번을 입력해주세요'
             pattern={/\d{10}/}
-            errorMessage='학번은 숫자 열 자리여야 합니다.'
+            errorMessage='학번은 숫자 열 자리여야 합니다'
             required
             css={css`margin-bottom: 20px;`}
           />
@@ -104,8 +104,8 @@ export const LoginModal: FC<Props> = ({ context, ...props}) => {
             name='password'
             label='비밀번호'
             type='password'
-            placeholder='비밀번호를 입력해주세요.'
-            errorMessage='비밀번호를 입력해주세요.'
+            placeholder='비밀번호를 입력해주세요'
+            errorMessage='비밀번호를 입력해주세요'
             required
             css={css`margin-bottom: 40px;`}
           />
