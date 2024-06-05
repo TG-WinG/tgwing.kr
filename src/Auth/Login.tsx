@@ -112,9 +112,9 @@ export const LoginModal: FC<Props> = ({ context, ...props}) => {
           <button css={[mainButton, LoginModalStyle.loginButton, css`margin-bottom: 20px;`]}>로그인</button>
 
           <nav css={LoginModalStyle.navBox}>
-            <Link href='reset-password' asChild><a css={LoginModalStyle.navLink}>비밀번호 재설정</a></Link>
+            <Link href='/reset-password' asChild><a css={LoginModalStyle.navLink}>비밀번호 재설정</a></Link>
             <img src={verticalBar} css={LoginModalStyle.verticalBar} />
-            <Link href='register' asChild><a css={LoginModalStyle.navLink}>회원가입</a></Link>
+            <Link href='/register' asChild><a css={LoginModalStyle.navLink}>회원가입</a></Link>
           </nav>
         </form>
       </main>
