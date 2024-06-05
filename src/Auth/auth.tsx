@@ -1,5 +1,5 @@
 import { createContext, useContext, FC, ReactNode, useState } from 'react'
-import { User } from './User.ts'
+import { StudentId, User } from './User.ts'
 
 //@TODO: Refactor this when React 19 release.
 const Auth
@@ -20,13 +20,18 @@ export function useCredential() {
 }
 
 //@TODO: Discriminate login failures.
-export function useLogin(): (loginFormData: FormData) => Promise<boolean> {
+export function useLogin(): (studentId: StudentId, password: string) => Promise<boolean> {
   const [ , setCredential ] = useContext(Auth)
 
-  return async loginFormData => {
+  return async (studentId, password) => {
+    const loginInfo = new FormData()
+
+    loginInfo.set('studentId', studentId)
+    loginInfo.set('password', password)
+
     const response = await fetch('login', {
       method: 'POST',
-      body: loginFormData,
+      body: loginInfo,
     })
 
     if (response.ok) {
