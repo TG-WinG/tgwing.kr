@@ -8,6 +8,9 @@ import { Color } from '../platte.ts'
 import { mainButton } from '../common/ButtonStyle.ts'
 import verticalBar from '../assets/verticalBar.png'
 import { Link } from 'wouter'
+import { z } from 'zod'
+import { useLogin } from './auth.tsx'
+import { StudentId } from './User.ts'
 
 interface Props {
   onClose: () => void
@@ -61,11 +64,27 @@ const LoginModalStyle = {
 }
 
 export const LoginModal: FC<Props> = ({ context, ...props}) => {
+  const login = useLogin()
 
   return (
     <Modal {...props}>
       <main>
-        <form css={LoginModalStyle.loginForm}>
+        <form
+          css={LoginModalStyle.loginForm}
+          onSubmit={async event => {
+            try {
+              const loginForm = new FormData(event.currentTarget)
+
+              const studentId = StudentId.parse(loginForm.get('schoolId'))
+              const password = z.string().parse(loginForm.get('password'))
+
+              await login(studentId, password)
+            } catch {
+              //@TODO inform user that login has failed
+              console.log('Failed to login')
+            }
+          }}
+        >
           <h1 css={LoginModalStyle.title}>환영합니다!</h1>
           <h2 css={LoginModalStyle.context}>{context}</h2>
 
