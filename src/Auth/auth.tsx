@@ -1,5 +1,6 @@
 import { createContext, useContext, FC, ReactNode, useState } from 'react'
-import { StudentId, User } from './User.ts'
+
+import { StudentId, RegistrationForm } from './User.ts'
 
 //@TODO: Refactor this when React 19 release.
 const Auth
@@ -57,10 +58,10 @@ export function useLogout(): () => Promise<boolean> {
 }
 
 //@TODO: Discriminate registration failures.
-export async function register(user: Omit<User, 'profilePicture'> & { password: string }): Promise<boolean> {
+export async function register(registrationForm: RegistrationForm): Promise<boolean> {
   const response = await fetch('register', {
     method: 'POST',
-    body: JSON.stringify(user)
+    body: JSON.stringify(registrationForm)
   })
 
   return response.ok
