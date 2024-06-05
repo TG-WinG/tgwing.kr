@@ -12,7 +12,7 @@ const UserDataBase = z.object({
 })
 
 export const User = UserDataBase.extend({
-  profilePicture: z.string().url()
+  picture: z.string().url()
 }).brand('User')
 export type User = z.infer<typeof User>
 
