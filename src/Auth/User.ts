@@ -7,5 +7,5 @@ export const User = z.object({
   birth: z.string().date(),
   phoneNumber: z.string().regex(/\d{3}-\d{4}-\d{4}/),
   profilePicture: z.string().url(),
-})
+}).brand('User')
 export type User = z.infer<typeof User>
