@@ -50,12 +50,13 @@ const LoginModalStyle = {
     display: flex;
     
     justify-content: center;
-  `,
-  navLink: css`
-    font-size: 15px;
-    font-weight: 400;
-    color: ${Color.Gray400};
-    text-decoration: none;
+    
+    a {
+      font-size: 15px;
+      font-weight: 400;
+      color: ${Color.Gray400};
+      text-decoration: none;
+    }
   `,
   verticalBar: css`
     margin-left: 14px;
@@ -112,9 +113,9 @@ export const LoginModal: FC<Props> = ({ context, ...props}) => {
           <button css={[mainButton, LoginModalStyle.loginButton, css`margin-bottom: 20px;`]}>로그인</button>
 
           <nav css={LoginModalStyle.navBox}>
-            <Link href='/reset-password' asChild><a css={LoginModalStyle.navLink}>비밀번호 재설정</a></Link>
+            <Link href='/reset-password'>비밀번호 재설정</Link>
             <img src={verticalBar} css={LoginModalStyle.verticalBar} />
-            <Link href='/register' asChild><a css={LoginModalStyle.navLink}>회원가입</a></Link>
+            <Link href='/register'>회원가입</Link>
           </nav>
         </form>
       </main>
