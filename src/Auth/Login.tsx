@@ -72,6 +72,8 @@ export const LoginModal: FC<Props> = ({ context, ...props}) => {
         <form
           css={LoginModalStyle.loginForm}
           onSubmit={async event => {
+            event.preventDefault()
+
             try {
               const loginForm = new FormData(event.currentTarget)
 
