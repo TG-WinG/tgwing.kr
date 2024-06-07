@@ -10,11 +10,6 @@ import { RegistrationForm } from './User.ts'
 import { useLocation } from 'wouter'
 
 const RegisterStyle = {
-  form: css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  `,
   title: css`
     font-size: 32px;
     font-weight: 700;
@@ -23,25 +18,40 @@ const RegisterStyle = {
     
     text-align: center;
   `,
-  inputBox: css`
+  singleInput: css`
+    margin-left: 50%;
     margin-bottom: 40px;
+    transform: translateX(-50%);
     
     width: 25%;
   `,
-  inputWithButtonBox: css`
-    width: 50%; 
-    
-    display:flex; 
-    align-items: flex-end; 
+  complexInputBox: css`
+    display: flex; 
+    align-items: flex-end;
     
     margin-bottom: 40px;
   `,
-  registrationButton: css`
+  complexInput: css`
+    display: inline-flex; 
+    margin-left: 37.5%; 
+    
     width: 25%;
+  `,
+  complexInputSideButton: css`
+    display: inline-block; 
+    height: 3em;
+  `,
+  registerButton: css`  
+    margin-left: 50%;
+    transform: translateX(-50%);
+  
     height: 47px;
+    width: 25%;
   `
 }
 
+//@FIXME email confirmation button layout need to be re-aligned
+//@TODO Email confirmation logic
 export const Register: FC = () => {
   const [ , navigate ] = useLocation()
   const [ validity, setValidity ] = useState(false)
@@ -54,7 +64,6 @@ export const Register: FC = () => {
         <h1 css={RegisterStyle.title}>회원가입</h1>
 
         <form
-          css={RegisterStyle.form}
           onSubmit={async event => {
             event.preventDefault()
 
@@ -88,7 +97,7 @@ export const Register: FC = () => {
             pattern={/\d{10}/}
             errorMessage="학번을 다시 확인해주세요"
             required
-            css={RegisterStyle.inputBox}
+            css={RegisterStyle.singleInput}
           />
           <InputBox
             name="name"
@@ -96,10 +105,9 @@ export const Register: FC = () => {
             placeholder="이름을 입력해주세요"
             errorMessage="이름을 입력해주세요"
             required
-            css={RegisterStyle.inputBox}
+            css={RegisterStyle.singleInput}
           />
-          <div css={RegisterStyle.inputWithButtonBox}>
-            <div css={css`width: 25%; display: inline-block`}></div>
+          <div css={RegisterStyle.complexInputBox}>
             <InputBox
               name="email"
               type="email"
@@ -109,21 +117,20 @@ export const Register: FC = () => {
               pattern={/.+@khu\.ac\.kr/}
               errorMessage="올바른 이메일을 입력해주세요"
               required
-              css={[RegisterStyle.inputBox, css`display: inline-flex; width: 50%; margin-bottom: 0px;`]}
+              css={RegisterStyle.complexInput}
             />
-            <button css={[subButton, css`display: inline-block; width: 25%; height: 3rem; margin-left: 10px;`]}>인증 요청</button>
+            <button css={[subButton, RegisterStyle.complexInputSideButton]}>인증 요청</button>
           </div>
-          <div css={RegisterStyle.inputWithButtonBox}>
-            <div css={css`width: 25%; display: inline-block`}></div>
+          <div css={RegisterStyle.complexInputBox}>
             <InputBox
               name="email-confirm-code"
               label="인증번호"
               placeholder="인증번호를 입력해주세요"
               errorMessage="인증번호가 일치하지 않습니다."
               required
-              css={[RegisterStyle.inputBox, css`display: inline-flex; width: 50%; margin-bottom: 0px;`]}
+              css={RegisterStyle.complexInput}
             />
-            <button css={[subButton, css`display: inline-block; width: 25%; height: 3rem; margin-left: 10px;`]}>인증번호 확인</button>
+            <button css={[subButton, RegisterStyle.complexInputSideButton]}>인증번호 확인</button>
           </div>
           <InputBox
             type="password"
@@ -132,8 +139,8 @@ export const Register: FC = () => {
             placeholder="비밀번호를 입력해주세요"
             value={password}
             required
-            css={RegisterStyle.inputBox}
             onChange={({ target: { value } }) => setPassword(value)}
+            css={RegisterStyle.singleInput}
           />
           <InputBox
             type='password'
@@ -143,7 +150,7 @@ export const Register: FC = () => {
             errorMessage="비밀번호가 일치하지 않습니다"
             pattern={new RegExp(password)}
             required
-            css={RegisterStyle.inputBox}
+            css={RegisterStyle.singleInput}
           />
           <InputBox
             name="birth"
@@ -152,7 +159,7 @@ export const Register: FC = () => {
             errorMessage="입력 형식에 맞게 입력해주세요"
             pattern={/\d{4}-\d{2}-\d{2}/}
             required
-            css={RegisterStyle.inputBox}
+            css={RegisterStyle.singleInput}
           />
           <InputBox
             type="tel"
@@ -162,10 +169,10 @@ export const Register: FC = () => {
             errorMessage="입력 형식에 맞게 입력해주세요"
             pattern={/010-\d{4}-\d{4}/}
             required
-            css={[RegisterStyle.inputBox, css`margin-bottom: 60px;`]}
+            css={[RegisterStyle.singleInput, css`margin-bottom: 60px;`]}
           />
 
-          <button disabled={!validity} css={[mainButton, RegisterStyle.registrationButton]}>가입 완료</button>
+          <button disabled={!validity} css={[mainButton, RegisterStyle.registerButton]}>가입 완료</button>
         </form>
       </main>
     </>
