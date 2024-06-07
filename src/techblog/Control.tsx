@@ -21,7 +21,7 @@ const TempStyle = {
     display: flex;
     align-items: center;
     border-radius: 32px;
-    border: 1.5px solid ${Color.Primary};
+    border: 1px solid ${Color.Primary};
     padding: 10px 15px;
     margin-right: 20px;
   `,

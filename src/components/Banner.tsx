@@ -33,7 +33,7 @@ const Banner: FC<TBanner> = ({ background, title, subTitle }) => {
         <p
           css={css`
             font-size: 32px;
-            font-weight: 600;
+            font-weight: 700;
           `}
         >
           {title}
@@ -41,6 +41,7 @@ const Banner: FC<TBanner> = ({ background, title, subTitle }) => {
         <p
           css={css`
             font-size: 20px;
+            font-weight: 500;
           `}
         >
           {subTitle}

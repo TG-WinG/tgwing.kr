@@ -7,7 +7,7 @@ import Comment from '../assets/comment.png'
 
 type TPostList = {
   title: string
-  tag: string
+  tag?: string
   date: string
   intro: string
   profile: string // 작성자 프로필 사진
@@ -65,20 +65,21 @@ const PostList = ({
             display: flex;
           `}
         >
-          <div
-            css={css`
-              background-color: ${Color.Primary};
-              color: #fff;
-              padding: 3px 9px; // 4px로 할 시 폰트 밀림
-              border-radius: 7500px;
-              height: 22px;
-              font-size: 12px;
-              text-align: center;
-              margin-bottom: 12px;
-            `}
-          >
-            {tag}
-          </div>
+          {tag && (
+            <div
+              css={css`
+                background-color: ${Color.Primary};
+                color: #fff;
+                padding: 2px 9px; // 4px로 할 시 폰트 밀림
+                border-radius: 7500px;
+                font-size: 12px;
+                text-align: center;
+                margin-bottom: 12px;
+              `}
+            >
+              {tag}
+            </div>
+          )}
         </div>
         <div
           css={css`
