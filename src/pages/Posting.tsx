@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState, FC, ChangeEvent } from 'react'
 import Editor from '../posting/Editor'
 import { css } from '@emotion/react'
 import TextBox from '../components/TextBox'
 import Button from '../components/Button'
 
-const Posting: React.FC = () => {
+const Posting: FC = () => {
   const [page, setPage] = useState<number>(0)
   const [imgPreview, setImgPreview] = useState<string | null>(null)
 
@@ -14,7 +14,7 @@ const Posting: React.FC = () => {
     if (fileRef.current) fileRef.current.click()
   }
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
       const reader = new FileReader()

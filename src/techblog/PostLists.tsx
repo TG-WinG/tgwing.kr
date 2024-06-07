@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import PostList from './PostList'
 import { css } from '@emotion/react'
 
@@ -55,7 +55,7 @@ const DUMMY = [
   },
 ]
 
-const PostLists: React.FC = () => {
+const PostLists: FC = () => {
   return (
     <div
       css={css`
