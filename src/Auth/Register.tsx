@@ -40,6 +40,8 @@ const RegisterStyle = {
   complexInputSideButton: css`
     display: inline-block; 
     height: 3em;
+    
+    margin-left: 10px;
   `,
   registerButton: css`  
     margin-left: 50%;
