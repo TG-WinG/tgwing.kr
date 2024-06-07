@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { ChangeEvent, FC, useState } from 'react'
 
 import { css } from '@emotion/react'
 
@@ -20,6 +20,8 @@ interface Props {
   type?: string
   placeholder?: string
   required?: boolean
+  value?: string
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 const InputBoxStyle = {
