@@ -1,7 +1,7 @@
-import React from 'react'
+import { FC } from 'react'
 import ReactQuill from 'react-quill'
 
-const Editor: React.FC = () => {
+const Editor: FC = () => {
   const modules = {
     toolbar: {
       container: [

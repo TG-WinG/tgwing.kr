@@ -1,4 +1,4 @@
-import React from 'react'
+import { FC } from 'react'
 import { css } from '@emotion/react'
 
 const TempStyle = {
@@ -24,7 +24,7 @@ const TempStyle = {
   `,
 }
 
-const Control: React.FC = () => {
+const Control: FC = () => {
   return (
     <div
       css={css`
