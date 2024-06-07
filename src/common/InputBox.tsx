@@ -140,7 +140,7 @@ const InputBoxStyle = {
   `
 }
 
-export const InputBox: FC<Props> = ({ name, label, detailedLabel, className, pattern, errorMessage, ...props }) => {
+export const InputBox: FC<Props> = ({ name, label, detailedLabel, className, pattern, errorMessage, onChange, ...props }) => {
   const [ input, setInput ] = useState('')
   const [ isTouched, setIsTouched ] = useState(false)
 
@@ -156,7 +156,11 @@ export const InputBox: FC<Props> = ({ name, label, detailedLabel, className, pat
         value={input}
         pattern={pattern?.source}
         css={InputBoxStyle.input}
-        onChange={({target: {value}}) => setInput(value)}
+        onChange={event => {
+          setInput(event.target.value)
+
+          if (onChange) onChange(event)
+        }}
         onFocus={() => setIsTouched(true)}
         data-is-touched={isTouched}
         {...props}
