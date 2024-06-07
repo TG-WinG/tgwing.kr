@@ -4,6 +4,7 @@ import TechBlog from './pages/TechBlog'
 import Post from './pages/Post'
 import Posting from './pages/Posting'
 import Project from './pages/Project'
+import NewProject from './pages/NewProject'
 import './font.css'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Route path='/' component={TechBlog} />
       <Route path='/posting' component={Posting} />
       <Route path='/project' component={Project} />
+      <Route path='/newproject' component={NewProject} />
       <Route path='/post' component={Post} />
     </>
   )
