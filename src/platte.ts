@@ -24,4 +24,5 @@ export const enum Color {
   Gray200 = '#DADCE2',
   Gray100 = '#E5E7ED',
   Red = '#EB3223',
+  DeepNavy = '#181C38',
 }
