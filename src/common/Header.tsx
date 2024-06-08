@@ -7,6 +7,10 @@ import logo from '../assets/logo.png'
 import logoSmall from '../assets/logo-small.png'
 import { Color } from '../platte.ts'
 
+interface Props {
+  className?: string
+}
+
 const HeaderStyle = {
   header: css`
     display: flex;
@@ -83,8 +87,8 @@ const HeaderStyle = {
   `
 }
 
-export const Header: FC = () => (
-  <header css={HeaderStyle.header}>
+export const Header: FC<Props> = ({ className }) => (
+  <header css={HeaderStyle.header} className={className}>
     <div css={HeaderStyle.logoBox}>
       <img src={logo} css={HeaderStyle.logo}/>
     </div>
