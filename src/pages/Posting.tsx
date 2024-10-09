@@ -3,20 +3,49 @@ import Editor from '../posting/Editor'
 import { css } from '@emotion/react'
 import TextBox from '../components/TextBox'
 import Button from '../components/Button'
-import { Color } from '../platte'
+import { Color } from '../palette'
 import PostList from '../techblog/PostList'
 
 import Profile from '../assets/blog_background.png'
+import { accessToken } from '../api'
+import { mutate } from 'swr'
 
 const Posting: React.FC = () => {
   const [page, setPage] = useState<number>(0)
   const [imgPreview, setImgPreview] = useState<string | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
+  const [title, setTitle] = useState<string>('')
+  const [content, setContent] = useState<string>('')
 
   const fileRef = useRef<HTMLInputElement>(null)
 
+  const postFetcher = (url: string, data: unknown) =>
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }).then((res) => res.json())
+
   const clickHandler = () => {
     if (fileRef.current) fileRef.current.click()
+  }
+
+  const submitHandler = async () => {
+    const postData = {
+      title,
+      content,
+      thumbnail: 'hi',
+    }
+
+    try {
+      await mutate('/api/blog', postFetcher('/api/blog', postData))
+      setPage(2)
+    } catch (error) {
+      console.error('Failed to post data:', error)
+    }
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,8 +75,9 @@ const Posting: React.FC = () => {
             padding='5px 8px'
             height='48px'
             placeholder='제목을 입력해주세요.'
+            onChange={(e) => setTitle(e.target.value)}
           />
-          <Editor />
+          <Editor onChange={(content) => setContent(content)} />
           <Button
             color={Color.Secondary}
             text='다음'
@@ -248,7 +278,7 @@ const Posting: React.FC = () => {
             color={Color.Primary}
             text='완료'
             margin='-15px 0 0 19px'
-            onClick={() => setPage(2)}
+            onClick={submitHandler}
           />
         </div>
       )}

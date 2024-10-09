@@ -8,7 +8,7 @@ import NewProject from './pages/NewProject'
 import ProjectDetail from './pages/ProjectDetail'
 import Profile from './pages/Profile'
 
-import './font.css'
+import './css/font.css'
 
 function App() {
   return (

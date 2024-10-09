@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import React from 'react'
-import { Color } from '../platte'
+import { Color } from '../palette'
 
 interface TextBoxProps {
   height?: string
@@ -9,6 +9,7 @@ interface TextBoxProps {
   padding?: string
   placeholder?: string
   position?: string
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const TextBox: React.FC<TextBoxProps> = ({
@@ -18,6 +19,7 @@ const TextBox: React.FC<TextBoxProps> = ({
   padding,
   placeholder,
   position,
+  onChange,
 }) => {
   return (
     <input
@@ -32,6 +34,7 @@ const TextBox: React.FC<TextBoxProps> = ({
         position: ${position};
       `}
       placeholder={placeholder}
+      onChange={onChange}
     />
   )
 }

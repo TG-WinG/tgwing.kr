@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import React from 'react'
-import { Color } from '../platte'
+import { Color } from '../palette'
 
 import Preview from '../assets/blog_background.png'
 

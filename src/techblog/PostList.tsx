@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
 import React from 'react'
-import { Color } from '../platte'
+import { Color } from '../palette'
 
 import Heart from '../assets/heart.png'
 import Comment from '../assets/comment.png'
@@ -8,12 +8,12 @@ import Comment from '../assets/comment.png'
 type TPostList = {
   title: string
   tag?: string
-  date: string
+  date?: string
   intro: string
-  profile: string // 작성자 프로필 사진
+  profile?: string // 작성자 프로필 사진
   name: string
-  heart: number
-  comment: number
+  heart?: number
+  comment?: number
 }
 
 const PostList = ({

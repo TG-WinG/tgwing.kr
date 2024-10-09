@@ -1,7 +1,11 @@
 import React from 'react'
 import ReactQuill from 'react-quill'
 
-const Editor: React.FC = () => {
+interface EditorProps {
+  onChange: (content: string) => void
+}
+
+const Editor = ({ onChange }: EditorProps) => {
   const modules = {
     toolbar: {
       container: [
@@ -22,6 +26,7 @@ const Editor: React.FC = () => {
           height: '500px',
         }}
         modules={modules}
+        onChange={onChange}
       />
     </>
   )

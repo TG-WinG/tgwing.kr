@@ -3,14 +3,13 @@ import { css } from '@emotion/react'
 import Banner from '../components/Banner'
 
 import Background from '../assets/project_background.png'
-import { Color } from '../platte'
+import { Color } from '../palette'
+import { getData } from '../api'
+import useSWR from 'swr'
+import { Link, useLocation } from 'wouter'
 
-const items = Array(8).fill({
-  thumbnail: Background,
-  title: 'TG Project No.1',
-  description: '한줄짜리 설명 들어가면됩니다. 첫줄짧아지고 올...',
-  tag: 'APP',
-})
+import PlusButtonIcon from '../assets/icon_plus_btn.svg'
+import { CustomPlusButton } from '../components/CustomPlusButton'
 
 const containerStyle = css`
   display: flex;
@@ -49,6 +48,7 @@ const descriptionStyle = css`
 
 const spanStyle = css`
   font-size: 14px;
+  font-weight: 400;
   color: rgba(140, 162, 255, 1);
 `
 
@@ -80,24 +80,30 @@ const categoryStyle = css`
   }
 `
 
-const buttonStyle = css`
-  display: flex;
-  align-items: center;
-  padding: 8px 16px;
-  border: 1px solid ${Color.Primary};
-  border-radius: 20px;
-  background-color: white;
-  font-size: 16px;
-  color: ${Color.Primary};
-  cursor: pointer;
-  transition: background-color 0.2s;
+export type TProject = {
+  title: string
+  desc?: string
+  devStatus: string
+  devType: string
+  thumbnail: string
+}
 
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`
+export type TProjects = {
+  projectList: TProject[]
+}
 
 const Project: FC = () => {
+  const [, navigate] = useLocation()
+
+  const { data, error } = useSWR('/api/project', getData)
+
+  if (error) return <div>Failed to load profile</div>
+  if (!data) return <div>hi</div>
+
+  const projectList: TProject[] = data.data
+
+  console.log(data.data)
+
   return (
     <>
       <Banner
@@ -122,19 +128,26 @@ const Project: FC = () => {
           <div css={categoryStyle}>WEB</div>
           <div css={categoryStyle}>APP</div>
         </div>
-        <button css={buttonStyle}>+ 새 프로젝트</button>
+        <CustomPlusButton
+          onClick={() => navigate('/newproject')}
+          text='새 프로젝트'
+        />
       </div>
 
       <div css={containerStyle}>
-        {items.map((item, index) => (
-          <div key={index} css={itemStyle}>
-            <img src={item.thumbnail} css={imageStyle} />
-            <div css={titleStyle}>
-              {item.title} <span css={spanStyle}>{item.tag}</span>
+        {projectList &&
+          projectList.map((item: TProject, idx: number) => (
+            <div key={idx} css={itemStyle}>
+              <img src={item.thumbnail} css={imageStyle} />
+              <div css={titleStyle}>
+                {item.title}
+                {item.devType && (
+                  <span css={spanStyle}>{item.devType.toUpperCase()}</span>
+                )}
+              </div>
+              <div css={descriptionStyle}>{item.desc}</div>
             </div>
-            <div css={descriptionStyle}>{item.description}</div>
-          </div>
-        ))}
+          ))}
       </div>
     </>
   )

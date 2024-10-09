@@ -1,6 +1,9 @@
 import React from 'react'
 import { css } from '@emotion/react'
-import { Color } from '../platte'
+import { Color } from '../palette'
+import { Link } from 'wouter'
+import { CustomPlusButton } from '../components/CustomPlusButton'
+import icon_search from '../assets/icon_search.svg'
 
 const TempStyle = {
   label: css`
@@ -37,11 +40,26 @@ const Control: React.FC = () => {
         justify-content: flex-end;
       `}
     >
-      <input
-        css={TempStyle.input}
-        placeholder='위에 배너랑 margin이 좀 짧은 느낌이지않나'
-      />
-      <label css={TempStyle.label}>+ 글쓰기</label>
+      <div
+        css={css`
+          position: relative;
+        `}
+      >
+        <input css={TempStyle.input} placeholder='검색' />
+        <button
+          css={css`
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 31px;
+          `}
+        >
+          <img src={icon_search} alt='x' />
+        </button>
+      </div>
+      <Link to='/posting'>
+        <CustomPlusButton onClick={() => console.log('hi')} text='글쓰기' />
+      </Link>
     </div>
   )
 }

@@ -1,8 +1,10 @@
 import { css } from '@emotion/react'
 import React from 'react'
-import { Color } from '../platte'
+import { Color } from '../palette'
 
 import Profiles from '../assets/blog_background.png'
+import useSWR from 'swr'
+import { getProfile } from '../api'
 
 const Style = {
   wrapper: css`
@@ -108,27 +110,43 @@ const Style = {
   `,
 }
 
+export type TProfile = {
+  studentId: string
+  email: string
+  name: string
+  birth: string
+  phoneNumber: string
+  profilePicture?: string
+}
+
 const Profile: React.FC = () => {
+  const { data, error } = useSWR('/api/profile', getProfile)
+  console.log(data)
+
+  if (error) return <div>Failed to load profile</div>
+  if (!data) return <div></div>
+
+  const profiles: TProfile = data.data
+
   return (
     <div css={Style.wrapper}>
       <div css={Style.title}>프로필</div>
       <div css={Style.subTitle}>내 정보</div>
-
       <div css={Style.profile}>
         <img src={Profiles} />
         <div>
-          <p css={Style.name}>이수민</p>
+          <p css={Style.name}>{profiles.name}</p>
           <div css={Style.info}>
-            <p>학번</p> 2023104559
+            <p>학번</p> {profiles.studentId}
           </div>
           <div css={Style.info}>
-            <p>이메일</p> tgwing@khu.ac.kr
+            <p>이메일</p> {profiles.email}
           </div>
           <div css={Style.info}>
-            <p>생년월일</p> 2000-03-16
+            <p>생년월일</p> {profiles.birth}
           </div>
           <div css={Style.info}>
-            <p>전화번호</p> 010-5321-1111
+            <p>전화번호</p> {profiles.phoneNumber}
           </div>
         </div>
         <button css={Style.button}>수정</button>

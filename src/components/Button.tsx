@@ -1,36 +1,46 @@
 import { css } from '@emotion/react'
 import React from 'react'
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color: string
   text: string
   margin?: string
-  onClick?: () => void
 }
 
-const Button: React.FC<ButtonProps> = ({ color, text, margin, onClick }) => {
+const Button: React.FC<ButtonProps> = ({
+  type,
+  color,
+  text,
+  margin,
+  onClick,
+}) => {
   return (
-    <div
+    <button
       css={css`
-        display: flex;
+        background: ${color};
+        width: 200px;
+        height: 48px;
+        margin: ${margin};
+        right: 0;
+        border: 0;
+        border-radius: 8px;
+        color: #fff;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+
+        &:hover {
+          background-color: #2c4bd1;
+        }
+
+        &:active {
+          background-color: #06208f;
+        }
       `}
+      onClick={onClick}
+      type={type}
     >
-      <button
-        css={css`
-          background: ${color};
-          width: 200px;
-          height: 48px;
-          margin: ${margin};
-          right: 0;
-          border: 0;
-          border-radius: 8px;
-          color: #fff;
-        `}
-        onClick={onClick}
-      >
-        {text}
-      </button>
-    </div>
+      {text}
+    </button>
   )
 }
 
