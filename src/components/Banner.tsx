@@ -1,38 +1,49 @@
+import React, { FC } from 'react'
 import { css } from '@emotion/react'
 
-const Banner = () => {
+type TBanner = {
+  background: string
+  title: string
+  subTitle: string
+}
+
+const Banner: FC<TBanner> = ({ background, title, subTitle }) => {
   return (
     <div
       css={css`
         width: 100%;
-        height: 460px;
-        background-color: #d9d9d9;
+        height: 270px;
         display: flex;
         flex-direction: column;
         justify-content: end;
         padding-bottom: 60px;
+        background-image: url(${background});
+        background-size: cover;
+        background-position: center;
+        color: #fff;
       `}
     >
       <div
         css={css`
-          width: 1280px;
+          width: 945px;
           margin: 0 auto;
         `}
       >
         <p
           css={css`
-            font-size: 40px;
+            font-size: 32px;
             font-weight: 700;
           `}
         >
-          Tech-Blog
+          {title}
         </p>
         <p
           css={css`
-            font-size: 32px;
+            font-size: 20px;
+            font-weight: 500;
           `}
         >
-          짧은 설명 블라 블라 어쩌고 ㅁㅁㅁㅁㅁㅁㅁ
+          {subTitle}
         </p>
       </div>
     </div>

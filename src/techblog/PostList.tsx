@@ -1,14 +1,19 @@
 import { css } from '@emotion/react'
+import React from 'react'
+import { Color } from '../palette'
+
+import Heart from '../assets/heart.png'
+import Comment from '../assets/comment.png'
 
 type TPostList = {
   title: string
-  tag: string
-  date: string
+  tag?: string
+  date?: string
   intro: string
-  profile: string // 작성자 프로필 사진
+  profile?: string // 작성자 프로필 사진
   name: string
-  heart: number
-  comment: number
+  heart?: number
+  comment?: number
 }
 
 const PostList = ({
@@ -25,18 +30,29 @@ const PostList = ({
     <div
       css={css`
         display: flex;
-        margin-bottom: 100px;
+        margin-bottom: 75px;
       `}
     >
       {/* THUMBNAIL */}
       <div
         css={css`
-          width: 300px;
-          height: 216px;
+          width: 240px;
+          height: 160px;
           background-color: #d9d9d9;
-          margin-right: 42px;
+          margin-right: 40px;
         `}
-      ></div>
+      >
+        <img
+          src={profile}
+          alt={profile}
+          css={css`
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          `}
+        />
+      </div>
+
       <div
         css={css`
           flex: 1;
@@ -47,43 +63,43 @@ const PostList = ({
         <div
           css={css`
             display: flex;
+          `}
+        >
+          {tag && (
+            <div
+              css={css`
+                background-color: ${Color.Primary};
+                color: #fff;
+                padding: 2px 9px; // 4px로 할 시 폰트 밀림
+                border-radius: 7500px;
+                font-size: 12px;
+                text-align: center;
+                margin-bottom: 12px;
+              `}
+            >
+              {tag}
+            </div>
+          )}
+        </div>
+        <div
+          css={css`
+            display: flex;
             align-items: center;
           `}
         >
           <p
             css={css`
-              font-size: 24px;
-              font-weight: 700;
+              font-size: 18px;
+              font-weight: 500;
             `}
           >
             {title}
           </p>
-          <div
-            css={css`
-              background-color: #d9d9d9;
-              padding: 2px 10px;
-              border-radius: 8px;
-              height: 22px;
-              margin-left: 20px;
-              font-size: 12px;
-            `}
-          >
-            {tag}
-          </div>
-          <div
-            css={css`
-              font-size: 18px;
-              color: #747474;
-              margin-left: auto;
-            `}
-          >
-            {date}
-          </div>
         </div>
         <div
           css={css`
-            margin-top: 20px;
-            font-size: 20px;
+            margin-top: 4px;
+            font-size: 16px;
           `}
         >
           {intro}
@@ -92,16 +108,70 @@ const PostList = ({
           css={css`
             margin-top: auto;
             display: flex;
+            align-items: center;
+            color: ${Color.Gray400};
+            font-size: 14px;
           `}
         >
-          <div>{profile}</div>
+          <img
+            css={css`
+              width: 20px;
+              height: 20px;
+              border-radius: 9999px;
+              margin-right: 8px;
+            `}
+            src={profile}
+          />
+
           {name}
           <div
             css={css`
-              margin-left: auto;
+              height: 12px;
+              border-right: 1px solid ${Color.Gray400};
+              margin: 0 12px;
+            `}
+          />
+          <div
+            css={css`
+              font-size: 14px;
             `}
           >
-            하트: {heart} 댓글 : {comment}
+            {date}
+          </div>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              margin-left: auto;
+              gap: 10px;
+            `}
+          >
+            <div>
+              <img
+                src={Heart}
+                alt={Heart}
+                css={css`
+                  width: 12px;
+                  height: 12px;
+                  display: inline-block;
+                  margin-right: 6px;
+                `}
+              />
+              {heart}
+            </div>
+            <div>
+              <img
+                src={Comment}
+                alt={Comment}
+                css={css`
+                  width: 12px;
+                  height: 12px;
+                  display: inline-block;
+                  margin-right: 6px;
+                `}
+              />
+              {comment}
+            </div>
           </div>
         </div>
       </div>

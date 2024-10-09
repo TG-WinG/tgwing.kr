@@ -1,10 +1,15 @@
+import React, { FC } from 'react'
 import { css } from '@emotion/react'
+import Banner from '../components/Banner'
 
-const items = Array(9).fill({
-  title: 'TG Project No.1',
-  description: '한줄짜리 설명 들어가면됩니다. 첫줄짧아지고 올...',
-  tag: 'App',
-})
+import Background from '../assets/project_background.png'
+import { Color } from '../palette'
+import { getData } from '../api'
+import useSWR from 'swr'
+import { Link, useLocation } from 'wouter'
+
+import PlusButtonIcon from '../assets/icon_plus_btn.svg'
+import { CustomPlusButton } from '../components/CustomPlusButton'
 
 const containerStyle = css`
   display: flex;
@@ -16,30 +21,34 @@ const containerStyle = css`
 
 const itemStyle = css`
   width: 300px;
-  border: 1px solid black;
+  height: 280px;
   border-radius: 4px;
 `
 
 const imageStyle = css`
   width: 100%;
-  height: auto;
-  border-radius: 8px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
 `
 
 const titleStyle = css`
-  margin-top: 8px;
-  font-size: 18px;
+  margin-top: 14px;
+  margin-left: 10px;
+  font-weight: 500;
   font-weight: bold;
 `
 
 const descriptionStyle = css`
-  margin-top: 4px;
+  margin-top: 6px;
+  margin-left: 10px;
   font-size: 14px;
   color: #666;
 `
 
 const spanStyle = css`
   font-size: 14px;
+  font-weight: 400;
   color: rgba(140, 162, 255, 1);
 `
 
@@ -71,56 +80,37 @@ const categoryStyle = css`
   }
 `
 
-const buttonStyle = css`
-  display: flex;
-  align-items: center;
-  padding: 8px 16px;
-  border: 1px solid rgba(161, 163, 173, 1);
-  border-radius: 20px;
-  background-color: white;
-  font-size: 16px;
-  color: rgba(161, 163, 173, 1);
-  cursor: pointer;
-  transition: background-color 0.2s;
+export type TProject = {
+  title: string
+  desc?: string
+  devStatus: string
+  devType: string
+  thumbnail: string
+}
 
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`
+export type TProjects = {
+  projectList: TProject[]
+}
 
-const Project = () => {
+const Project: FC = () => {
+  const [, navigate] = useLocation()
+
+  const { data, error } = useSWR('/api/project', getData)
+
+  if (error) return <div>Failed to load profile</div>
+  if (!data) return <div>hi</div>
+
+  const projectList: TProject[] = data.data
+
+  console.log(data.data)
+
   return (
     <>
-      <div
-        css={css`
-          width: 100%;
-          height: 168px;
-          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-          padding-top: 60px;
-        `}
-      >
-        <div
-          css={css`
-            width: 944px;
-            margin: 0 auto;
-          `}
-        >
-          <p
-            css={css`
-              font-size: 32px;
-            `}
-          >
-            Project
-          </p>
-          <p
-            css={css`
-              font-size: 20px;
-            `}
-          >
-            혁신적인 스타트업 아이디어: 성공을 위한 핵심 전략
-          </p>
-        </div>
-      </div>
+      <Banner
+        background={Background}
+        title='Project'
+        subTitle='혁신적인 스타트업 아이디오: 성공을 위한 핵심 전략'
+      />
 
       <div css={topContainerStyle}>
         <div css={categoriesStyle}>
@@ -138,19 +128,26 @@ const Project = () => {
           <div css={categoryStyle}>WEB</div>
           <div css={categoryStyle}>APP</div>
         </div>
-        <button css={buttonStyle}>+ 새 프로젝트</button>
+        <CustomPlusButton
+          onClick={() => navigate('/newproject')}
+          text='새 프로젝트'
+        />
       </div>
 
       <div css={containerStyle}>
-        {items.map((item, index) => (
-          <div key={index} css={itemStyle}>
-            <div css={imageStyle}></div>
-            <div css={titleStyle}>
-              {item.title} <span css={spanStyle}>{item.tag}</span>
+        {projectList &&
+          projectList.map((item: TProject, idx: number) => (
+            <div key={idx} css={itemStyle}>
+              <img src={item.thumbnail} css={imageStyle} />
+              <div css={titleStyle}>
+                {item.title}
+                {item.devType && (
+                  <span css={spanStyle}>{item.devType.toUpperCase()}</span>
+                )}
+              </div>
+              <div css={descriptionStyle}>{item.desc}</div>
             </div>
-            <div css={descriptionStyle}>{item.description}</div>
-          </div>
-        ))}
+          ))}
       </div>
     </>
   )
