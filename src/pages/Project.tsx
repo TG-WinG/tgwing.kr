@@ -1,14 +1,12 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { css } from '@emotion/react'
 import Banner from '../components/Banner'
 
 import Background from '../assets/project_background.png'
-import { Color } from '../palette'
 import { getData } from '../api'
 import useSWR from 'swr'
-import { Link, useLocation } from 'wouter'
+import { useLocation } from 'wouter'
 
-import PlusButtonIcon from '../assets/icon_plus_btn.svg'
 import { CustomPlusButton } from '../components/CustomPlusButton'
 
 const containerStyle = css`

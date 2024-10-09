@@ -6,6 +6,7 @@ import { Color } from '../palette'
 type CustomPlusButtonProps = {
   onClick: () => void
   text: string
+  disabled?: boolean
 }
 
 const buttonStyle = css`
@@ -35,11 +36,34 @@ const buttonStyle = css`
       filter: brightness(0) invert(100%);
     }
   }
+
+  &:disabled {
+    border-color: ${Color.Gray400};
+    color: ${Color.Gray400};
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: #fff;
+    }
+
+    &:active {
+      background-color: #fff;
+    }
+
+    img {
+      filter: invert(71%) sepia(7%) saturate(330%) hue-rotate(193deg)
+        brightness(93%) contrast(85%);
+    }
+  }
 `
 
-export const CustomPlusButton = ({ onClick, text }: CustomPlusButtonProps) => {
+export const CustomPlusButton = ({
+  onClick,
+  text,
+  disabled,
+}: CustomPlusButtonProps) => {
   return (
-    <button onClick={onClick} css={buttonStyle}>
+    <button onClick={onClick} css={buttonStyle} disabled={disabled}>
       <img src={PlusButtonIcon} alt='+' /> <div>{text}</div>
     </button>
   )

@@ -5,28 +5,34 @@ import { Link } from 'wouter'
 import { CustomPlusButton } from '../components/CustomPlusButton'
 import icon_search from '../assets/icon_search.svg'
 
-const TempStyle = {
-  label: css`
-    width: 85px;
-    height: 38px;
+const ControlStyle = {
+  Wrapper: css`
     display: flex;
-    justify-content: center;
-    border: 1px solid ${Color.Primary};
-    color: ${Color.Primary};
-    align-items: center;
-    border-radius: 32px;
+    gap: 20px;
   `,
-
-  input: css`
-    width: 340px;
-    height: 38px;
-    background-color: #fff;
+  InputBox: css`
     display: flex;
-    align-items: center;
-    border-radius: 32px;
+    width: 340px;
     border: 1px solid ${Color.Primary};
     padding: 10px 15px;
-    margin-right: 20px;
+    border-radius: 999px;
+
+    input {
+      flex: 1;
+      border: 0;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 18px;
+
+      :focus {
+        outline: 0;
+      }
+    }
+
+    :focus-within .SearchIcon {
+      filter: invert(47%) sepia(39%) saturate(1009%) hue-rotate(193deg)
+        brightness(101%) contrast(96%);
+    }
   `,
 }
 
@@ -35,31 +41,20 @@ const Control: FC = () => {
     <div
       css={css`
         width: 945px;
-        margin: 20px auto;
+        margin: 50px auto 40px auto;
         display: flex;
         justify-content: flex-end;
       `}
     >
-      <div
-        css={css`
-          position: relative;
-        `}
-      >
-        <input css={TempStyle.input} placeholder='검색' />
-        <button
-          css={css`
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 31px;
-          `}
-        >
-          <img src={icon_search} alt='x' />
-        </button>
+      <div css={ControlStyle.Wrapper}>
+        <div css={ControlStyle.InputBox}>
+          <input type='text' placeholder='검색' />
+          <img className='SearchIcon' src={icon_search} alt='' />
+        </div>
+        <Link to='/posting'>
+          <CustomPlusButton onClick={() => console.log('hi')} text='글쓰기' />
+        </Link>
       </div>
-      <Link to='/posting'>
-        <CustomPlusButton onClick={() => console.log('hi')} text='글쓰기' />
-      </Link>
     </div>
   )
 }
