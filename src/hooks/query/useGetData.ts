@@ -1,8 +1,8 @@
 import useSWR from 'swr'
-import { getData } from '../../api'
+import { fetcher } from '../../api'
 
 export const useGetData = (params: string) => {
-  const key = `/api/post?${params}`
+  const key = `post?${params}`
 
-  return useSWR(key, getData)
+  return useSWR(key, fetcher)
 }

@@ -4,7 +4,7 @@ import { Color } from '../palette'
 
 import Profiles from '../assets/blog_background.png'
 import useSWR from 'swr'
-import { getProfile } from '../api'
+import { fetcher } from '../api'
 
 const Style = {
   wrapper: css`
@@ -111,7 +111,7 @@ const Style = {
 }
 
 export type TProfile = {
-  studentId: string
+  studentNumber: string
   email: string
   name: string
   birth: string
@@ -120,7 +120,7 @@ export type TProfile = {
 }
 
 const Profile: React.FC = () => {
-  const { data, error } = useSWR('/api/profile', getProfile)
+  const { data, error } = useSWR('profile', fetcher)
   console.log(data)
 
   if (error) return <div>Failed to load profile</div>
@@ -137,7 +137,7 @@ const Profile: React.FC = () => {
         <div>
           <p css={Style.name}>{profiles.name}</p>
           <div css={Style.info}>
-            <p>학번</p> {profiles.studentId}
+            <p>학번</p> {profiles.studentNumber}
           </div>
           <div css={Style.info}>
             <p>이메일</p> {profiles.email}

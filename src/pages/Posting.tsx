@@ -7,7 +7,6 @@ import { Color } from '../palette'
 import PostList from '../techblog/PostList'
 
 import Profile from '../assets/blog_background.png'
-import { accessToken } from '../api'
 import { mutate } from 'swr'
 
 const Posting: FC = () => {
@@ -24,7 +23,6 @@ const Posting: FC = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(data),
     }).then((res) => res.json())

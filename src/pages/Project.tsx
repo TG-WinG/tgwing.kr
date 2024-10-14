@@ -3,11 +3,12 @@ import { css } from '@emotion/react'
 import Banner from '../components/Banner'
 
 import Background from '../assets/project_background.png'
-import { getData } from '../api'
+import { fetcher } from '../api'
 import useSWR from 'swr'
 import { useLocation } from 'wouter'
 
 import { CustomPlusButton } from '../components/CustomPlusButton'
+import { Header } from '../common/Header'
 
 const containerStyle = css`
   display: flex;
@@ -93,7 +94,7 @@ export type TProjects = {
 const Project: FC = () => {
   const [, navigate] = useLocation()
 
-  const { data, error } = useSWR('/api/project', getData)
+  const { data, error } = useSWR('/api/project', fetcher)
 
   if (error) return <div>Failed to load profile</div>
   if (!data) return <div>hi</div>
@@ -104,6 +105,7 @@ const Project: FC = () => {
 
   return (
     <>
+      <Header num={2} />
       <Banner
         background={Background}
         title='Project'

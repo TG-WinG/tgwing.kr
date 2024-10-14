@@ -5,6 +5,7 @@ import Control from '../techblog/Control'
 
 import Background from '../assets/blog_background.png'
 import { useGetData } from '../hooks/query/useGetData'
+import { Header } from '../common/Header'
 
 export type TPost = {
   content: string
@@ -33,6 +34,7 @@ const TechBlog: React.FC = () => {
 
   return (
     <>
+      <Header num={1} />
       <Banner
         background={Background}
         title='Tech-Blog'
