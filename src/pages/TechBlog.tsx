@@ -6,17 +6,7 @@ import Control from '../techblog/Control'
 import Background from '../assets/blog_background.png'
 import { useGetData } from '../hooks/query/useGetData'
 import { Header } from '../common/Header'
-
-export type TPost = {
-  content: string
-  id: number
-  thumbnail: string
-  title: string
-  writer: string
-  tag: string
-  comment: number
-  heart: number
-}
+import { Post } from '../types'
 
 const TechBlog: React.FC = () => {
   const params = new URLSearchParams({
@@ -30,7 +20,7 @@ const TechBlog: React.FC = () => {
   if (isLoading) return <div>Failed to load profiles</div>
   if (error) return <div>Error!</div>
 
-  const postList: TPost[] = data.content
+  const postList: Post[] = data.content
 
   return (
     <>

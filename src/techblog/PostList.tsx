@@ -1,31 +1,20 @@
 import { css } from '@emotion/react'
-import React from 'react'
 import { Color } from '../palette'
 
 import Heart from '../assets/heart.png'
 import Comment from '../assets/comment.png'
-
-type TPostList = {
-  title: string
-  tag?: string
-  date?: string
-  intro: string
-  profile?: string // 작성자 프로필 사진
-  name: string
-  heart?: number
-  comment?: number
-}
+import { Post } from '../types'
 
 const PostList = ({
   title,
-  tag,
-  date,
-  intro,
-  profile,
-  name,
-  heart,
-  comment,
-}: TPostList) => {
+  thumbnail,
+  content,
+  writer,
+  likeCount,
+  commentCount,
+  hashtags,
+  modDate,
+}: Omit<Post, 'id' | 'summary'>) => {
   return (
     <div
       css={css`
@@ -43,8 +32,8 @@ const PostList = ({
         `}
       >
         <img
-          src={profile}
-          alt={profile}
+          src={thumbnail}
+          alt={thumbnail}
           css={css`
             width: 100%;
             height: 100%;
@@ -65,21 +54,24 @@ const PostList = ({
             display: flex;
           `}
         >
-          {tag && (
-            <div
-              css={css`
-                background-color: ${Color.Primary};
-                color: #fff;
-                padding: 2px 9px; // 4px로 할 시 폰트 밀림
-                border-radius: 7500px;
-                font-size: 12px;
-                text-align: center;
-                margin-bottom: 12px;
-              `}
-            >
-              {tag}
-            </div>
-          )}
+          {hashtags &&
+            hashtags.map((item, idx) => (
+              <div
+                key={idx}
+                css={css`
+                  background-color: ${Color.Primary};
+                  color: #fff;
+                  padding: 2px 9px; // 4px로 할 시 폰트 밀림
+                  border-radius: 7500px;
+                  font-size: 12px;
+                  text-align: center;
+                  margin-bottom: 12px;
+                  margin-right: 6px;
+                `}
+              >
+                {item}
+              </div>
+            ))}
         </div>
         <div
           css={css`
@@ -91,6 +83,11 @@ const PostList = ({
             css={css`
               font-size: 18px;
               font-weight: 500;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+              text-overflow: ellipsis;
             `}
           >
             {title}
@@ -100,9 +97,14 @@ const PostList = ({
           css={css`
             margin-top: 4px;
             font-size: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
           `}
         >
-          {intro}
+          {content}
         </div>
         <div
           css={css`
@@ -120,10 +122,10 @@ const PostList = ({
               border-radius: 9999px;
               margin-right: 8px;
             `}
-            src={profile}
+            src={writer.profilePicture}
           />
 
-          {name}
+          {writer.name}
           <div
             css={css`
               height: 12px;
@@ -136,7 +138,7 @@ const PostList = ({
               font-size: 14px;
             `}
           >
-            {date}
+            {modDate}
           </div>
           <div
             css={css`
@@ -146,32 +148,36 @@ const PostList = ({
               gap: 10px;
             `}
           >
-            <div>
-              <img
-                src={Heart}
-                alt={Heart}
-                css={css`
-                  width: 12px;
-                  height: 12px;
-                  display: inline-block;
-                  margin-right: 6px;
-                `}
-              />
-              {heart}
-            </div>
-            <div>
-              <img
-                src={Comment}
-                alt={Comment}
-                css={css`
-                  width: 12px;
-                  height: 12px;
-                  display: inline-block;
-                  margin-right: 6px;
-                `}
-              />
-              {comment}
-            </div>
+            {likeCount && (
+              <>
+                <div>
+                  <img
+                    src={Heart}
+                    alt={Heart}
+                    css={css`
+                      width: 12px;
+                      height: 12px;
+                      display: inline-block;
+                      margin-right: 6px;
+                    `}
+                  />
+                  {likeCount}
+                </div>
+                <div>
+                  <img
+                    src={Comment}
+                    alt={Comment}
+                    css={css`
+                      width: 12px;
+                      height: 12px;
+                      display: inline-block;
+                      margin-right: 6px;
+                    `}
+                  />
+                  {commentCount}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

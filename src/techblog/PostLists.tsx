@@ -1,9 +1,9 @@
 import PostList from './PostList'
 import { css } from '@emotion/react'
-import { TPost } from '../pages/TechBlog'
+import { Post } from '../types'
 
 type PostListsProps = {
-  postList: TPost[]
+  postList: Post[]
 }
 
 const PostLists = ({ postList }: PostListsProps) => {
@@ -16,17 +16,17 @@ const PostLists = ({ postList }: PostListsProps) => {
       `}
     >
       {postList &&
-        postList.map((item: TPost, idx: number) => (
+        postList.map((item, idx) => (
           <PostList
             key={idx}
             title={item.title}
-            tag={item.tag}
-            // date={item.date}
-            intro={item.content}
-            // profile={item.profile}
-            name={item.writer}
-            heart={item.heart}
-            comment={item.comment}
+            hashtags={item.hashtags}
+            modDate={item.modDate}
+            content={item.content}
+            thumbnail={item.thumbnail}
+            writer={item.writer}
+            likeCount={item.likeCount}
+            commentCount={item.commentCount}
           />
         ))}
     </div>
