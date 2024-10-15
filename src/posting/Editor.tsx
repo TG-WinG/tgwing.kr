@@ -1,10 +1,11 @@
 import ReactQuill from 'react-quill'
 
 interface EditorProps {
+  value: string
   onChange: (content: string) => void
 }
 
-const Editor = ({ onChange }: EditorProps) => {
+const Editor = ({ value, onChange }: EditorProps) => {
   const modules = {
     toolbar: {
       container: [
@@ -24,6 +25,7 @@ const Editor = ({ onChange }: EditorProps) => {
           width: '942px',
           height: '500px',
         }}
+        value={value}
         modules={modules}
         onChange={onChange}
       />

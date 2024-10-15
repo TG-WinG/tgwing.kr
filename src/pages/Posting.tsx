@@ -8,6 +8,8 @@ import PostList from '../techblog/PostList'
 
 import Profile from '../assets/blog_background.png'
 import { mutate } from 'swr'
+import { removeHTMLTags } from '../utils/removeTags'
+import icon_delete from '../assets/icon_delete_tag.svg'
 
 const Posting: FC = () => {
   const [page, setPage] = useState<number>(0)
@@ -15,8 +17,24 @@ const Posting: FC = () => {
   const [fileName, setFileName] = useState<string | null>(null)
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
+  const [tags, setTags] = useState<string[]>([])
+  const [tagInput, setTagInput] = useState<string>('')
 
   const fileRef = useRef<HTMLInputElement>(null)
+
+  const addTag = (newTag: string) => {
+    const sanitizedTag = newTag.replace(/\s+/g, '')
+
+    if (sanitizedTag && !tags.includes(sanitizedTag)) {
+      setTags([...tags, sanitizedTag])
+    }
+
+    setTagInput('')
+  }
+
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove))
+  }
 
   const postFetcher = (url: string, data: unknown) =>
     fetch(url, {
@@ -37,6 +55,7 @@ const Posting: FC = () => {
       content,
       thumbnail: 'hi',
     }
+    console.log(postData)
 
     try {
       await mutate('/api/blog', postFetcher('/api/blog', postData))
@@ -68,6 +87,7 @@ const Posting: FC = () => {
           `}
         >
           <TextBox
+            value={title}
             margin='80px 0 61px 0'
             fontSize='24px'
             padding='5px 8px'
@@ -75,7 +95,7 @@ const Posting: FC = () => {
             placeholder='제목을 입력해주세요.'
             onChange={(e) => setTitle(e.target.value)}
           />
-          <Editor onChange={(content) => setContent(content)} />
+          <Editor value={content} onChange={(content) => setContent(content)} />
           <Button
             color={Color.Secondary}
             text='다음'
@@ -109,7 +129,9 @@ const Posting: FC = () => {
               placeholder='# 태그를 추가해주세요 (최대 5개)'
               height='40px'
               padding='10px'
-              // position='relative'
+              value={tagInput}
+              maxLength={10}
+              onChange={(e) => setTagInput(e.target.value)}
             />
             <button
               css={css`
@@ -122,15 +144,53 @@ const Posting: FC = () => {
                 font-size: 12px;
                 right: 0px;
               `}
+              onClick={() => addTag(tagInput)}
             >
               Enter
             </button>
+          </div>
+          <div
+            css={css`
+              display: flex;
+              flex-wrap: wrap;
+              gap: 10px;
+              margin-top: 20px;
+            `}
+          >
+            {tags.map((item, idx) => (
+              <div
+                key={idx}
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                  margin-bottom: 5px;
+                  padding: 4px 9px;
+                  background-color: ${Color.Primary};
+                  border-radius: 1000px;
+                `}
+              >
+                <button onClick={() => removeTag(item)}>
+                  <img src={icon_delete} alt='' />
+                </button>
+                <span
+                  css={css`
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 16.8px;
+                    color: #fff;
+                  `}
+                >
+                  {item}
+                </span>
+              </div>
+            ))}
           </div>
           <p
             css={css`
               font-size: 24px;
               font-weight: 500;
-              margin-top: 93px;
+              margin-top: 88px;
             `}
           >
             썸네일
@@ -212,13 +272,19 @@ const Posting: FC = () => {
           <div
             css={css`
               display: flex;
-              justify-content: flex-end;
+              justify-content: space-between;
+              width: 100%;
+              margin-top: 60px;
             `}
           >
             <Button
+              color={Color.Gray100}
+              text='이전'
+              onClick={() => setPage(0)}
+            />
+            <Button
               color={Color.Secondary}
               text='완료'
-              margin='60px 0 0 19px'
               onClick={() => setPage(2)}
             />
           </div>
@@ -261,14 +327,12 @@ const Posting: FC = () => {
             `}
           >
             <PostList
-              title='제목 어쩌고 저쩌고 블라블라'
-              tag='프로젝트'
-              date='2024.05.01'
-              intro='여행은 새로운 경험과 추억을 선사하지만, 올바른 준비가 필수입니다. 이번 블로그 포스트에서는 여행자가 가져가야할 10가지 필수 아이템을 상세히 소개합니당'
-              profile={Profile}
-              name='Sunny'
-              heart={2}
-              comment={4}
+              title={title}
+              hashtags={tags}
+              modDate='2024.05.01'
+              content={removeHTMLTags(content)}
+              thumbnail={imgPreview ?? Profile}
+              writer={{ name: 'Sunny' }} //!FEAT: writer 정보 받아와서 넣어주기
             />
           </div>
 
