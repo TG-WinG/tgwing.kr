@@ -20,7 +20,7 @@ function App() {
       <Route path='/project' component={Project} />
       <Route path='/newproject' component={NewProject} />
       <Route path='/project/detail' component={ProjectDetail} />
-      <Route path='/post' component={Post} />
+      <Route path='/post/:post_id' component={Post} />
       <Route path='/profile' component={Profile} />
     </Switch>
   )

@@ -1,8 +1,8 @@
 import useSWR from 'swr'
 import { fetcher } from '../../api'
 
-export const useGetData = (params: string) => {
-  const key = `post?${params}`
+export const useGetComments = (postId: string) => {
+  const key = `post/${postId}/comment`
 
   return useSWR(key, fetcher)
 }
