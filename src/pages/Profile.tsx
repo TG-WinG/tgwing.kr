@@ -1,10 +1,12 @@
 import { css } from '@emotion/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Color } from '../palette'
 
 import Profiles from '../assets/blog_background.png'
 import useSWR from 'swr'
 import { fetcher } from '../api'
+import PostLists from '../techblog/PostLists'
+import { Pagination } from '../components/Pagination'
 
 const Style = {
   wrapper: css`
@@ -120,11 +122,32 @@ export type TProfile = {
 }
 
 const Profile: React.FC = () => {
-  const { data, error } = useSWR('profile', fetcher)
-  console.log(data)
+  const [currentPage, setCurrentPage] = useState<number>(0)
+  const [totalPages, setTotalPages] = useState<number>(0)
 
-  if (error) return <div>Failed to load profile</div>
-  if (!data) return <div></div>
+  const { data, isLoading, error } = useSWR('profile', fetcher)
+
+  const params = new URLSearchParams({
+    page: String(currentPage),
+    size: '5',
+    sort: 'modDate,desc',
+  }).toString()
+  const {
+    data: myPosts,
+    isLoading: postLoading,
+    error: postsError,
+  } = useSWR(`profile/blog?${params}`, fetcher)
+
+  useEffect(() => {
+    if (myPosts) {
+      setTotalPages(Math.ceil(myPosts.data.totalElements / 5))
+    }
+  }, [])
+
+  if (error || postsError) return <div>Failed to load profile</div>
+  if (isLoading || postLoading) return <div>Loading...</div>
+
+  const postList = myPosts.data.content
 
   const profiles: TProfile = data.data
 
@@ -159,6 +182,12 @@ const Profile: React.FC = () => {
           <label css={Style.label}>+ 글쓰기</label>
         </div>
       </div>
+      <PostLists postList={postList} />
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   )
 }

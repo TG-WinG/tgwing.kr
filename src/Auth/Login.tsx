@@ -83,6 +83,7 @@ export const LoginModal: FC<Props> = ({ context, ...props }) => {
               const password = z.string().parse(loginForm.get('password'))
 
               await login(studentId, password)
+              props.onClose()
             } catch {
               //@TODO inform user that login has failed
               console.log('Failed to login')
