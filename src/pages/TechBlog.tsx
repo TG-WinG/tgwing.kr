@@ -10,15 +10,19 @@ import { useGetPostList } from '../hooks/query/post.api'
 import { Pagination } from '../components/Pagination'
 
 const TechBlog: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<number>(6)
+  const [currentPage, setCurrentPage] = useState<number>(0)
   const [totalPages, setTotalPages] = useState<number>(0)
+  const [keyword, setKeyword] = useState<string>('')
 
   const params = new URLSearchParams({
     page: String(currentPage),
     size: '7',
+    sort: 'modDate,desc',
+    keyword,
   }).toString()
 
   const { data, isLoading, error } = useGetPostList(params)
+
   useEffect(() => {
     if (data) {
       setTotalPages(Math.ceil(data.totalElements / 7))
@@ -38,7 +42,7 @@ const TechBlog: React.FC = () => {
         title='Tech-Blog'
         subTitle='짧은 설명 한 줄 짜리 어쩌고 효과적인 의사소통을 위한 비언어적 신호'
       />
-      <Control />
+      <Control setKeyword={setKeyword} />
       <PostLists postList={postList} />
       <Pagination
         totalPages={totalPages}

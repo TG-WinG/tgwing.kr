@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { useRef } from 'react'
 import { css } from '@emotion/react'
 import { Color } from '../palette'
 import { Link } from 'wouter'
@@ -16,6 +16,7 @@ const ControlStyle = {
     border: 1px solid ${Color.Primary};
     padding: 10px 15px;
     border-radius: 999px;
+    gap: 10px;
 
     input {
       flex: 1;
@@ -36,7 +37,20 @@ const ControlStyle = {
   `,
 }
 
-const Control: FC = () => {
+type ControlProps = {
+  setKeyword?: (keyword: string) => void
+}
+
+const Control = ({ setKeyword }: ControlProps) => {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const clickHandler = () => {
+    if (inputRef.current && setKeyword) {
+      setKeyword(inputRef.current.value)
+      inputRef.current.value = ''
+    }
+  }
+
   return (
     <div
       css={css`
@@ -48,8 +62,10 @@ const Control: FC = () => {
     >
       <div css={ControlStyle.Wrapper}>
         <div css={ControlStyle.InputBox}>
-          <input type='text' placeholder='검색' />
-          <img className='SearchIcon' src={icon_search} alt='' />
+          <input ref={inputRef} type='text' placeholder='검색' />
+          <button onClick={clickHandler}>
+            <img className='SearchIcon' src={icon_search} alt='' />
+          </button>
         </div>
         <Link to='/posting'>
           <CustomPlusButton onClick={() => console.log('hi')} text='글쓰기' />
