@@ -1,26 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Banner from '../components/Banner'
 import PostLists from '../techblog/PostLists'
 import Control from '../techblog/Control'
 
 import Background from '../assets/blog_background.png'
-import { useGetData } from '../hooks/query/useGetData'
 import { Header } from '../common/Header'
-import { Post } from '../types'
+import { TPost } from '../types'
+import { useGetPostList } from '../hooks/query/post.api'
+import { Pagination } from '../components/Pagination'
 
 const TechBlog: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<number>(6)
+  const [totalPages, setTotalPages] = useState<number>(0)
+
   const params = new URLSearchParams({
-    page: '0',
-    size: '10',
+    page: String(currentPage),
+    size: '7',
   }).toString()
 
-  const { data, isLoading, error } = useGetData(params)
-  console.log(data)
+  const { data, isLoading, error } = useGetPostList(params)
+  useEffect(() => {
+    if (data) {
+      setTotalPages(Math.ceil(data.totalElements / 7))
+    }
+  }, [data])
 
   if (isLoading) return <div>Failed to load profiles</div>
   if (error) return <div>Error!</div>
 
-  const postList: Post[] = data.content
+  const postList: TPost[] = data.content
 
   return (
     <>
@@ -32,6 +40,11 @@ const TechBlog: React.FC = () => {
       />
       <Control />
       <PostLists postList={postList} />
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </>
   )
 }
