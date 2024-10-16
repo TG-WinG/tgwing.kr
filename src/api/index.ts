@@ -14,6 +14,5 @@ export const fetcher = (url: string) => {
   if (token) {
     Server.defaults.headers.common.Authorization = `Bearer ${token}`
   }
-  console.log(Server.defaults.headers.common.Authorization)
   return Server.get(url).then((res) => res.data)
 }

@@ -94,7 +94,7 @@ export type TProjects = {
 const Project: FC = () => {
   const [, navigate] = useLocation()
 
-  const { data, error } = useSWR('/api/project', fetcher)
+  const { data, error } = useSWR('project', fetcher)
 
   if (error) return <div>Failed to load profile</div>
   if (!data) return <div>hi</div>

@@ -21,13 +21,14 @@ const LoginModalStyle = {
   loginForm: css`
     display: flex;
     flex-direction: column;
+    min-width: 416px;
   `,
   title: css`
     font-size: 32px;
     font-weight: 700;
-    
+
     margin-bottom: 7px;
-    
+
     :has(+ h2:empty) {
       margin-bottom: 50px;
     }
@@ -36,9 +37,9 @@ const LoginModalStyle = {
     font-size: 16px;
     font-weight: 400;
     color: ${Color.Gray500};
-    
+
     margin-bottom: 24px;
-    
+
     :empty {
       display: none;
     }
@@ -48,9 +49,9 @@ const LoginModalStyle = {
   `,
   navBox: css`
     display: flex;
-    
+
     justify-content: center;
-    
+
     a {
       font-size: 15px;
       font-weight: 400;
@@ -61,10 +62,10 @@ const LoginModalStyle = {
   verticalBar: css`
     margin-left: 14px;
     margin-right: 14px;
-  `
+  `,
 }
 
-export const LoginModal: FC<Props> = ({ context, ...props}) => {
+export const LoginModal: FC<Props> = ({ context, ...props }) => {
   const login = useLogin()
 
   return (
@@ -72,7 +73,7 @@ export const LoginModal: FC<Props> = ({ context, ...props}) => {
       <main>
         <form
           css={LoginModalStyle.loginForm}
-          onSubmit={async event => {
+          onSubmit={async (event) => {
             event.preventDefault()
 
             try {
@@ -92,13 +93,15 @@ export const LoginModal: FC<Props> = ({ context, ...props}) => {
           <h2 css={LoginModalStyle.context}>{context}</h2>
 
           <InputBox
-            name="schoolId"
-            label="학번"
+            name='schoolId'
+            label='학번'
             placeholder='학번을 입력해주세요'
             pattern={/\d{10}/}
             errorMessage='학번은 숫자 열 자리여야 합니다'
             required
-            css={css`margin-bottom: 20px;`}
+            css={css`
+              margin-bottom: 20px;
+            `}
           />
           <InputBox
             name='password'
@@ -107,10 +110,22 @@ export const LoginModal: FC<Props> = ({ context, ...props}) => {
             placeholder='비밀번호를 입력해주세요'
             errorMessage='비밀번호를 입력해주세요'
             required
-            css={css`margin-bottom: 40px;`}
+            css={css`
+              margin-bottom: 40px;
+            `}
           />
 
-          <button css={[mainButton, LoginModalStyle.loginButton, css`margin-bottom: 20px;`]}>로그인</button>
+          <button
+            css={[
+              mainButton,
+              LoginModalStyle.loginButton,
+              css`
+                margin-bottom: 20px;
+              `,
+            ]}
+          >
+            로그인
+          </button>
 
           <nav css={LoginModalStyle.navBox}>
             <Link href='/reset-password'>비밀번호 재설정</Link>
