@@ -35,6 +35,11 @@ const TextBox: React.FC<TextBoxProps> = ({
         font-size: ${fontSize};
         padding: ${padding};
         position: ${position};
+
+        :focus {
+          outline: none;
+          border-color: ${Color.PrimaryBorder};
+        }
       `}
       value={value}
       maxLength={maxLength}
