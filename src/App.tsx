@@ -1,8 +1,8 @@
 import { Route, Switch } from 'wouter'
 import TechBlog from './pages/TechBlog'
 import { Register } from './Auth/Register.tsx'
-import Post from './pages/Post'
-import Posting from './pages/Posting'
+import PostDetail from './pages/PostDetail.tsx'
+import UploadPost from './pages/UploadPost.tsx'
 import Project from './pages/Project'
 import NewProject from './pages/NewProject'
 import ProjectDetail from './pages/ProjectDetail'
@@ -16,11 +16,11 @@ function App() {
       <Route path='/' component={TechBlog} />
       <Route path='/blog' component={TechBlog} />
       <Route path='/register' component={Register} />
-      <Route path='/posting' component={Posting} />
+      <Route path='/posting' component={UploadPost} />
       <Route path='/project' component={Project} />
       <Route path='/newproject' component={NewProject} />
       <Route path='/project/detail' component={ProjectDetail} />
-      <Route path='/post/:post_id' component={Post} />
+      <Route path='/post/:post_id' component={PostDetail} />
       <Route path='/profile' component={Profile} />
     </Switch>
   )

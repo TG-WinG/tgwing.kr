@@ -248,14 +248,6 @@ const Post: React.FC = () => {
                   modDate={item.modDate}
                 />
               ))}
-              {comments.map((item, idx) => (
-                <Comment
-                  key={idx}
-                  content={item.content}
-                  writer={item.writer}
-                  modDate={item.modDate}
-                />
-              ))}
 
               <div
                 css={[
