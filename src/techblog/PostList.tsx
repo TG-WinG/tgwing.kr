@@ -3,9 +3,11 @@ import { Color } from '../palette'
 
 import Heart from '../assets/heart.png'
 import Comment from '../assets/comment.png'
-import { Post } from '../types'
+import { TPost } from '../types'
+import { useLocation } from 'wouter'
 
 const PostList = ({
+  id,
   title,
   thumbnail,
   content,
@@ -14,13 +16,16 @@ const PostList = ({
   commentCount,
   hashtags,
   modDate,
-}: Omit<Post, 'id' | 'summary'>) => {
+}: Omit<TPost, 'summary'>) => {
+  const [, navigate] = useLocation()
+
   return (
     <div
       css={css`
         display: flex;
         margin-bottom: 75px;
       `}
+      onClick={() => navigate(`/post/${String(id)}`)}
     >
       {/* THUMBNAIL */}
       <div
@@ -148,7 +153,7 @@ const PostList = ({
               gap: 10px;
             `}
           >
-            {likeCount && (
+            {likeCount >= 0 && (
               <>
                 <div>
                   <img

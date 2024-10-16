@@ -1,4 +1,4 @@
-type User = {
+type TUser = {
   studentNumber: string
   email: string
   name: string
@@ -7,4 +7,4 @@ type User = {
   profilePicture: string
 }
 
-export type { User }
+export type { TUser }

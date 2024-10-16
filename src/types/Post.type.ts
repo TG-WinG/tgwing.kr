@@ -1,6 +1,6 @@
-import { User } from './User.type'
+import { TUser } from './User.type'
 
-type Post = {
+type TPost = {
   id: number
   title: string
   thumbnail: string
@@ -10,14 +10,14 @@ type Post = {
   commentCount: number
   hashtags: string[]
   modDate: string
-  writer: User
+  writer: TUser
 }
 
-type Comment = {
-  id: number
+type TComment = {
+  id?: number
   content: string
-  writer: User
+  writer: TUser
   modDate: string
 }
 
-export type { Post, Comment }
+export type { TPost, TComment }
