@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import { TComment } from '../types'
 import { Color } from '../palette'
 import { dateFormat } from '../utils/dateFormat'
+import icon_default_profile from '../assets/icon_default_profile.svg'
 
 const CommentStyle = {
   wrapper: css``,
@@ -58,7 +59,7 @@ export const Comment = ({ content, modDate, writer }: TComment) => {
     <div>
       <div css={CommentStyle.title}>
         <img
-          src={writer.profilePicture}
+          src={writer.profilePicture ?? icon_default_profile}
           alt='x'
           css={CommentStyle.profileImg}
         />
