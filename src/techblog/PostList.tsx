@@ -12,8 +12,8 @@ const PostList = ({
   thumbnail,
   content,
   writer,
-  likeCount,
-  commentCount,
+  likeCount = -1,
+  commentCount = -1,
   hashtags,
   modDate,
 }: Omit<TPost, 'summary'>) => {
@@ -24,8 +24,17 @@ const PostList = ({
       css={css`
         display: flex;
         margin-bottom: 75px;
+        cursor: ${likeCount >= 0 ? 'pointer' : 'default'};
+        transition: 0.2s ease-in-out;
+        :hover {
+          ${likeCount >= 0 ? 'transform: scale(1.01);' : ''}
+        }
       `}
-      onClick={() => navigate(`/post/${String(id)}`)}
+      onClick={() => {
+        if (likeCount >= 0) {
+          navigate(`/post/${String(id)}`)
+        }
+      }}
     >
       {/* THUMBNAIL */}
       <div
@@ -36,15 +45,18 @@ const PostList = ({
           margin-right: 40px;
         `}
       >
-        <img
-          src={thumbnail}
-          alt={thumbnail}
-          css={css`
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          `}
-        />
+        {thumbnail && (
+          <img
+            src={thumbnail}
+            alt={'잠시만용'}
+            loading='lazy'
+            css={css`
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            `}
+          />
+        )}
       </div>
 
       <div

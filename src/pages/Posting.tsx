@@ -7,20 +7,28 @@ import { Color } from '../palette'
 import PostList from '../techblog/PostList'
 
 import Profile from '../assets/blog_background.png'
-import { mutate } from 'swr'
 import { removeHTMLTags } from '../utils/removeTags'
 import icon_delete from '../assets/icon_delete_tag.svg'
+import { uploadImageApi, uploadPostAPi } from '../api/post'
+import useSWR from 'swr'
+import { fetcher } from '../api'
+import { TUser } from '../types'
+import { getCurrentDate } from '../utils/dateFormat'
 
 const Posting: FC = () => {
   const [page, setPage] = useState<number>(0)
   const [imgPreview, setImgPreview] = useState<string | null>(null)
+  const [thumbnail, setThumbnail] = useState<File | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
   const [tags, setTags] = useState<string[]>([])
   const [tagInput, setTagInput] = useState<string>('')
-
   const fileRef = useRef<HTMLInputElement>(null)
+
+  const { data, isLoading, error } = useSWR('profile', fetcher)
+  if (isLoading || error) return <div>error</div>
+  const userInfo: TUser = data.data
 
   const addTag = (newTag: string) => {
     const sanitizedTag = newTag.replace(/\s+/g, '')
@@ -36,29 +44,28 @@ const Posting: FC = () => {
     setTags(tags.filter((tag) => tag !== tagToRemove))
   }
 
-  const postFetcher = (url: string, data: unknown) =>
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }).then((res) => res.json())
-
   const clickHandler = () => {
     if (fileRef.current) fileRef.current.click()
   }
 
   const submitHandler = async () => {
-    const postData = {
-      title,
-      content,
-      thumbnail: 'hi',
-    }
-    console.log(postData)
-
     try {
-      await mutate('/api/blog', postFetcher('/api/blog', postData))
+      if (!thumbnail) {
+        throw new Error('No file selected')
+      }
+      const formdata = new FormData()
+      formdata.append('image', thumbnail)
+      const imgurl = await uploadImageApi(formdata)
+      const postData = {
+        title,
+        content,
+        thumbnail: imgurl,
+        hashtags: tags,
+      }
+      console.log(postData)
+
+      await uploadPostAPi(postData)
+
       setPage(2)
     } catch (error) {
       console.error('Failed to post data:', error)
@@ -68,6 +75,7 @@ const Posting: FC = () => {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
+      setThumbnail(file)
       setFileName(file.name)
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -75,6 +83,10 @@ const Posting: FC = () => {
       }
       reader.readAsDataURL(file)
     }
+  }
+
+  const handleFinalClick = async () => {
+    setPage(2)
   }
 
   return (
@@ -285,7 +297,7 @@ const Posting: FC = () => {
             <Button
               color={Color.Secondary}
               text='완료'
-              onClick={() => setPage(2)}
+              onClick={handleFinalClick}
             />
           </div>
         </div>
@@ -310,6 +322,7 @@ const Posting: FC = () => {
               font-weight: 700;
               margin: 80px 0 12px 0;
             `}
+            onClick={() => setPage(1)}
           >
             글 작성을 완료하시겠습니까?
           </p>
@@ -327,12 +340,13 @@ const Posting: FC = () => {
             `}
           >
             <PostList
+              id={12346}
               title={title}
               hashtags={tags}
-              modDate='2024.05.01'
+              modDate={getCurrentDate()}
               content={removeHTMLTags(content)}
               thumbnail={imgPreview ?? Profile}
-              writer={{ name: 'Sunny' }} //!FEAT: writer 정보 받아와서 넣어주기
+              writer={userInfo}
             />
           </div>
 

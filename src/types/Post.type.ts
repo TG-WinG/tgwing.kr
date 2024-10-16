@@ -6,8 +6,8 @@ type TPost = {
   thumbnail: string
   summary: string
   content: string
-  likeCount: number
-  commentCount: number
+  likeCount?: number
+  commentCount?: number
   hashtags: string[]
   modDate: string
   writer: TUser

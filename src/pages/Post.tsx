@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Color } from '../palette'
 
 import Heart from '../assets/heart.png'
@@ -11,6 +11,8 @@ import { useGetComments } from '../hooks/query/comment.api'
 import { TComment } from '../types'
 import { Comment } from '../components/Comment'
 import icon_new_comment from '../assets/icon_new_comment.svg'
+import DOMPurify from 'dompurify'
+import { uploadComment } from '../api/post'
 
 const PostStyle = {
   wrapper: css`
@@ -150,6 +152,7 @@ const PostStyle = {
 
 const Post: React.FC = () => {
   const { post_id } = useParams()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const [isFocused, setIsFocused] = useState(false)
 
@@ -158,6 +161,7 @@ const Post: React.FC = () => {
     data: commentsData,
     isLoading: isCommentsLoading,
     error: commentsError,
+    mutate,
   } = useGetComments(post_id!)
 
   if (isLoading || isCommentsLoading) return <>Loading..</>
@@ -165,7 +169,22 @@ const Post: React.FC = () => {
 
   const comments: TComment[] = commentsData.content
 
-  console.log(comments)
+  const commentUpload = async () => {
+    if (!inputRef.current || inputRef.current.value.trim() === '') {
+      alert('댓글을 입력하세요!')
+      return
+    }
+
+    try {
+      const result = await uploadComment(post_id!, {
+        content: inputRef.current.value,
+      })
+      console.log(result)
+      mutate()
+    } catch {
+      console.log('errr')
+    }
+  }
 
   return (
     <>
@@ -196,11 +215,16 @@ const Post: React.FC = () => {
 
             <div css={PostStyle.line} />
 
-            <div css={PostStyle.post}>{post.content}</div>
+            <div
+              css={PostStyle.post}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(String(post.content)),
+              }}
+            />
 
             <div css={PostStyle.heart}>
               <img src={Heart} /> {post.likeCount}
-              <img src={icon_comment} /> {post.commnetCount}
+              <img src={icon_comment} /> {post.commentCount}
             </div>
 
             <div css={PostStyle.line} />
@@ -240,13 +264,14 @@ const Post: React.FC = () => {
                 ]}
               >
                 <input
+                  ref={inputRef}
                   type='text'
                   css={PostStyle.newCommentInput}
                   placeholder='댓글 작성'
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                 />
-                <button>
+                <button onClick={commentUpload}>
                   <img
                     src={icon_new_comment}
                     alt='>'
