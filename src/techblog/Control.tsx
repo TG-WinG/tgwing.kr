@@ -1,9 +1,10 @@
 import { useRef } from 'react'
 import { css } from '@emotion/react'
 import { Color } from '../palette'
-import { Link } from 'wouter'
 import { CustomPlusButton } from '../components/CustomPlusButton'
 import icon_search from '../assets/icon_search.svg'
+import userStore from '../store/User'
+import { useLocation } from 'wouter'
 
 const ControlStyle = {
   Wrapper: css`
@@ -44,6 +45,10 @@ type ControlProps = {
 const Control = ({ setKeyword }: ControlProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const [, navigate] = useLocation()
+
+  const { user } = userStore()
+
   const clickHandler = () => {
     if (inputRef.current && setKeyword) {
       setKeyword(inputRef.current.value)
@@ -67,9 +72,11 @@ const Control = ({ setKeyword }: ControlProps) => {
             <img className='SearchIcon' src={icon_search} alt='' />
           </button>
         </div>
-        <Link to='/posting'>
-          <CustomPlusButton onClick={() => console.log('hi')} text='글쓰기' />
-        </Link>
+        <CustomPlusButton
+          onClick={() => navigate('/posting')}
+          text='글쓰기'
+          disabled={Boolean(!user)}
+        />
       </div>
     </div>
   )

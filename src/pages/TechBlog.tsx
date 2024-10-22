@@ -18,7 +18,9 @@ const TechBlog: React.FC = () => {
     page: String(currentPage),
     size: '7',
     sort: 'modDate,desc',
-    keyword,
+    ...(keyword.startsWith('#')
+      ? { hashtag: keyword.substring(1) }
+      : { keyword }),
   }).toString()
 
   const { data, isLoading, error } = useGetPostList(params)

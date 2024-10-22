@@ -9,6 +9,7 @@ import icon_delete from '../assets/icon_delete_tag.svg'
 import { uploadImageApi, uploadPostAPi } from '../api/post'
 import { UploadPostModal } from '../components/UploadPostModal'
 import { Header } from '../common/Header'
+import { useLocation } from 'wouter'
 
 const Posting: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -22,6 +23,8 @@ const Posting: FC = () => {
   const [tagInput, setTagInput] = useState<string>('')
 
   const fileRef = useRef<HTMLInputElement>(null)
+
+  const [, navigate] = useLocation()
 
   const addTag = (newTag: string) => {
     if (tags.length > 4) {
@@ -62,8 +65,7 @@ const Posting: FC = () => {
       console.log(postData)
 
       await uploadPostAPi(postData)
-
-      setPage(2)
+      navigate('/blog')
     } catch (error) {
       console.error('Failed to post data:', error)
     }
