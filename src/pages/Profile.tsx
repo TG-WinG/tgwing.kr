@@ -2,7 +2,8 @@ import { css } from '@emotion/react'
 import React, { useEffect, useState } from 'react'
 import { Color } from '../palette'
 
-import Profiles from '../assets/blog_background.png'
+import icon_default_profile from '../assets/icon_default_profile.svg'
+
 import useSWR from 'swr'
 import { fetcher } from '../api'
 import PostLists from '../techblog/PostLists'
@@ -156,7 +157,7 @@ const Profile: React.FC = () => {
       <div css={Style.title}>프로필</div>
       <div css={Style.subTitle}>내 정보</div>
       <div css={Style.profile}>
-        <img src={Profiles} />
+        <img src={profiles.profilePicture ?? icon_default_profile} />
         <div>
           <p css={Style.name}>{profiles.name}</p>
           <div css={Style.info}>

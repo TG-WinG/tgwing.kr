@@ -26,3 +26,9 @@ export const uploadComment = async (postId: string, body: object) => {
 
   return res
 }
+
+export const deletePostApi = async (postId: string) => {
+  const res = await Server.delete(`post/${postId}`)
+
+  return res
+}

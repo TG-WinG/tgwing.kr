@@ -4,7 +4,7 @@ import { Color } from '../palette'
 
 import Heart from '../assets/heart.png'
 import icon_comment from '../assets/comment.png'
-import { useParams } from 'wouter'
+import { useLocation, useParams } from 'wouter'
 import { useGetPostDetail } from '../hooks/query/post.api'
 import { Header } from '../common/Header'
 import { useGetComments } from '../hooks/query/comment.api'
@@ -12,7 +12,10 @@ import { TComment } from '../types'
 import { Comment } from '../components/Comment'
 import icon_new_comment from '../assets/icon_new_comment.svg'
 import DOMPurify from 'dompurify'
-import { uploadComment } from '../api/post'
+import { deletePostApi, uploadComment } from '../api/post'
+import icon_default_profile from '../assets/icon_default_profile.svg'
+import userStore from '../store/User'
+import { mutate } from 'swr'
 
 const PostStyle = {
   wrapper: css`
@@ -62,6 +65,13 @@ const PostStyle = {
     margin-left: auto;
     font-size: 14px;
     gap: 25px;
+    button {
+      color: ${Color.Gray400};
+      :hover {
+        border-bottom: 1px solid ${Color.Gray700};
+        color: ${Color.Gray700};
+      }
+    }
   `,
 
   line: css`
@@ -156,18 +166,24 @@ const Post: React.FC = () => {
 
   const [isFocused, setIsFocused] = useState(false)
 
+  const [, navigate] = useLocation()
+
+  const { user } = userStore()
+
   const { data: post, isLoading, error } = useGetPostDetail(post_id!)
   const {
     data: commentsData,
     isLoading: isCommentsLoading,
     error: commentsError,
-    mutate,
+    mutate: commentMutate,
   } = useGetComments(post_id!)
 
   if (isLoading || isCommentsLoading) return <>Loading..</>
   if (error || commentsError) return <>Error occured!</>
 
   const comments: TComment[] = commentsData.content
+
+  console.log(post?.writer.studentNumber === user?.studentNumber)
 
   const commentUpload = async () => {
     if (!inputRef.current || inputRef.current.value.trim() === '') {
@@ -180,9 +196,20 @@ const Post: React.FC = () => {
         content: inputRef.current.value,
       })
       console.log(result)
-      mutate()
+      commentMutate()
     } catch {
       console.log('errr')
+    }
+  }
+
+  const deleteClick = async () => {
+    try {
+      const res = await deletePostApi(String(post?.id))
+      console.log(res)
+      mutate((key) => Array.isArray(key) && key[0] === 'post')
+      navigate('/blog')
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -203,14 +230,23 @@ const Post: React.FC = () => {
             </div>
 
             <div css={PostStyle.info}>
-              <img src={post.writer.profilePicture} css={PostStyle.profile} />
+              <img
+                src={post.writer.profilePicture ?? icon_default_profile}
+                css={PostStyle.profile}
+              />
               <span>{post.writer.name}</span>
               <div css={PostStyle.border} />
               <span>{post.modDate}</span>
-              <div css={PostStyle.buttonBox}>
-                <span>수정</span>
-                <span>삭제</span>
-              </div>
+              {post?.writer.studentNumber === user?.studentNumber && (
+                <div css={PostStyle.buttonBox}>
+                  <button>
+                    <span>수정</span>
+                  </button>
+                  <button onClick={deleteClick}>
+                    <span>삭제</span>
+                  </button>
+                </div>
+              )}
             </div>
 
             <div css={PostStyle.line} />
