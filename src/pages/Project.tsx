@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/react'
 import Banner from '../components/Banner'
 
@@ -9,6 +9,8 @@ import { useLocation } from 'wouter'
 
 import { CustomPlusButton } from '../components/CustomPlusButton'
 import { Header } from '../common/Header'
+import { ProjectCard } from '../components/ProjectCard'
+import { TProject } from '../types'
 
 const containerStyle = css`
   display: flex;
@@ -16,39 +18,6 @@ const containerStyle = css`
   gap: 22px;
   width: 944px;
   margin: 20px auto 0 auto;
-`
-
-const itemStyle = css`
-  width: 300px;
-  height: 280px;
-  border-radius: 4px;
-`
-
-const imageStyle = css`
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 4px;
-`
-
-const titleStyle = css`
-  margin-top: 14px;
-  margin-left: 10px;
-  font-weight: 500;
-  font-weight: bold;
-`
-
-const descriptionStyle = css`
-  margin-top: 6px;
-  margin-left: 10px;
-  font-size: 14px;
-  color: #666;
-`
-
-const spanStyle = css`
-  font-size: 14px;
-  font-weight: 400;
-  color: rgba(140, 162, 255, 1);
 `
 
 const topContainerStyle = css`
@@ -62,37 +31,60 @@ const topContainerStyle = css`
 
 const categoriesStyle = css`
   display: flex;
-  gap: 24px;
+  position: relative;
 `
 
 const categoryStyle = css`
   font-size: 16px;
   color: #888;
+  display: flex;
+  padding: 9.5px 13px;
   cursor: pointer;
-  width: 54px;
-  height: 38px;
   text-align: center;
+  line-height: 38px;
+  position: relative;
 
-  &.active {
+  span {
+    line-height: 19.2px;
+  }
+
+  &:hover {
     color: #007bff;
-    border-bottom: 2px solid #007bff;
   }
 `
 
-export type TProject = {
-  title: string
-  desc?: string
-  devStatus: string
-  devType: string
-  thumbnail: string
-}
+const underlineStyle = css`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 64px;
+  height: 2px;
+  background-color: #007bff;
+  transition: transform 0.3s ease;
+`
 
-export type TProjects = {
-  projectList: TProject[]
-}
+const categories = ['ALL', 'WEB', 'APP']
 
 const Project: FC = () => {
   const [, navigate] = useLocation()
+
+  const [activeCategory, setActiveCategory] = useState('ALL')
+  const [underlinePosition, setUnderlinePosition] = useState(0)
+  const [underlineWidth, setUnderlineWidth] = useState(0)
+  const categoryRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    const activeIndex = categories.indexOf(activeCategory)
+    if (categoryRefs.current[activeIndex]) {
+      const activeElement = categoryRefs.current[activeIndex]
+      setUnderlinePosition(activeElement?.offsetLeft || 0)
+      setUnderlineWidth(activeElement?.offsetWidth || 0)
+    }
+  }, [activeCategory])
+
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category)
+  }
 
   const { data, error } = useSWR('project', fetcher)
 
@@ -101,7 +93,7 @@ const Project: FC = () => {
 
   const projectList: TProject[] = data.data
 
-  console.log(data.data)
+  console.log(data)
 
   return (
     <>
@@ -114,19 +106,29 @@ const Project: FC = () => {
 
       <div css={topContainerStyle}>
         <div css={categoriesStyle}>
-          <div
-            css={[
-              categoryStyle,
-              css`
-                color: #007bff;
-                border-bottom: 2px solid #007bff;
-              `,
-            ]}
-          >
-            ALL
-          </div>
-          <div css={categoryStyle}>WEB</div>
-          <div css={categoryStyle}>APP</div>
+          {categories.map((category, index) => (
+            <div
+              key={category}
+              css={[
+                categoryStyle,
+                activeCategory === category &&
+                  css`
+                    color: #007bff;
+                  `,
+              ]}
+              onClick={() => handleCategoryClick(category)}
+              ref={(el) => (categoryRefs.current[index] = el)} // ref 할당
+            >
+              <span>{category}</span>
+            </div>
+          ))}
+          <span
+            css={underlineStyle}
+            style={{
+              width: `${underlineWidth}px`, // underline의 너비 설정
+              transform: `translateX(${underlinePosition}px)`, // underline의 위치 설정
+            }}
+          />
         </div>
         <CustomPlusButton
           onClick={() => navigate('/newproject')}
@@ -135,19 +137,17 @@ const Project: FC = () => {
       </div>
 
       <div css={containerStyle}>
-        {projectList &&
-          projectList.map((item: TProject, idx: number) => (
-            <div key={idx} css={itemStyle}>
-              <img src={item.thumbnail} css={imageStyle} />
-              <div css={titleStyle}>
-                {item.title}
-                {item.devType && (
-                  <span css={spanStyle}>{item.devType.toUpperCase()}</span>
-                )}
-              </div>
-              <div css={descriptionStyle}>{item.desc}</div>
-            </div>
-          ))}
+        {projectList.map((item) => (
+          <ProjectCard
+            id={item.id}
+            key={item.id}
+            title={item.title}
+            thumbnail={item.thumbnail}
+            description={item.description}
+            devStatus={item.devStatus}
+            devType={item.devType}
+          />
+        ))}
       </div>
     </>
   )

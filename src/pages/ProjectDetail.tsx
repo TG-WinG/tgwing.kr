@@ -1,14 +1,27 @@
 import { css } from '@emotion/react'
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { Color } from '../palette'
 
-import Preview from '../assets/blog_background.png'
+import { useLocation, useParams } from 'wouter'
+import useSWR from 'swr'
+import { fetcher } from '../api'
+import { TProject } from '../types'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+import 'swiper/css/effect-fade'
+import { SwiperBullets } from '../components/SwiperBullets'
+import { Swiper as SwiperClass } from 'swiper/types' // Swiper 인스턴스 타입
 
 const Style = {
   wrapper: css`
     padding-top: 80px;
     width: 944px;
     margin: 0 auto;
+
+    a {
+      text-decoration: none;
+      color: #000;
+    }
   `,
 
   title: css`
@@ -22,11 +35,12 @@ const Style = {
     color: ${Color.Gray600};
     margin-bottom: 60px;
   `,
-
   flex: css`
-    display: flex;
-    gap: 28px;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    grid-gap: 28px;
     margin-bottom: 40px;
+    align-items: start;
   `,
 
   summary: css`
@@ -36,6 +50,7 @@ const Style = {
     border: 1px solid ${Color.Gray200};
     border-radius: 10px;
     gap: 20px;
+    max-width: 600px;
 
     > p {
       font-size: 20px;
@@ -43,6 +58,7 @@ const Style = {
       font-weight: 500;
       margin-bottom: 9px;
     }
+
     > div {
       display: flex;
       font-size: 13px;
@@ -60,8 +76,36 @@ const Style = {
     }
   `,
 
+  image: css`
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    overflow: hidden;
+
+    height: 100%;
+  `,
+
+  // swiperContainer 스타일 수정
+  swiperContainer: css`
+    width: 100%;
+    height: 100%;
+
+    .swiper-slide {
+      height: 400px;
+    }
+  `,
+
+  imageSwiper: css`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 4px;
+  `,
+
   roleBox: css`
     display: flex;
+    flex-shrink: 0;
     margin-bottom: 8px;
 
     p {
@@ -85,16 +129,6 @@ const Style = {
     div {
       font-size: 15px;
       font-weight: 500;
-    }
-  `,
-
-  image: css`
-    max-width: 559px;
-    height: 361px;
-
-    img {
-      width: 100%;
-      height: 100%;
     }
   `,
 
@@ -128,36 +162,92 @@ const Style = {
       padding: 14px 26px;
       border-radius: 8px;
       background: none;
+      transition: 0.2s ease-in-out;
+
+      :hover {
+        color: #fff;
+        background-color: ${Color.Primary};
+      }
+
+      :active {
+        background-color: #2c4bd1;
+      }
+    }
+  `,
+  linkBox: css`
+    width: 200px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    white-space: pre-wrap;
+
+    span {
+      border-bottom: 1px solid #000;
     }
   `,
 }
 
 const ProjectDetail: React.FC = () => {
+  const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0)
+
+  const swiperRef = useRef<SwiperClass | null>(null)
+
+  const { project_id } = useParams()
+  const [, navigate] = useLocation()
+
+  const { data, isLoading, error } = useSWR(`project/${project_id!}`, fetcher)
+  if (isLoading || error) return <div>Error</div>
+
+  const projectInfo: TProject = data.data
+
+  console.log(data.data)
+
+  const goToSlide = (index: number) => {
+    if (swiperRef.current && swiperRef.current) {
+      swiperRef.current.slideTo(index) // Move to the specified index
+    }
+  }
+
   return (
     <div css={Style.wrapper}>
-      <div css={Style.title}>TG Project No.1 제목 영역</div>
-      <div css={Style.subTitle}>
-        프로젝트 한줄설명 짧게 이전페이지 컴포넌트에서 보이는 내용 그대로
-        넣어줘용
-      </div>
+      <div css={Style.title}>{projectInfo.title}</div>
+      <div css={Style.subTitle}></div>
       <div css={Style.flex}>
         <div css={Style.summary}>
           <p>프로젝트 요약</p>
           <div>
             <p>프로젝트 기간</p>
-            <span>2000.00.00 ~ 2000.00.00</span>
+            <span>
+              {projectInfo.start.replace(/-/g, '.')} ~{' '}
+              {projectInfo.end.replace(/-/g, '.')}
+            </span>
           </div>
           <div>
             <p>프로젝트 형태</p>
-            <span>APP</span>
+            <span>{projectInfo.devType}</span>
           </div>
           <div>
             <p>프로젝트 상태</p>
-            <span>배포완료</span>
+            <span>{projectInfo.devStatus}</span>
           </div>
           <div>
             <p>링크</p>
-            <span>Github Notion</span>
+            <div css={Style.linkBox}>
+              {projectInfo.links.map((item) => (
+                <a
+                  key={item.url}
+                  href={
+                    item.url.startsWith('http')
+                      ? item.url
+                      : `https://${item.url}`
+                  }
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <span>{item.description}</span>
+                </a>
+              ))}
+            </div>
           </div>
           <div>
             <p>참여자</p>
@@ -165,63 +255,83 @@ const ProjectDetail: React.FC = () => {
               <div css={Style.roleBox}>
                 <p>PM</p>
                 <div css={Style.roleName}>
-                  <div>이하윤</div>
-                  <div>이하윤</div>
-                  <div>이하윤</div>
+                  {projectInfo.participants
+                    .filter((item) => item.part === 'PM')
+                    .map((item, idx) => (
+                      <div key={idx}>{item.username}</div>
+                    ))}
                 </div>
               </div>
               <div css={Style.roleBox}>
                 <p>Front-end</p>
                 <div css={Style.roleName}>
-                  <div>이하윤</div>
-                  <div>이하윤</div>
-                  <div>이하윤</div>
+                  {projectInfo.participants
+                    .filter((item) => item.part === 'FRONT')
+                    .map((item, idx) => (
+                      <div key={idx}>{item.username}</div>
+                    ))}
                 </div>
               </div>
               <div css={Style.roleBox}>
                 <p>Back-end</p>
                 <div css={Style.roleName}>
-                  <div>이하윤</div>
-                  <div>이하윤</div>
-                  <div>이하윤</div>
-                  {/* <div>이하윤</div> */}
+                  {projectInfo.participants
+                    .filter((item) => item.part === 'BACK')
+                    .map((item, idx) => (
+                      <div key={idx}>{item.username}</div>
+                    ))}
                 </div>
               </div>
               <div css={Style.roleBox}>
                 <p>Designer</p>
                 <div css={Style.roleName}>
-                  <div>이하윤</div>
-                  <div>이하윤</div>
-                  <div>이하윤</div>
+                  {projectInfo.participants
+                    .filter((item) => item.part === 'DESIGNER')
+                    .map((item, idx) => (
+                      <div key={idx}>{item.username}</div>
+                    ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div css={Style.image}>
-          <img src={Preview} />
+          <Swiper
+            onSwiper={(swiperInstance) => (swiperRef.current = swiperInstance)} // Swiper 인스턴스 저장
+            spaceBetween={50}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            loop
+            css={Style.swiperContainer}
+            onActiveIndexChange={(swiper) => {
+              setActiveSlideIndex(swiper.activeIndex)
+            }}
+          >
+            {projectInfo.imageUrls.map((imageUrl, index) => (
+              <SwiperSlide key={index}>
+                <img
+                  css={Style.imageSwiper}
+                  src={imageUrl}
+                  alt={`Project image ${index}`}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <SwiperBullets
+            goToSlide={goToSlide}
+            activeSlideIndex={activeSlideIndex}
+            slideLength={projectInfo.imageUrls.length}
+          />
         </div>
       </div>
 
       <div css={Style.textBox}>
         <p>프로젝트 설명</p>
-        <div>
-          자기 개발은 목표를 설정하고 달성하기 위한 여정입니다. 이 블로그
-          포스트에서는 일상 생활에 쉽게 통합할 수 있는 5가지 핵심 습관을
-          소개합니다. 첫 번째는 목표 설정과 시간 관리입니다. 이는 개인적 성취와
-          전문적 성장을 위한 기초를 마련합니다. 두 번째 습관은 긍정적 사고를
-          통한 자기 격려입니다. 이는 도전을 극복하고 성공으로 나아가는 데
-          중요합니다. 세 번째는 건강 유지를 위한 일상적인 운동과 균형 잡힌
-          식단입니다. 건강한 몸은 능률적인 마음의 기초입니다. 네 번째는 지속적인
-          학습과 자기 계발입니다. 새로운 기술과 지식은 경쟁력을 높이고 삶의 질을
-          향상시킵니다. 마지막으로 다섯 번째 습관은 일상 속에서의 작은 목표
-          달성을 통해 성취감을 느끼는 것입니다. 이러한 습관들은 개인의 성장과
-          발전에 필수적이며, 이 글을 통해 자기 계발의 길을 찾는 데 도움을 줄
-          것입니다.
-        </div>
+        <div>{projectInfo.description}</div>
       </div>
 
-      <div css={Style.buttonBox}>
+      <div css={Style.buttonBox} onClick={() => navigate('/project')}>
         <button>목록으로</button>
       </div>
     </div>
