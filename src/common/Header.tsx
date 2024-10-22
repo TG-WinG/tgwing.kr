@@ -4,10 +4,11 @@ import { css } from '@emotion/react'
 import { Link } from 'wouter'
 
 import logo from '../assets/logo.png'
-import logoSmall from '../assets/logo-small.png'
 import { Color } from '../platte.ts'
 import { LoginModal } from '../Auth/Login.tsx'
 import { ProfileModal } from '../components/ProfileModal.tsx'
+import userStore from '../store/User.ts'
+import icon_default_profile from '../assets/icon_default_profile.svg'
 
 type HeaderProps = {
   num: number
@@ -69,19 +70,21 @@ const HeaderStyle = {
     justify-content: center;
     height: 24px;
     width: 24px;
-    border-radius: 50%;
-    background-color: ${Color.Gray200};
     margin-right: 75px;
   `,
   profileImage: css`
-    height: 12px;
-    width: 12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    object-fit: cover;
   `,
 }
 
 export const Header: FC<HeaderProps> = ({ num }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false)
+
+  const { user } = userStore()
 
   return (
     <>
@@ -97,20 +100,30 @@ export const Header: FC<HeaderProps> = ({ num }) => {
         </nav>
 
         <div css={HeaderStyle.profileBox}>
-          <button css={HeaderStyle.loginButton} onClick={() => setIsOpen(true)}>
-            Log-in
-          </button>
-          <div
+          {!user && (
+            <button
+              css={HeaderStyle.loginButton}
+              onClick={() => setIsOpen(true)}
+            >
+              Log-in
+            </button>
+          )}
+          <button
             css={HeaderStyle.profileButton}
             onClick={() => setIsProfileOpen(true)}
           >
-            <img src={logoSmall} css={HeaderStyle.profileImage} />
-          </div>
+            {user && (
+              <img
+                src={user.profilePicture ?? icon_default_profile}
+                css={HeaderStyle.profileImage}
+              />
+            )}
+          </button>
         </div>
       </header>
       {isOpen && <LoginModal context='' onClose={() => setIsOpen(false)} />}
-      {isProfileOpen && (
-        <ProfileModal onClose={() => setIsProfileOpen(false)} />
+      {isProfileOpen && user && (
+        <ProfileModal user={user} onClose={() => setIsProfileOpen(false)} />
       )}
     </>
   )
