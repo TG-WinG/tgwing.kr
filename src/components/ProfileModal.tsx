@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { css } from '@emotion/react'
-import icon_profile from '../assets/blog_background.png'
 import { Color } from '../palette'
 import { useLocation } from 'wouter'
+import { TUser } from '../types'
+import icon_default_profile from '../assets/icon_default_profile.svg'
+import { logout } from '../api/auth'
 
 type ProfileModalProps = {
+  user: TUser
   onClose: () => void
 }
 
-export const ProfileModal = ({ onClose }: ProfileModalProps) => {
+export const ProfileModal = ({ user, onClose }: ProfileModalProps) => {
   const [, navigate] = useLocation()
 
   const modalRef = useRef<HTMLDivElement | null>(null)
@@ -28,6 +31,13 @@ export const ProfileModal = ({ onClose }: ProfileModalProps) => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [onClose])
+
+  const handleLogout = async () => {
+    const res = await logout()
+    navigate('/')
+    window.location.reload()
+    console.log(res)
+  }
 
   return (
     <div
@@ -52,7 +62,7 @@ export const ProfileModal = ({ onClose }: ProfileModalProps) => {
         `}
       >
         <img
-          src={icon_profile}
+          src={user.profilePicture ?? icon_default_profile}
           alt='x'
           css={css`
             width: 70px;
@@ -81,7 +91,7 @@ export const ProfileModal = ({ onClose }: ProfileModalProps) => {
                 color: ${Color.Black};
               `}
             >
-              김진우{' '}
+              {user.name}{' '}
             </span>
             님
           </div>
@@ -90,9 +100,9 @@ export const ProfileModal = ({ onClose }: ProfileModalProps) => {
               margin-bottom: 2px;
             `}
           >
-            2023104559
+            {user.studentNumber}
           </div>
-          <div>tgwing@khu.ac.kr</div>
+          <div>{user.email}</div>
         </div>
       </div>
       <div
@@ -123,7 +133,13 @@ export const ProfileModal = ({ onClose }: ProfileModalProps) => {
             flex: 1;
             font-size: 14px;
             color: ${Color.Gray300};
+            transition: 0.3s ease-in-out;
+
+            :hover {
+              color: ${Color.Gray800};
+            }
           `}
+          onClick={handleLogout}
         >
           로그아웃
         </button>

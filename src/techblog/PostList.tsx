@@ -5,6 +5,7 @@ import Heart from '../assets/heart.png'
 import Comment from '../assets/comment.png'
 import { TPost } from '../types'
 import { useLocation } from 'wouter'
+import icon_default_profile from '../assets/icon_default_profile.svg'
 
 const PostList = ({
   id,
@@ -139,7 +140,7 @@ const PostList = ({
               border-radius: 9999px;
               margin-right: 8px;
             `}
-            src={writer.profilePicture}
+            src={writer.profilePicture ?? icon_default_profile}
           />
 
           {writer.name}
