@@ -6,6 +6,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string
   margin?: string
   back?: boolean
+  width?: string
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -16,12 +17,13 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   disabled,
   back = false,
+  width = '200px',
 }) => {
   return (
     <button
       css={css`
         background: ${color};
-        width: 200px;
+        width: ${width};
         height: 48px;
         margin: ${margin};
         right: 0;

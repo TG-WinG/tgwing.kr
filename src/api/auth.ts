@@ -24,3 +24,8 @@ export const logout = async () => {
 
   return res
 }
+
+export const updateUserInfo = async (body: TUser) => {
+  const res = await Server.put('profile', body)
+  return res
+}
