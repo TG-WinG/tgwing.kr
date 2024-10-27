@@ -12,6 +12,10 @@ import Button from '../components/Button'
 import { updateUserInfo } from '../api/auth'
 import { TUser } from '../types'
 import { uploadImageApi } from '../api/post'
+import { Header } from '../common/Header'
+import { CustomPlusButton } from '../components/CustomPlusButton'
+import { useLocation } from 'wouter'
+import icon_search from '../assets/icon_search.svg'
 
 const Style = {
   wrapper: css`
@@ -91,6 +95,7 @@ const Style = {
     padding-top: 10px;
     margin-bottom: 40px;
     display: flex;
+    gap: 20px;
   `,
 
   label: css`
@@ -106,7 +111,6 @@ const Style = {
 
   input: css`
     width: 340px;
-    height: 38px;
     background-color: #fff;
     display: flex;
     align-items: center;
@@ -137,6 +141,31 @@ const Style = {
   mb: css`
     margin-bottom: 20px;
   `,
+  inputBox: css`
+    display: flex;
+    width: 340px;
+    border: 1px solid ${Color.Primary};
+    padding: 10px 15px;
+    border-radius: 999px;
+    gap: 10px;
+
+    input {
+      flex: 1;
+      border: 0;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 18px;
+
+      :focus {
+        outline: 0;
+      }
+    }
+
+    :focus-within .SearchIcon {
+      filter: invert(47%) sepia(39%) saturate(1009%) hue-rotate(193deg)
+        brightness(101%) contrast(96%);
+    }
+  `,
 }
 
 const Profile: React.FC = () => {
@@ -148,7 +177,12 @@ const Profile: React.FC = () => {
   )
   const [profileData, setProfileData] = useState<TUser | null>(null)
   const [preview, setPreview] = useState<string | undefined>(undefined)
+  const [keyword, setKeyword] = useState<string>('')
+
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const [, navigate] = useLocation()
 
   const handleEditMode = async () => {
     if (!isEditMode) {
@@ -174,7 +208,8 @@ const Profile: React.FC = () => {
         } else {
           await updateUserInfo(profileData)
         }
-        mutate('profile')
+        mutate()
+        postMutate()
         setPreview(undefined)
       }
       setIsEditMode(false)
@@ -189,12 +224,16 @@ const Profile: React.FC = () => {
     page: String(currentPage),
     size: '5',
     sort: 'modDate,desc',
+    ...(keyword.startsWith('#')
+      ? { hashtag: keyword.substring(1) }
+      : { keyword }),
   }).toString()
 
   const {
     data: myPosts,
     isLoading: postLoading,
     error: postsError,
+    mutate: postMutate,
   } = useSWR(`profile/blog?${params}`, fetcher)
 
   useEffect(() => {
@@ -209,7 +248,7 @@ const Profile: React.FC = () => {
     }
   }, [data])
 
-  if (error || postsError) return <div>Failed to load profile</div>
+  if (error || postsError) return <div>로그인 후 이용해주세요!</div>
   if (isLoading || postLoading || !profileData) return <div>Loading...</div>
 
   const profiles: TUser = profileData
@@ -229,96 +268,114 @@ const Profile: React.FC = () => {
     fileInputRef.current?.click()
   }
 
+  const clickHandler = () => {
+    if (inputRef.current) {
+      setKeyword(inputRef.current.value)
+      inputRef.current.value = ''
+    }
+  }
+
   return (
-    <div css={Style.wrapper}>
-      <div css={Style.title}>프로필</div>
-      <div css={Style.subTitle}>내 정보</div>
-      <div css={Style.profile}>
-        <div css={Style.profileImageBox}>
-          <img
-            src={preview || profiles.profilePicture || icon_default_profile}
-            alt='프로필'
-          />
-          {isEditMode && (
-            <div css={Style.editButton}>
-              <Button
-                width={'150px'}
-                text='이미지 업로드'
-                color={Color.Primary}
-                onClick={handleUploadClick} // 이미지 업로드 버튼 클릭 시 파일 입력 트리거
-              />
-              <input
-                type='file'
-                accept='image/*'
-                style={{ display: 'none' }}
-                ref={fileInputRef}
-                onChange={handleFileChange}
-              />
-            </div>
-          )}
-        </div>
-        <div>
-          {isEditMode && profileData ? (
-            <input
-              type='text'
-              value={profileData.name}
-              onChange={(e) =>
-                setProfileData({ ...profileData, name: e.target.value })
-              }
-              css={[Style.editInput, Style.mb]}
+    <>
+      <Header num={3} />
+      <div css={Style.wrapper}>
+        <div css={Style.title}>프로필</div>
+        <div css={Style.subTitle}>내 정보</div>
+        <div css={Style.profile}>
+          <div css={Style.profileImageBox}>
+            <img
+              src={preview || profiles.profilePicture || icon_default_profile}
+              alt='프로필'
             />
-          ) : (
-            <p css={Style.name}>{profiles.name}</p>
-          )}
-          <div css={Style.info}>
-            <p>학번</p> {profiles.studentNumber}
+            {isEditMode && (
+              <div css={Style.editButton}>
+                <Button
+                  width={'150px'}
+                  text='이미지 업로드'
+                  color={Color.Primary}
+                  onClick={handleUploadClick} // 이미지 업로드 버튼 클릭 시 파일 입력 트리거
+                />
+                <input
+                  type='file'
+                  accept='image/*'
+                  style={{ display: 'none' }}
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                />
+              </div>
+            )}
           </div>
-          <div css={Style.info}>
-            <p>이메일</p> {profiles.email}
-          </div>
-          <div css={Style.info}>
-            <p>생년월일</p> {profiles.birth}
-          </div>
-          {isEditMode && profileData ? (
-            <div css={Style.info}>
-              <p>전화번호</p>
+          <div>
+            {isEditMode && profileData ? (
               <input
                 type='text'
-                value={profileData.phoneNumber}
+                value={profileData.name}
                 onChange={(e) =>
-                  setProfileData({
-                    ...profileData,
-                    phoneNumber: e.target.value,
-                  })
+                  setProfileData({ ...profileData, name: e.target.value })
                 }
-                css={Style.editInput}
+                css={[Style.editInput, Style.mb]}
               />
-            </div>
-          ) : (
+            ) : (
+              <p css={Style.name}>{profiles.name}</p>
+            )}
             <div css={Style.info}>
-              <p>전화번호</p> {profiles.phoneNumber}
+              <p>학번</p> {profiles.studentNumber}
             </div>
-          )}
+            <div css={Style.info}>
+              <p>이메일</p> {profiles.email}
+            </div>
+            <div css={Style.info}>
+              <p>생년월일</p> {profiles.birth}
+            </div>
+            {isEditMode && profileData ? (
+              <div css={Style.info}>
+                <p>전화번호</p>
+                <input
+                  type='text'
+                  value={profileData.phoneNumber}
+                  onChange={(e) =>
+                    setProfileData({
+                      ...profileData,
+                      phoneNumber: e.target.value,
+                    })
+                  }
+                  css={Style.editInput}
+                />
+              </div>
+            ) : (
+              <div css={Style.info}>
+                <p>전화번호</p> {profiles.phoneNumber}
+              </div>
+            )}
+          </div>
+          <button css={Style.button} onClick={handleEditMode}>
+            {isEditMode ? '완료' : '수정'}
+          </button>
         </div>
-        <button css={Style.button} onClick={handleEditMode}>
-          {isEditMode ? '완료' : '수정'}
-        </button>
-      </div>
 
-      <div css={Style.posts}>
-        <p css={Style.subTitle}>내 포스트</p>
-        <div css={Style.control}>
-          <input css={Style.input} placeholder='검색' />
-          <label css={Style.label}>+ 글쓰기</label>
+        <div css={Style.posts}>
+          <p css={Style.subTitle}>내 포스트</p>
+          <div css={Style.control}>
+            <div css={Style.inputBox}>
+              <input placeholder='검색' ref={inputRef} />
+              <button onClick={clickHandler}>
+                <img src={icon_search} alt='x' className='SearchIcon' />
+              </button>
+            </div>
+            <CustomPlusButton
+              onClick={() => navigate('/posting')}
+              text='글쓰기'
+            />
+          </div>
         </div>
+        <PostLists postList={postList} />
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </div>
-      <PostLists postList={postList} />
-      <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
-    </div>
+    </>
   )
 }
 

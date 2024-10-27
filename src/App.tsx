@@ -12,6 +12,7 @@ import './css/font.css'
 import { useEffect } from 'react'
 import { checkToken, getUserInfo } from './api/auth.ts'
 import userStore from './store/User.ts'
+import Home from './pages/Home'
 
 function App() {
   const [location] = useLocation()
@@ -34,7 +35,7 @@ function App() {
 
   return (
     <Switch>
-      <Route path='/' component={TechBlog} />
+      <Route path='/' component={Home} />
       <Route path='/blog' component={TechBlog} />
       <Route path='/register' component={Register} />
       <Route path='/posting' component={UploadPost} />

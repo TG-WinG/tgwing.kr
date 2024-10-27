@@ -94,7 +94,7 @@ export const Header: FC<HeaderProps> = ({ num }) => {
         </div>
 
         <nav css={HeaderStyle.navBox(num)}>
-          <Link href='/login'>About us</Link>
+          <Link href='/'>About us</Link>
           <Link href='/blog'>Tech-blog</Link>
           <Link href='/project'>Project</Link>
         </nav>

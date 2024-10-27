@@ -11,6 +11,7 @@ import 'swiper/css'
 import 'swiper/css/effect-fade'
 import { SwiperBullets } from '../components/SwiperBullets'
 import { Swiper as SwiperClass } from 'swiper/types' // Swiper 인스턴스 타입
+import { Header } from '../common/Header'
 
 const Style = {
   wrapper: css`
@@ -209,132 +210,137 @@ const ProjectDetail: React.FC = () => {
   }
 
   return (
-    <div css={Style.wrapper}>
-      <div css={Style.title}>{projectInfo.title}</div>
-      <div css={Style.subTitle}></div>
-      <div css={Style.flex}>
-        <div css={Style.summary}>
-          <p>프로젝트 요약</p>
-          <div>
-            <p>프로젝트 기간</p>
-            <span>
-              {projectInfo.start.replace(/-/g, '.')} ~{' '}
-              {projectInfo.end.replace(/-/g, '.')}
-            </span>
-          </div>
-          <div>
-            <p>프로젝트 형태</p>
-            <span>{projectInfo.devType}</span>
-          </div>
-          <div>
-            <p>프로젝트 상태</p>
-            <span>{projectInfo.devStatus}</span>
-          </div>
-          <div>
-            <p>링크</p>
-            <div css={Style.linkBox}>
-              {projectInfo.links.map((item) => (
-                <a
-                  key={item.url}
-                  href={
-                    item.url.startsWith('http')
-                      ? item.url
-                      : `https://${item.url}`
-                  }
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  <span>{item.description}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p>참여자</p>
+    <>
+      <Header num={2} />
+      <div css={Style.wrapper}>
+        <div css={Style.title}>{projectInfo.title}</div>
+        <div css={Style.subTitle}></div>
+        <div css={Style.flex}>
+          <div css={Style.summary}>
+            <p>프로젝트 요약</p>
             <div>
-              <div css={Style.roleBox}>
-                <p>PM</p>
-                <div css={Style.roleName}>
-                  {projectInfo.participants
-                    .filter((item) => item.part === 'PM')
-                    .map((item, idx) => (
-                      <div key={idx}>{item.username}</div>
-                    ))}
-                </div>
+              <p>프로젝트 기간</p>
+              <span>
+                {projectInfo.start.replace(/-/g, '.')} ~{' '}
+                {projectInfo.end.replace(/-/g, '.')}
+              </span>
+            </div>
+            <div>
+              <p>프로젝트 형태</p>
+              <span>{projectInfo.devType}</span>
+            </div>
+            <div>
+              <p>프로젝트 상태</p>
+              <span>{projectInfo.devStatus}</span>
+            </div>
+            <div>
+              <p>링크</p>
+              <div css={Style.linkBox}>
+                {projectInfo.links.map((item) => (
+                  <a
+                    key={item.url}
+                    href={
+                      item.url.startsWith('http')
+                        ? item.url
+                        : `https://${item.url}`
+                    }
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    <span>{item.description}</span>
+                  </a>
+                ))}
               </div>
-              <div css={Style.roleBox}>
-                <p>Front-end</p>
-                <div css={Style.roleName}>
-                  {projectInfo.participants
-                    .filter((item) => item.part === 'FRONT')
-                    .map((item, idx) => (
-                      <div key={idx}>{item.username}</div>
-                    ))}
+            </div>
+            <div>
+              <p>참여자</p>
+              <div>
+                <div css={Style.roleBox}>
+                  <p>PM</p>
+                  <div css={Style.roleName}>
+                    {projectInfo.participants
+                      .filter((item) => item.part === 'PM')
+                      .map((item, idx) => (
+                        <div key={idx}>{item.username}</div>
+                      ))}
+                  </div>
                 </div>
-              </div>
-              <div css={Style.roleBox}>
-                <p>Back-end</p>
-                <div css={Style.roleName}>
-                  {projectInfo.participants
-                    .filter((item) => item.part === 'BACK')
-                    .map((item, idx) => (
-                      <div key={idx}>{item.username}</div>
-                    ))}
+                <div css={Style.roleBox}>
+                  <p>Front-end</p>
+                  <div css={Style.roleName}>
+                    {projectInfo.participants
+                      .filter((item) => item.part === 'FRONT')
+                      .map((item, idx) => (
+                        <div key={idx}>{item.username}</div>
+                      ))}
+                  </div>
                 </div>
-              </div>
-              <div css={Style.roleBox}>
-                <p>Designer</p>
-                <div css={Style.roleName}>
-                  {projectInfo.participants
-                    .filter((item) => item.part === 'DESIGNER')
-                    .map((item, idx) => (
-                      <div key={idx}>{item.username}</div>
-                    ))}
+                <div css={Style.roleBox}>
+                  <p>Back-end</p>
+                  <div css={Style.roleName}>
+                    {projectInfo.participants
+                      .filter((item) => item.part === 'BACK')
+                      .map((item, idx) => (
+                        <div key={idx}>{item.username}</div>
+                      ))}
+                  </div>
+                </div>
+                <div css={Style.roleBox}>
+                  <p>Designer</p>
+                  <div css={Style.roleName}>
+                    {projectInfo.participants
+                      .filter((item) => item.part === 'DESIGNER')
+                      .map((item, idx) => (
+                        <div key={idx}>{item.username}</div>
+                      ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div css={Style.image}>
+            <Swiper
+              onSwiper={(swiperInstance) =>
+                (swiperRef.current = swiperInstance)
+              } // Swiper 인스턴스 저장
+              spaceBetween={50}
+              slidesPerView={1}
+              navigation
+              pagination={{ clickable: true }}
+              loop
+              css={Style.swiperContainer}
+              onActiveIndexChange={(swiper) => {
+                setActiveSlideIndex(swiper.activeIndex)
+              }}
+            >
+              {projectInfo.imageUrls.map((imageUrl, index) => (
+                <SwiperSlide key={index}>
+                  <img
+                    css={Style.imageSwiper}
+                    src={imageUrl}
+                    alt={`Project image ${index}`}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <SwiperBullets
+              goToSlide={goToSlide}
+              activeSlideIndex={activeSlideIndex}
+              slideLength={projectInfo.imageUrls.length}
+            />
+          </div>
         </div>
-        <div css={Style.image}>
-          <Swiper
-            onSwiper={(swiperInstance) => (swiperRef.current = swiperInstance)} // Swiper 인스턴스 저장
-            spaceBetween={50}
-            slidesPerView={1}
-            navigation
-            pagination={{ clickable: true }}
-            loop
-            css={Style.swiperContainer}
-            onActiveIndexChange={(swiper) => {
-              setActiveSlideIndex(swiper.activeIndex)
-            }}
-          >
-            {projectInfo.imageUrls.map((imageUrl, index) => (
-              <SwiperSlide key={index}>
-                <img
-                  css={Style.imageSwiper}
-                  src={imageUrl}
-                  alt={`Project image ${index}`}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <SwiperBullets
-            goToSlide={goToSlide}
-            activeSlideIndex={activeSlideIndex}
-            slideLength={projectInfo.imageUrls.length}
-          />
+
+        <div css={Style.textBox}>
+          <p>프로젝트 설명</p>
+          <div>{projectInfo.description}</div>
+        </div>
+
+        <div css={Style.buttonBox} onClick={() => navigate('/project')}>
+          <button>목록으로</button>
         </div>
       </div>
-
-      <div css={Style.textBox}>
-        <p>프로젝트 설명</p>
-        <div>{projectInfo.description}</div>
-      </div>
-
-      <div css={Style.buttonBox} onClick={() => navigate('/project')}>
-        <button>목록으로</button>
-      </div>
-    </div>
+    </>
   )
 }
 
