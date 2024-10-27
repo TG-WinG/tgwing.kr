@@ -1,10 +1,16 @@
+import { FC, useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/react'
+import Banner from '../components/Banner'
 
-const items = Array(9).fill({
-  title: 'TG Project No.1',
-  description: '한줄짜리 설명 들어가면됩니다. 첫줄짧아지고 올...',
-  tag: 'App',
-})
+import Background from '../assets/project_background.png'
+import { fetcher } from '../api'
+import useSWR from 'swr'
+import { useLocation } from 'wouter'
+
+import { CustomPlusButton } from '../components/CustomPlusButton'
+import { Header } from '../common/Header'
+import { ProjectCard } from '../components/ProjectCard'
+import { TProject } from '../types'
 
 const containerStyle = css`
   display: flex;
@@ -12,35 +18,6 @@ const containerStyle = css`
   gap: 22px;
   width: 944px;
   margin: 20px auto 0 auto;
-`
-
-const itemStyle = css`
-  width: 300px;
-  border: 1px solid black;
-  border-radius: 4px;
-`
-
-const imageStyle = css`
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-`
-
-const titleStyle = css`
-  margin-top: 8px;
-  font-size: 18px;
-  font-weight: bold;
-`
-
-const descriptionStyle = css`
-  margin-top: 4px;
-  font-size: 14px;
-  color: #666;
-`
-
-const spanStyle = css`
-  font-size: 14px;
-  color: rgba(140, 162, 255, 1);
 `
 
 const topContainerStyle = css`
@@ -54,102 +31,122 @@ const topContainerStyle = css`
 
 const categoriesStyle = css`
   display: flex;
-  gap: 24px;
+  position: relative;
 `
 
 const categoryStyle = css`
   font-size: 16px;
   color: #888;
-  cursor: pointer;
-  width: 54px;
-  height: 38px;
-  text-align: center;
-
-  &.active {
-    color: #007bff;
-    border-bottom: 2px solid #007bff;
-  }
-`
-
-const buttonStyle = css`
   display: flex;
-  align-items: center;
-  padding: 8px 16px;
-  border: 1px solid rgba(161, 163, 173, 1);
-  border-radius: 20px;
-  background-color: white;
-  font-size: 16px;
-  color: rgba(161, 163, 173, 1);
+  padding: 9.5px 13px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  text-align: center;
+  line-height: 38px;
+  position: relative;
+
+  span {
+    line-height: 19.2px;
+  }
 
   &:hover {
-    background-color: #f0f0f0;
+    color: #007bff;
   }
 `
 
-const Project = () => {
+const underlineStyle = css`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 64px;
+  height: 2px;
+  background-color: #007bff;
+  transition: transform 0.3s ease;
+`
+
+const categories = ['ALL', 'WEB', 'APP']
+
+const Project: FC = () => {
+  const [, navigate] = useLocation()
+
+  const [activeCategory, setActiveCategory] = useState('ALL')
+  const [underlinePosition, setUnderlinePosition] = useState(0)
+  const [underlineWidth, setUnderlineWidth] = useState(0)
+  const categoryRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    const activeIndex = categories.indexOf(activeCategory)
+    if (categoryRefs.current[activeIndex]) {
+      const activeElement = categoryRefs.current[activeIndex]
+      setUnderlinePosition(activeElement?.offsetLeft || 0)
+      setUnderlineWidth(activeElement?.offsetWidth || 0)
+    }
+  }, [activeCategory])
+
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category)
+  }
+
+  const { data, error } = useSWR('project', fetcher)
+
+  if (error) return <div>Failed to load profile</div>
+  if (!data) return <div>hi</div>
+
+  const projectList: TProject[] = data.data
+
+  console.log(data)
+
   return (
     <>
-      <div
-        css={css`
-          width: 100%;
-          height: 168px;
-          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-          padding-top: 60px;
-        `}
-      >
-        <div
-          css={css`
-            width: 944px;
-            margin: 0 auto;
-          `}
-        >
-          <p
-            css={css`
-              font-size: 32px;
-            `}
-          >
-            Project
-          </p>
-          <p
-            css={css`
-              font-size: 20px;
-            `}
-          >
-            혁신적인 스타트업 아이디어: 성공을 위한 핵심 전략
-          </p>
-        </div>
-      </div>
+      <Header num={2} />
+      <Banner
+        background={Background}
+        title='Project'
+        subTitle='혁신적인 스타트업 아이디오: 성공을 위한 핵심 전략'
+      />
 
       <div css={topContainerStyle}>
         <div css={categoriesStyle}>
-          <div
-            css={[
-              categoryStyle,
-              css`
-                color: #007bff;
-                border-bottom: 2px solid #007bff;
-              `,
-            ]}
-          >
-            ALL
-          </div>
-          <div css={categoryStyle}>WEB</div>
-          <div css={categoryStyle}>APP</div>
+          {categories.map((category, index) => (
+            <div
+              key={category}
+              css={[
+                categoryStyle,
+                activeCategory === category &&
+                  css`
+                    color: #007bff;
+                  `,
+              ]}
+              onClick={() => handleCategoryClick(category)}
+              ref={(el) => (categoryRefs.current[index] = el)} // ref 할당
+            >
+              <span>{category}</span>
+            </div>
+          ))}
+          <span
+            css={underlineStyle}
+            style={{
+              width: `${underlineWidth}px`, // underline의 너비 설정
+              transform: `translateX(${underlinePosition}px)`, // underline의 위치 설정
+            }}
+          />
         </div>
-        <button css={buttonStyle}>+ 새 프로젝트</button>
+        <CustomPlusButton
+          onClick={() => navigate('/newproject')}
+          text='새 프로젝트'
+        />
       </div>
 
       <div css={containerStyle}>
-        {items.map((item, index) => (
-          <div key={index} css={itemStyle}>
-            <div css={imageStyle}></div>
-            <div css={titleStyle}>
-              {item.title} <span css={spanStyle}>{item.tag}</span>
-            </div>
-            <div css={descriptionStyle}>{item.description}</div>
-          </div>
+        {projectList.map((item) => (
+          <ProjectCard
+            id={item.id}
+            key={item.id}
+            title={item.title}
+            thumbnail={item.thumbnail}
+            description={item.description}
+            devStatus={item.devStatus}
+            devType={item.devType}
+          />
         ))}
       </div>
     </>

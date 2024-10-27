@@ -1,40 +1,83 @@
-import { FC } from 'react'
+import { useRef } from 'react'
 import { css } from '@emotion/react'
+import { Color } from '../palette'
+import { CustomPlusButton } from '../components/CustomPlusButton'
+import icon_search from '../assets/icon_search.svg'
+import userStore from '../store/User'
+import { useLocation } from 'wouter'
 
-const TempStyle = {
-  label: css`
-    width: 224px;
-    height: 64px;
-    background-color: #d9d9d9;
+const ControlStyle = {
+  Wrapper: css`
     display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 32px;
+    gap: 20px;
   `,
-
-  input: css`
-    width: 224px;
-    height: 64px;
-    background-color: #d9d9d9;
+  InputBox: css`
     display: flex;
-    align-items: center;
-    border-radius: 32px;
-    border: 0;
-    padding: 0 20px;
+    width: 340px;
+    border: 1px solid ${Color.Primary};
+    padding: 10px 15px;
+    border-radius: 999px;
+    gap: 10px;
+
+    input {
+      flex: 1;
+      border: 0;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 18px;
+
+      :focus {
+        outline: 0;
+      }
+    }
+
+    :focus-within .SearchIcon {
+      filter: invert(47%) sepia(39%) saturate(1009%) hue-rotate(193deg)
+        brightness(101%) contrast(96%);
+    }
   `,
 }
 
-const Control: FC = () => {
+type ControlProps = {
+  setKeyword?: (keyword: string) => void
+}
+
+const Control = ({ setKeyword }: ControlProps) => {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const [, navigate] = useLocation()
+
+  const { user } = userStore()
+
+  const clickHandler = () => {
+    if (inputRef.current && setKeyword) {
+      setKeyword(inputRef.current.value)
+      inputRef.current.value = ''
+    }
+  }
+
   return (
     <div
       css={css`
-        width: 1280px;
-        margin: 60px auto;
+        width: 945px;
+        margin: 50px auto 40px auto;
         display: flex;
+        justify-content: flex-end;
       `}
     >
-      <label css={TempStyle.label}>글쓰기</label>
-      <input css={TempStyle.input} placeholder='검색' />
+      <div css={ControlStyle.Wrapper}>
+        <div css={ControlStyle.InputBox}>
+          <input ref={inputRef} type='text' placeholder='검색' />
+          <button onClick={clickHandler}>
+            <img className='SearchIcon' src={icon_search} alt='' />
+          </button>
+        </div>
+        <CustomPlusButton
+          onClick={() => navigate('/posting')}
+          text='글쓰기'
+          disabled={Boolean(!user)}
+        />
+      </div>
     </div>
   )
 }

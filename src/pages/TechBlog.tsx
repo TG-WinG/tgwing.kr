@@ -1,14 +1,56 @@
-import { FC } from 'react'
-import Banner from '../techblog/Banner'
+import React, { useEffect, useState } from 'react'
+import Banner from '../components/Banner'
 import PostLists from '../techblog/PostLists'
 import Control from '../techblog/Control'
 
-const TechBlog: FC = () => {
+import Background from '../assets/blog_background.png'
+import { Header } from '../common/Header'
+import { TPost } from '../types'
+import { useGetPostList } from '../hooks/query/post.api'
+import { Pagination } from '../components/Pagination'
+
+const TechBlog: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<number>(0)
+  const [totalPages, setTotalPages] = useState<number>(0)
+  const [keyword, setKeyword] = useState<string>('')
+
+  const params = new URLSearchParams({
+    page: String(currentPage),
+    size: '7',
+    sort: 'modDate,desc',
+    ...(keyword.startsWith('#')
+      ? { hashtag: keyword.substring(1) }
+      : { keyword }),
+  }).toString()
+
+  const { data, isLoading, error } = useGetPostList(params)
+
+  useEffect(() => {
+    if (data) {
+      setTotalPages(Math.ceil(data.totalElements / 7))
+    }
+  }, [data])
+
+  if (isLoading) return <div>Failed to load profiles</div>
+  if (error) return <div>Error!</div>
+
+  const postList: TPost[] = data.content
+
   return (
     <>
-      <Banner />
-      <Control />
-      <PostLists />
+      <Header num={1} />
+      <Banner
+        background={Background}
+        title='Tech-Blog'
+        subTitle='짧은 설명 한 줄 짜리 어쩌고 효과적인 의사소통을 위한 비언어적 신호'
+      />
+      <Control setKeyword={setKeyword} />
+      <PostLists postList={postList} />
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </>
   )
 }

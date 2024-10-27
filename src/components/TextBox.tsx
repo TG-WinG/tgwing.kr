@@ -1,20 +1,28 @@
 import { css } from '@emotion/react'
 import React from 'react'
+import { Color } from '../palette'
 
-interface TextBoxProps {
+interface TextBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  value?: string
   height?: string
   margin?: string
   fontSize?: string
   padding?: string
   placeholder?: string
+  position?: string
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const TextBox: React.FC<TextBoxProps> = ({
+  value,
   height,
   margin,
   fontSize,
   padding,
   placeholder,
+  position,
+  onChange,
+  maxLength,
 }) => {
   return (
     <input
@@ -22,12 +30,21 @@ const TextBox: React.FC<TextBoxProps> = ({
         width: 100%;
         height: ${height};
         border: 0;
-        border-bottom: 3px solid #c4c6cc;
+        border-bottom: 1.5px solid ${Color.Gray300};
         margin: ${margin};
         font-size: ${fontSize};
         padding: ${padding};
+        position: ${position};
+
+        :focus {
+          outline: none;
+          border-color: ${Color.PrimaryBorder};
+        }
       `}
+      value={value}
+      maxLength={maxLength}
       placeholder={placeholder}
+      onChange={onChange}
     />
   )
 }
