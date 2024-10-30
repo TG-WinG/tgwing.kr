@@ -40,5 +40,5 @@ jobs:
 
       - name: Send files to EC2
         run: |
-          jarPath=$(yarn build)
+          yarn build
           scp -i private_key.pem -r dist/* "${username}@${host}:/usr/share/nginx/html"
