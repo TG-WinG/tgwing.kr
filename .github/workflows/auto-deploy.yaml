@@ -1,0 +1,44 @@
+name: AWS EC2 자동 배포
+
+on:
+  push:
+    branches: [ "dev" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      host: ${{ secrets.EC2_HOST }}
+      username: ${{ secrets.EC2_USERNAME }}
+
+    steps:
+      - uses: actions/checkout@v4.1.2
+
+      - name: Show git status
+        run: git status
+
+      - name: Yarn Setup
+        uses: DerYeger/yarn-setup-action@v1.0.1
+        with:
+          node-version: v20.13.1
+
+      - name: Build
+        run: |
+          yarn build
+
+      - name: Prepare SSH connect
+        env:
+          private_key: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          echo "$private_key" > private_key.pem
+          chmod 400 private_key.pem
+          mkdir ~/.ssh
+          ssh-keyscan -t rsa $host > ~/.ssh/known_hosts
+
+      - name: Send files to EC2
+        run: |
+          jarPath=$(yarn build)
+          scp -i private_key.pem -r dist/* "${username}@${host}:/usr/share/nginx/html"
