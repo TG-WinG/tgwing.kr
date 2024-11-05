@@ -32,3 +32,27 @@ export const deletePostApi = async (postId: string) => {
 
   return res
 }
+
+export const postLikeApi = async (postId: string) => {
+  const res = await Server.post(`post/${postId}/like`)
+
+  return res
+}
+
+export const uploadReplyComment = async (
+  postId: string,
+  commentId: number,
+  body: object
+) => {
+  const res = await Server.post(
+    `post/${postId}/comment/${commentId}/reply`,
+    body
+  )
+
+  return res
+}
+
+export const getReplyComments = async (postId: string, commentId: number) => {
+  const res = await Server.get(`post/${postId}/comment/${commentId}/reply`)
+  return res
+}

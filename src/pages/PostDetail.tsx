@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import React, { useRef, useState } from 'react'
 import { Color } from '../palette'
 
-import Heart from '../assets/heart.png'
+import Heart from '../assets/heart.svg'
 import icon_comment from '../assets/comment.png'
 import { useLocation, useParams } from 'wouter'
 import { useGetPostDetail } from '../hooks/query/post.api'
@@ -12,7 +12,12 @@ import { TComment } from '../types'
 import { Comment } from '../components/Comment'
 import icon_new_comment from '../assets/icon_new_comment.svg'
 import DOMPurify from 'dompurify'
-import { deletePostApi, uploadComment } from '../api/post'
+import {
+  deletePostApi,
+  postLikeApi,
+  uploadComment,
+  uploadReplyComment,
+} from '../api/post'
 import icon_default_profile from '../assets/icon_default_profile.svg'
 import userStore from '../store/User'
 import { mutate } from 'swr'
@@ -120,6 +125,7 @@ const PostStyle = {
     flex: 1;
     justify-content: center;
     align-items: center;
+    color: ${Color.Gray500};
   `,
 
   div: css`
@@ -158,6 +164,13 @@ const PostStyle = {
       outline: none;
     }
   `,
+  heartIcon: css`
+    filter: invert(25%) sepia(86%) saturate(3427%) hue-rotate(350deg)
+      brightness(95%) contrast(93%);
+  `,
+  liked: css`
+    color: ${Color.Red};
+  `,
 }
 
 const Post: React.FC = () => {
@@ -170,7 +183,12 @@ const Post: React.FC = () => {
 
   const { user } = userStore()
 
-  const { data: post, isLoading, error } = useGetPostDetail(post_id!)
+  const {
+    data: post,
+    isLoading,
+    error,
+    mutate: postMutate,
+  } = useGetPostDetail(post_id!)
   const {
     data: commentsData,
     isLoading: isCommentsLoading,
@@ -183,7 +201,9 @@ const Post: React.FC = () => {
 
   const comments: TComment[] = commentsData.content
 
-  console.log(post?.writer.studentNumber === user?.studentNumber)
+  // console.log(post)
+
+  // console.log(post?.writer.studentNumber === user?.studentNumber)
 
   const commentUpload = async () => {
     if (!inputRef.current || inputRef.current.value.trim() === '') {
@@ -210,6 +230,26 @@ const Post: React.FC = () => {
       navigate('/blog')
     } catch (err) {
       console.log(err)
+    }
+  }
+
+  const likeClick = async () => {
+    try {
+      const res = await postLikeApi(String(post?.id))
+      console.log(res)
+      postMutate()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const replyUpload = async (commentId: number, content: string) => {
+    try {
+      const result = await uploadReplyComment(post_id!, commentId, { content })
+      commentMutate()
+      console.log(result)
+    } catch (err) {
+      console.log('Reply upload error:', err)
     }
   }
 
@@ -266,13 +306,19 @@ const Post: React.FC = () => {
             <div css={PostStyle.line} />
 
             <div css={PostStyle.button}>
-              <div css={PostStyle.imgBox}>
-                <img src={Heart} /> 공감하기
-              </div>
+              <button css={PostStyle.imgBox} onClick={likeClick}>
+                <img src={Heart} css={post.ilikeIt && PostStyle.heartIcon} />
+                <span css={post.ilikeIt && PostStyle.liked}>
+                  {post.ilikeIt ? '공감취소' : '공감하기'}
+                </span>
+              </button>
               <div css={PostStyle.div} />
-              <div css={PostStyle.imgBox}>
+              <button
+                css={PostStyle.imgBox}
+                onClick={() => inputRef.current?.focus()}
+              >
                 <img src={icon_comment} /> 댓글달기
-              </div>
+              </button>
             </div>
 
             <div css={PostStyle.commentContainer}>
@@ -282,6 +328,9 @@ const Post: React.FC = () => {
                   content={item.content}
                   writer={item.writer}
                   modDate={item.modDate}
+                  id={item.id}
+                  onReplySubmit={replyUpload}
+                  post_id={post.id}
                 />
               ))}
 
