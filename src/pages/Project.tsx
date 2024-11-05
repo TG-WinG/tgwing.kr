@@ -70,7 +70,7 @@ const Project: FC = () => {
 
   const [activeCategory, setActiveCategory] = useState('ALL')
   const [underlinePosition, setUnderlinePosition] = useState(0)
-  const [underlineWidth, setUnderlineWidth] = useState(0)
+  const [underlineWidth, setUnderlineWidth] = useState(53)
   const categoryRefs = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
@@ -91,9 +91,9 @@ const Project: FC = () => {
   if (error) return <div>Failed to load profile</div>
   if (!data) return <div>hi</div>
 
-  const projectList: TProject[] = data.data
+  console.log(data.data.content)
 
-  console.log(data)
+  const projectList: TProject[] = data.data.content
 
   return (
     <>
