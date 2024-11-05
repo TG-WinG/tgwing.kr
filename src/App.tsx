@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 import { checkToken, getUserInfo } from './api/auth.ts'
 import userStore from './store/User.ts'
 import Home from './pages/Home'
+import Admin from './pages/Admin.tsx'
 
 function App() {
   const [location] = useLocation()
@@ -44,6 +45,7 @@ function App() {
       <Route path='/project/:project_id' component={ProjectDetail} />
       <Route path='/post/:post_id' component={PostDetail} />
       <Route path='/profile' component={Profile} />
+      <Route path='/admin' component={Admin} />
     </Switch>
   )
 }
