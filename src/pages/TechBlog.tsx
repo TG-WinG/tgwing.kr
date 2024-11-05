@@ -13,15 +13,16 @@ const TechBlog: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [totalPages, setTotalPages] = useState<number>(0)
   const [keyword, setKeyword] = useState<string>('')
+  const [hashtag, setHashtag] = useState<string[]>([])
 
   const params = new URLSearchParams({
     page: String(currentPage),
     size: '7',
     sort: 'modDate,desc',
-    ...(keyword.startsWith('#')
-      ? { hashtag: keyword.substring(1) }
-      : { keyword }),
+    keyword,
+    hashtag: hashtag.join(','),
   }).toString()
+  console.log(params)
 
   const { data, isLoading, error } = useGetPostList(params)
 
@@ -30,6 +31,14 @@ const TechBlog: React.FC = () => {
       setTotalPages(Math.ceil(data.totalElements / 7))
     }
   }, [data])
+
+  useEffect(() => {
+    if (keyword.startsWith('#')) {
+      console.log('태그 검색!')
+      return
+    }
+    console.log('태그 검색 아님!')
+  }, [keyword])
 
   if (isLoading) return <div>Failed to load profiles</div>
   if (error) return <div>Error!</div>
@@ -44,7 +53,7 @@ const TechBlog: React.FC = () => {
         title='Tech-Blog'
         subTitle='짧은 설명 한 줄 짜리 어쩌고 효과적인 의사소통을 위한 비언어적 신호'
       />
-      <Control setKeyword={setKeyword} />
+      <Control setKeyword={setKeyword} setHashtag={setHashtag} />
       <PostLists postList={postList} />
       <Pagination
         totalPages={totalPages}

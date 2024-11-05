@@ -1,48 +1,24 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { css } from '@emotion/react'
-import { Color } from '../palette'
 import { CustomPlusButton } from '../components/CustomPlusButton'
-import icon_search from '../assets/icon_search.svg'
 import userStore from '../store/User'
 import { useLocation } from 'wouter'
+import { CustomInput } from '../components/CustomInput'
 
 const ControlStyle = {
   Wrapper: css`
     display: flex;
     gap: 20px;
   `,
-  InputBox: css`
-    display: flex;
-    width: 340px;
-    border: 1px solid ${Color.Primary};
-    padding: 10px 15px;
-    border-radius: 999px;
-    gap: 10px;
-
-    input {
-      flex: 1;
-      border: 0;
-      font-size: 15px;
-      font-weight: 400;
-      line-height: 18px;
-
-      :focus {
-        outline: 0;
-      }
-    }
-
-    :focus-within .SearchIcon {
-      filter: invert(47%) sepia(39%) saturate(1009%) hue-rotate(193deg)
-        brightness(101%) contrast(96%);
-    }
-  `,
 }
 
 type ControlProps = {
   setKeyword?: (keyword: string) => void
+  setHashtag: (hashtag: string[]) => void
 }
 
-const Control = ({ setKeyword }: ControlProps) => {
+const Control = ({ setKeyword, setHashtag }: ControlProps) => {
+  const [searchTag, setSearchTag] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [, navigate] = useLocation()
@@ -50,8 +26,10 @@ const Control = ({ setKeyword }: ControlProps) => {
   const { user } = userStore()
 
   const clickHandler = () => {
+    console.log(searchTag)
     if (inputRef.current && setKeyword) {
       setKeyword(inputRef.current.value)
+      setHashtag(searchTag)
       inputRef.current.value = ''
     }
   }
@@ -66,12 +44,12 @@ const Control = ({ setKeyword }: ControlProps) => {
       `}
     >
       <div css={ControlStyle.Wrapper}>
-        <div css={ControlStyle.InputBox}>
-          <input ref={inputRef} type='text' placeholder='검색' />
-          <button onClick={clickHandler}>
-            <img className='SearchIcon' src={icon_search} alt='' />
-          </button>
-        </div>
+        <CustomInput
+          inputRef={inputRef}
+          clickHandler={clickHandler}
+          placeholder='검색'
+          setHashtag={setSearchTag}
+        />
         <CustomPlusButton
           onClick={() => navigate('/posting')}
           text='글쓰기'
