@@ -6,7 +6,6 @@ import { InputBox } from '../common/InputBox.tsx'
 import { mainButton, subButton } from '../common/ButtonStyle.ts'
 
 import { register } from './auth.tsx'
-import { RegistrationForm } from './User.ts'
 import { useLocation } from 'wouter'
 
 const RegisterStyle = {
@@ -53,8 +52,6 @@ const RegisterStyle = {
   `,
 }
 
-//@FIXME email confirmation button layout need to be re-aligned
-//@TODO Email confirmation logic
 export const Register: FC = () => {
   const [, navigate] = useLocation()
   const [validity, setValidity] = useState(false)
@@ -72,21 +69,16 @@ export const Register: FC = () => {
 
             try {
               const formData = new FormData(event.currentTarget)
-              const registrationForm = RegistrationForm.parse({
-                studentId: formData.get('studentId'),
-                email: formData.get('email'),
-                name: formData.get('name'),
-                birth: formData.get('birth'),
-                phoneNumber: formData.get('phoneNumber'),
-                password: formData.get('password'),
-              })
+              formData.delete('password-confirm')
+              formData.delete('email-confirm-code')
 
-              await register(registrationForm)
+              const data = Object.fromEntries(formData.entries())
+              console.log(data)
 
-              //@TODO open login modal
+              await register(data)
+              console.log('Success to register')
               navigate('/')
             } catch {
-              //@TODO inform user that login has failed
               console.log('Failed to register')
             }
           }}
@@ -96,7 +88,7 @@ export const Register: FC = () => {
           }}
         >
           <InputBox
-            name='studentId'
+            name='studentNumber'
             label='학번'
             placeholder='학번 10자리를 입력해주세요'
             pattern={/\d{10}/}

@@ -1,28 +1,61 @@
 import { css } from '@emotion/react'
 import { TUser } from '../types'
+import { acceptStudent, rejectStudent } from '../api/admin'
+import { mutate } from 'swr'
 
 type UserCardProps = {
   user: TUser
   showActions?: boolean
 }
 
-const UserCard = ({ user, showActions = false }: UserCardProps) => (
-  <div css={Style.userItem}>
-    <div css={Style.userInfo}>
-      <span css={Style.userName}>{user.name}</span>
-      <span css={Style.userDetails}>학번: {user.studentNumber}</span>
-      <span css={Style.userDetails}>이메일: {user.email}</span>
-      <span css={Style.userDetails}>생년월일: {user.birth}</span>
-      <span css={Style.userDetails}>전화번호: {user.phoneNumber}</span>
-    </div>
-    {showActions && (
-      <div css={Style.actionButtons}>
-        <button css={[Style.button, Style.acceptButton]}>수락</button>
-        <button css={[Style.button, Style.rejectButton]}>거절</button>
+const UserCard = ({ user, showActions = false }: UserCardProps) => {
+  const handleAccept = async () => {
+    try {
+      await acceptStudent(user.studentId)
+      mutate('admin')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleReject = async () => {
+    try {
+      await rejectStudent(user.studentId)
+      console.log('reject')
+      mutate('admin')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  return (
+    <div css={Style.userItem}>
+      <div css={Style.userInfo}>
+        <span css={Style.userName}>{user.name}</span>
+        <span css={Style.userDetails}>학번: {user.studentNumber}</span>
+        <span css={Style.userDetails}>이메일: {user.email}</span>
+        <span css={Style.userDetails}>생년월일: {user.birth}</span>
+        <span css={Style.userDetails}>전화번호: {user.phoneNumber}</span>
       </div>
-    )}
-  </div>
-)
+      {showActions && (
+        <div css={Style.actionButtons}>
+          <button
+            css={[Style.button, Style.acceptButton]}
+            onClick={handleAccept}
+          >
+            수락
+          </button>
+          <button
+            css={[Style.button, Style.rejectButton]}
+            onClick={handleReject}
+          >
+            거절
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
 
 const Style = {
   userItem: css`

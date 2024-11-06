@@ -1,6 +1,11 @@
 import { css } from '@emotion/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import UserCard from '../components/UserCard'
+import useSWR from 'swr'
+import { fetcher } from '../api'
+import { TUser } from '../types'
+import { Color } from '../palette'
+import icon_search from '../assets/icon_search.svg'
 
 const Style = {
   wrapper: css`
@@ -42,106 +47,78 @@ const Style = {
     gap: 10px;
   `,
   inputBox: css`
+    position: relative;
+    display: flex;
+    align-items: center;
     margin-bottom: 30px;
+    border: 1px solid ${Color.Primary};
+    border-radius: 999px;
+    padding: 10px 15px;
+    min-width: 300px;
+
+    input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 18px;
+    }
+
+    :focus-within .SearchIcon {
+      filter: invert(47%) sepia(39%) saturate(1009%) hue-rotate(193deg)
+        brightness(101%) contrast(96%);
+    }
+  `,
+  noData: css`
+    text-align: center;
+    font-size: 16px;
+    color: #888;
   `,
 }
-
-const joinRequestUsers = [
-  {
-    studentNumber: '20210001',
-    email: 'kim.jiwon@example.com',
-    name: '김지원',
-    birth: '1999-03-15',
-    phoneNumber: '010-1234-5678',
-    profilePicture: 'null',
-  },
-  {
-    studentNumber: '20210002',
-    email: 'lee.haein@example.com',
-    name: '이해인',
-    birth: '2000-07-22',
-    phoneNumber: '010-2345-6789',
-    profilePicture: 'null',
-  },
-  {
-    studentNumber: '20210003',
-    email: 'choi.minho@example.com',
-    name: '최민호',
-    birth: '1998-11-05',
-    phoneNumber: '010-3456-7890',
-    profilePicture: 'null',
-  },
-  {
-    studentNumber: '20210004',
-    email: 'park.sumin@example.com',
-    name: '박수민',
-    birth: '2001-01-30',
-    phoneNumber: '010-4567-8901',
-    profilePicture: 'null',
-  },
-  {
-    studentNumber: '20210005',
-    email: 'jung.jisoo@example.com',
-    name: '정지수',
-    birth: '1997-05-20',
-    phoneNumber: '010-5678-9012',
-    profilePicture: 'null',
-  },
-]
-
-const allUsers = [
-  {
-    studentNumber: '20210001',
-    email: 'kim.jiwon@example.com',
-    name: '김지원',
-    birth: '1999-03-15',
-    phoneNumber: '010-1234-5678',
-    profilePicture: 'null',
-  },
-  {
-    studentNumber: '20210002',
-    email: 'lee.haein@example.com',
-    name: '이해인',
-    birth: '2000-07-22',
-    phoneNumber: '010-2345-6789',
-    profilePicture: 'null',
-  },
-  {
-    studentNumber: '20210003',
-    email: 'choi.minho@example.com',
-    name: '최민호',
-    birth: '1998-11-05',
-    phoneNumber: '010-3456-7890',
-    profilePicture: 'null',
-  },
-  {
-    studentNumber: '20210004',
-    email: 'park.sumin@example.com',
-    name: '박수민1',
-    birth: '2001-01-30',
-    phoneNumber: '010-4567-8901',
-    profilePicture: 'null',
-  },
-  {
-    studentNumber: '20210005',
-    email: 'jung.jisoo@example.com',
-    name: '정지수',
-    birth: '1997-05-20',
-    phoneNumber: '010-5678-9012',
-    profilePicture: 'null',
-  },
-]
 
 const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'joinRequest' | 'userInfo'>(
     'joinRequest'
   )
+  const [keyword, setKeyword] = useState('')
+  const [debouncedKeyword, setDebouncedKeyword] = useState('')
+  const [page, setPage] = useState(0)
+  const size = 10
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [keyword])
+
+  const { data: studentRequestList, error: studentRequestError } = useSWR(
+    'admin',
+    fetcher
+  )
+
+  const { data: studentList, error: studentListError } = useSWR(
+    activeTab === 'userInfo'
+      ? `admin/student?page=${page}&size=${size}${`&keyword=${debouncedKeyword}`}`
+      : null,
+    fetcher
+  )
 
   const renderUsers = () => {
-    const users = activeTab === 'joinRequest' ? joinRequestUsers : allUsers
+    const data: TUser[] =
+      activeTab === 'joinRequest'
+        ? studentRequestList?.data?.content
+        : studentList?.data?.content
+
+    if (!data || data.length === 0) {
+      return <div css={Style.noData}>데이터가 없습니다.</div>
+    }
+
     const showActions = activeTab === 'joinRequest'
 
-    return users.map((user) => (
+    return data.map((user) => (
       <UserCard
         key={user.studentNumber}
         user={user}
@@ -149,6 +126,8 @@ const Admin: React.FC = () => {
       />
     ))
   }
+
+  if (studentRequestError || studentListError) return <div>Error</div>
 
   return (
     <div css={Style.wrapper}>
@@ -169,7 +148,13 @@ const Admin: React.FC = () => {
       </div>
       {activeTab === 'userInfo' && (
         <div css={Style.inputBox}>
-          <input type='text' />
+          <input
+            type='text'
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder='이름, 학번, 이메일로 검색'
+          />
+          <img className='SearchIcon' src={icon_search} alt='search' />
         </div>
       )}
       <div css={Style.userList}>{renderUsers()}</div>
