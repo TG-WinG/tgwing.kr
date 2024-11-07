@@ -11,6 +11,7 @@ type TPost = {
   hashtags: string[]
   modDate: string
   writer: TUser
+  ilikeIt: boolean
 }
 
 type TComment = {

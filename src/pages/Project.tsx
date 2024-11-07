@@ -11,6 +11,7 @@ import { CustomPlusButton } from '../components/CustomPlusButton'
 import { Header } from '../common/Header'
 import { ProjectCard } from '../components/ProjectCard'
 import { TProject } from '../types'
+import userStore from '../store/User'
 
 const containerStyle = css`
   display: flex;
@@ -70,7 +71,7 @@ const Project: FC = () => {
 
   const [activeCategory, setActiveCategory] = useState('ALL')
   const [underlinePosition, setUnderlinePosition] = useState(0)
-  const [underlineWidth, setUnderlineWidth] = useState(0)
+  const [underlineWidth, setUnderlineWidth] = useState(53)
   const categoryRefs = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
@@ -86,14 +87,16 @@ const Project: FC = () => {
     setActiveCategory(category)
   }
 
+  const { user } = userStore()
+
   const { data, error } = useSWR('project', fetcher)
 
   if (error) return <div>Failed to load profile</div>
   if (!data) return <div>hi</div>
 
-  const projectList: TProject[] = data.data
+  console.log(data.data.content)
 
-  console.log(data)
+  const projectList: TProject[] = data.data.content
 
   return (
     <>
@@ -133,6 +136,7 @@ const Project: FC = () => {
         <CustomPlusButton
           onClick={() => navigate('/newproject')}
           text='새 프로젝트'
+          disabled={Boolean(!user)}
         />
       </div>
 

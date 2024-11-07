@@ -1,15 +1,36 @@
+import { useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { Header } from '../common/Header'
 import main_image from '../assets/main_image.svg'
-import history_background from '../assets/main_history_background.svg'
+import history_background from '../assets/history_background.png'
 import { Color } from '../palette'
+import AnimatedNumber from '../components/AnimatedNumber'
+import { motion } from 'framer-motion'
 
 const Home = () => {
+  const animations = {
+    initial: {
+      opacity: 0,
+      y: 50,
+    },
+    whileInView: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1,
+        delay: 0.6,
+      },
+    },
+    viewport: { amount: 0.5 },
+  }
+
   return (
     <>
       <Header num={0} />
       <div css={Wrapper}>
-        <div css={Section}>
+
+        <motion.div css={Section} {...animations}>
+
           <div css={MainContainer}>
             <img
               src={main_image}
@@ -21,56 +42,72 @@ const Home = () => {
               et quis netus mauris.
             </span>
           </div>
-        </div>
 
-        <div css={HistorySection}>
-          <div css={HistoryContainer}>
-            <span css={HistoryTitle}>WHO WE ARE</span>
+        </motion.div>
 
-            <div css={HistorySubtitle}>
-              The
-              <span css={Bold}>Greatest</span>
-              Wave-ing
-            </div>
+        <div css={Section}>
+          <div css={HistorySection}>
+            <motion.div css={HistoryContainer} {...animations}>
+              <span css={HistoryTitle}>WHO WE ARE</span>
 
-            <div css={HistoryContentContainer}>
-              <div css={Line} />
-              <div css={HistoryContents}>
-                <div css={HistoryContent}>
-                  <span css={[Bold, HistoryBold]}>최대의</span>
-                  <div css={[LineHeight, HistoryCenter]}>
-                    회원 수 1234명 <br />
-                    컴퓨터공학과 최대규모의 학술 동아리
+              <div css={HistorySubtitle}>
+                The
+                <span css={Bold}>Greatest</span>
+                Wave-ing
+              </div>
+
+              <div css={HistoryContentContainer}>
+                <div css={Line} />
+                <div css={HistoryContents}>
+                  <div css={HistoryContent}>
+                    <span css={[Bold, HistoryBold]}>최대의</span>
+                    <div css={[LineHeight, HistoryCenter]}>
+                      회원 수 1234명 <br />
+                      컴퓨터공학과 최대규모의 학술 동아리
+                    </div>
+                    <div css={DashedLine} />
+                    <div css={HistoryNumber}>
+                      회원수
+                      <div css={Size28}>
+                        <AnimatedNumber targetNumber={250} duration={2} />
+                      </div>
+                      명
+                    </div>
                   </div>
-                  <div css={DashedLine} />
-                  <div css={HistoryNumber}>
-                    회원수 <span css={Size28}>1234</span> 명
+                  <div css={HistoryContent}>
+                    <span css={[Bold, HistoryBold]}>최고의</span>
+                    <div css={[LineHeight, HistoryCenter]}>
+                      프로젝트 진행 횟수 누적 1234회 <br />
+                      최대 크기 이만큼만 해주세용 글씨 박스 여기까지입니
+                    </div>
+                    <div css={DashedLine} />
+                    <div css={HistoryNumber}>
+                      프로젝트
+                      <div css={Size28}>
+                        <AnimatedNumber targetNumber={155} duration={2} />
+                      </div>
+                      회
+                    </div>
                   </div>
-                </div>
-                <div css={HistoryContent}>
-                  <span css={[Bold, HistoryBold]}>최고의</span>
-                  <div css={[LineHeight, HistoryCenter]}>
-                    프로젝트 진행 횟수 누적 1234회 <br />
-                    최대 크기 이만큼만 해주세용 글씨 박스 여기까지입니
-                  </div>
-                  <div css={DashedLine} />
-                  <div css={HistoryNumber}>
-                    프로젝트 <span css={Size28}>4567</span> 회
-                  </div>
-                </div>
-                <div css={HistoryContent}>
-                  <span css={[Bold, HistoryBold]}>최선의</span>
-                  <div css={[LineHeight, HistoryCenter]}>
-                    스터디 진행횟수 1234회 <br />이 글 박스랑 점선 사이 간격
-                    최소 28이용
-                  </div>
-                  <div css={DashedLine} />
-                  <div css={HistoryNumber}>
-                    스터디 <span css={Size28}>123</span> 개
+                  <div css={HistoryContent}>
+                    <span css={[Bold, HistoryBold]}>최선의</span>
+                    <div css={[LineHeight, HistoryCenter]}>
+                      스터디 진행횟수 1234회 <br />이 글 박스랑 점선 사이 간격
+                      최소 28이용
+                    </div>
+                    <div css={DashedLine} />
+                    <div css={HistoryNumber}>
+                      스터디
+                      <div css={Size28}>
+                        <AnimatedNumber targetNumber={28} duration={2} />
+                      </div>
+                      개
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
+
           </div>
         </div>
 
@@ -82,13 +119,15 @@ const Home = () => {
 
 const Wrapper = css`
   width: 100%;
-  display: flex;
-  flex-direction: column;
+
+
 `
 
 const Section = css`
   width: 100%;
-  height: calc(100vh - 60px);
+
+  height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,7 +152,8 @@ const MainIntro = css`
 
 const HistorySection = css`
   width: 100%;
-  height: 100vh;
+  height: 100%;
+
   background-image: url(${history_background});
   background-size: cover;
   background-position: center;
@@ -204,12 +244,20 @@ const DashedLine = css`
 `
 
 const HistoryNumber = css`
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+
   margin-left: 20px;
   font-size: 15px;
   line-height: 18px;
 `
 
 const Size28 = css`
+
+  margin: 0 15px;
+  text-align: center;
+
   font-size: 28px;
   font-weight: 600;
   line-height: 24px;

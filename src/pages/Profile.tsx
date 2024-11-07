@@ -15,7 +15,9 @@ import { uploadImageApi } from '../api/post'
 import { Header } from '../common/Header'
 import { CustomPlusButton } from '../components/CustomPlusButton'
 import { useLocation } from 'wouter'
-import icon_search from '../assets/icon_search.svg'
+
+import { CustomInput } from '../components/CustomInput'
+
 
 const Style = {
   wrapper: css`
@@ -356,12 +358,12 @@ const Profile: React.FC = () => {
         <div css={Style.posts}>
           <p css={Style.subTitle}>내 포스트</p>
           <div css={Style.control}>
-            <div css={Style.inputBox}>
-              <input placeholder='검색' ref={inputRef} />
-              <button onClick={clickHandler}>
-                <img src={icon_search} alt='x' className='SearchIcon' />
-              </button>
-            </div>
+            <CustomInput
+              inputRef={inputRef}
+              clickHandler={clickHandler}
+              placeholder='검색'
+            />
+
             <CustomPlusButton
               onClick={() => navigate('/posting')}
               text='글쓰기'

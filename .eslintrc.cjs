@@ -11,13 +11,11 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-    'react/no-unknown-property': ['error', { ignore: ['css'] }],
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'react/no-unknown-property': ['error', { 'ignore': ['css'] }],
     'react/react-in-jsx-scope': 'off',
+    indent: ['error', 2],
     semi: ['error', 'never'],
-    quotes: ['error', 'single'],
+    quotes: ['error', 'single']
   },
 }
