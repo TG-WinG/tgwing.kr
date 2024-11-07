@@ -18,7 +18,6 @@ import { useLocation } from 'wouter'
 
 import { CustomInput } from '../components/CustomInput'
 
-
 const Style = {
   wrapper: css`
     width: 944px;
@@ -362,6 +361,7 @@ const Profile: React.FC = () => {
               inputRef={inputRef}
               clickHandler={clickHandler}
               placeholder='검색'
+              setHashtag={() => console.log('')}
             />
 
             <CustomPlusButton

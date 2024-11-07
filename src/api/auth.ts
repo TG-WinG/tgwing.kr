@@ -30,7 +30,6 @@ export const updateUserInfo = async (body: TUser) => {
   return res
 }
 
-
 export const certifyEmail = async (body: object) => {
   const res = await Server.post('user/register/email', body)
 

@@ -1,6 +1,5 @@
 import { createContext, useContext, FC, ReactNode, useState } from 'react'
 
-
 import { StudentId } from './User.ts'
 
 import { addAccessTokenToServer } from '../api/index.ts'
@@ -77,7 +76,6 @@ export function useLogout(): () => Promise<boolean> {
 
 export async function register(registrationForm: object): Promise<boolean> {
   const response = await fetch('api/user/register', {
-
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

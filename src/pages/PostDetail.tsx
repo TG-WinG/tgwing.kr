@@ -2,7 +2,6 @@ import { css } from '@emotion/react'
 import React, { useRef, useState } from 'react'
 import { Color } from '../palette'
 
-
 import Heart from '../assets/heart.svg'
 
 import icon_comment from '../assets/comment.png'
@@ -131,7 +130,6 @@ const PostStyle = {
     align-items: center;
 
     color: ${Color.Gray500};
-
   `,
 
   div: css`
@@ -178,7 +176,6 @@ const PostStyle = {
   liked: css`
     color: ${Color.Red};
   `,
-
 }
 
 const Post: React.FC = () => {
@@ -190,7 +187,6 @@ const Post: React.FC = () => {
   const [, navigate] = useLocation()
 
   const { user } = userStore()
-
 
   const {
     data: post,
@@ -211,11 +207,9 @@ const Post: React.FC = () => {
 
   const comments: TComment[] = commentsData.content
 
-
   // console.log(post)
 
   // console.log(post?.writer.studentNumber === user?.studentNumber)
-
 
   const commentUpload = async () => {
     if (!inputRef.current || inputRef.current.value.trim() === '') {
@@ -245,7 +239,6 @@ const Post: React.FC = () => {
     }
   }
 
-
   const likeClick = async () => {
     try {
       const res = await postLikeApi(String(post?.id))
@@ -265,7 +258,6 @@ const Post: React.FC = () => {
       console.log('Reply upload error:', err)
     }
   }
-
 
   return (
     <>
@@ -320,7 +312,6 @@ const Post: React.FC = () => {
             <div css={PostStyle.line} />
 
             <div css={PostStyle.button}>
-
               <button css={PostStyle.imgBox} onClick={likeClick}>
                 <img src={Heart} css={post.ilikeIt && PostStyle.heartIcon} />
                 <span css={post.ilikeIt && PostStyle.liked}>
@@ -334,7 +325,6 @@ const Post: React.FC = () => {
               >
                 <img src={icon_comment} /> 댓글달기
               </button>
-
             </div>
 
             <div css={PostStyle.commentContainer}>
@@ -344,11 +334,9 @@ const Post: React.FC = () => {
                   content={item.content}
                   writer={item.writer}
                   modDate={item.modDate}
-
                   id={item.id}
                   onReplySubmit={replyUpload}
                   post_id={post.id}
-
                 />
               ))}
 

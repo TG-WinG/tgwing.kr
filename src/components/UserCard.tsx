@@ -11,7 +11,7 @@ type UserCardProps = {
 const UserCard = ({ user, showActions = false }: UserCardProps) => {
   const handleAccept = async () => {
     try {
-      await acceptStudent(user.studentId)
+      await acceptStudent(user.studentId!)
       mutate('admin?page=0&size=5')
     } catch (error) {
       console.error(error)
@@ -20,7 +20,7 @@ const UserCard = ({ user, showActions = false }: UserCardProps) => {
 
   const handleReject = async () => {
     try {
-      await rejectStudent(user.studentId)
+      await rejectStudent(user.studentId!)
       console.log('reject')
       mutate('admin?page=0&size=5')
     } catch (error) {

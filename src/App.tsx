@@ -15,7 +15,6 @@ import userStore from './store/User.ts'
 import Home from './pages/Home'
 import Admin from './pages/Admin.tsx'
 
-
 function App() {
   const [location] = useLocation()
   const { setUser } = userStore()

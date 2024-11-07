@@ -1,7 +1,5 @@
 type TUser = {
-
-  studentId: number
-
+  studentId?: number
   studentNumber: string
   email: string
   name: string

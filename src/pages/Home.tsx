@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { Header } from '../common/Header'
 import main_image from '../assets/main_image.svg'
@@ -28,9 +27,7 @@ const Home = () => {
     <>
       <Header num={0} />
       <div css={Wrapper}>
-
         <motion.div css={Section} {...animations}>
-
           <div css={MainContainer}>
             <img
               src={main_image}
@@ -42,7 +39,6 @@ const Home = () => {
               et quis netus mauris.
             </span>
           </div>
-
         </motion.div>
 
         <div css={Section}>
@@ -107,7 +103,6 @@ const Home = () => {
                 </div>
               </div>
             </motion.div>
-
           </div>
         </div>
 
@@ -119,8 +114,6 @@ const Home = () => {
 
 const Wrapper = css`
   width: 100%;
-
-
 `
 
 const Section = css`
@@ -254,7 +247,6 @@ const HistoryNumber = css`
 `
 
 const Size28 = css`
-
   margin: 0 15px;
   text-align: center;
 

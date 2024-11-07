@@ -9,7 +9,6 @@ import { register } from './auth.tsx'
 import { useLocation } from 'wouter'
 import { certifyEmail, verifyEmailCode } from '../api/auth.ts'
 
-
 const RegisterStyle = {
   title: css`
     font-size: 32px;
@@ -54,7 +53,6 @@ const RegisterStyle = {
   `,
 }
 
-
 export const Register: FC = () => {
   const [, navigate] = useLocation()
   const [validity, setValidity] = useState(false)
@@ -82,7 +80,6 @@ export const Register: FC = () => {
     }
   }
 
-
   return (
     <>
       <Header num={4} />
@@ -104,9 +101,8 @@ export const Register: FC = () => {
 
               await register(data)
               console.log('Success to register')
-              // navigate('/')
+              navigate('/')
             } catch {
-
               console.log('Failed to register')
             }
           }}
@@ -117,7 +113,6 @@ export const Register: FC = () => {
         >
           <InputBox
             name='studentNumber'
-
             label='학번'
             placeholder='학번 10자리를 입력해주세요'
             pattern={/\d{10}/}
@@ -144,7 +139,6 @@ export const Register: FC = () => {
               errorMessage='올바른 이메일을 입력해주세요'
               required
               css={RegisterStyle.complexInput}
-
               onChange={({ target: { value } }) => setEmail(value)}
               readOnly={isEmailVerified}
             />
@@ -163,7 +157,6 @@ export const Register: FC = () => {
               errorMessage='인증번호가 일치하지 않습니다.'
               required
               css={RegisterStyle.complexInput}
-
               onChange={({ target: { value } }) => setEmailConfirmCode(value)}
               readOnly={isEmailVerified}
             />
@@ -220,7 +213,6 @@ export const Register: FC = () => {
           />
 
           <button
-
             disabled={!validity || !isEmailVerified}
             css={[mainButton, RegisterStyle.registerButton]}
           >

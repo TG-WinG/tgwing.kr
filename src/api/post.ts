@@ -33,7 +33,6 @@ export const deletePostApi = async (postId: string) => {
   return res
 }
 
-
 export const postLikeApi = async (postId: string) => {
   const res = await Server.post(`post/${postId}/like`)
 
