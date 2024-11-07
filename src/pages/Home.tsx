@@ -2,50 +2,12 @@ import { useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { Header } from '../common/Header'
 import main_image from '../assets/main_image.svg'
-import history_background from '../assets/main_history_background.svg'
+import history_background from '../assets/history_background.png'
 import { Color } from '../palette'
 import AnimatedNumber from '../components/AnimatedNumber'
 import { motion } from 'framer-motion'
 
 const Home = () => {
-  const [currentPage, setCurrentPage] = useState(0)
-  const totalSections = 3 // Section의 개수
-  const viewportHeight = window.innerHeight
-
-  useEffect(() => {
-    let scrollTimeout: NodeJS.Timeout | null = null
-
-    const handleScroll = (event: WheelEvent) => {
-      if (scrollTimeout) return // 스크롤이 연속 발생하지 않도록 막음
-
-      if (event.deltaY > 0) {
-        // 아래로 스크롤
-        setCurrentPage((prev) => Math.min(prev + 1, totalSections - 1))
-      } else {
-        // 위로 스크롤
-        setCurrentPage((prev) => Math.max(prev - 1, 0))
-      }
-
-      // 일정 시간 동안 스크롤을 막기 위해 타임아웃 설정
-      scrollTimeout = setTimeout(() => {
-        scrollTimeout = null
-      }, 800) // 0.8초 동안 스크롤 막기
-    }
-
-    window.addEventListener('wheel', handleScroll)
-
-    // 페이지 이동 애니메이션
-    window.scrollTo({
-      top: currentPage * viewportHeight,
-      behavior: 'smooth',
-    })
-
-    return () => {
-      window.removeEventListener('wheel', handleScroll)
-      if (scrollTimeout) clearTimeout(scrollTimeout)
-    }
-  }, [currentPage])
-
   const animations = {
     initial: {
       opacity: 0,
