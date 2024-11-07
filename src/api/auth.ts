@@ -29,3 +29,18 @@ export const updateUserInfo = async (body: TUser) => {
   const res = await Server.put('profile', body)
   return res
 }
+
+export const certifyEmail = async (body: object) => {
+  const res = await Server.post('user/register/email', body)
+
+  return res
+}
+
+export const verifyEmailCode = async (body: object, emailKey: string) => {
+  const res = await Server.post(
+    `user/register/check?emailKey=${emailKey}`,
+    body
+  )
+
+  return res
+}

@@ -7,6 +7,7 @@ import { mainButton, subButton } from '../common/ButtonStyle.ts'
 
 import { register } from './auth.tsx'
 import { useLocation } from 'wouter'
+import { certifyEmail, verifyEmailCode } from '../api/auth.ts'
 
 const RegisterStyle = {
   title: css`
@@ -56,6 +57,28 @@ export const Register: FC = () => {
   const [, navigate] = useLocation()
   const [validity, setValidity] = useState(false)
   const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const [emailConfirmCode, setEmailConfirmCode] = useState('')
+  const [emailCode, setEmailCode] = useState('')
+  const [isEmailVerified, setIsEmailVerified] = useState(false)
+
+  const handleCertifyEmail = async () => {
+    try {
+      const res = await certifyEmail({ email })
+      setEmailCode(res.data.data)
+    } catch (error) {
+      console.error('Failed to certify email', error)
+    }
+  }
+
+  const handleVerifyEmailCode = async () => {
+    try {
+      await verifyEmailCode({ code: emailConfirmCode }, emailCode)
+      setIsEmailVerified(true)
+    } catch (error) {
+      console.error('Failed to verify email code', error)
+    }
+  }
 
   return (
     <>
@@ -77,7 +100,7 @@ export const Register: FC = () => {
 
               await register(data)
               console.log('Success to register')
-              navigate('/')
+              // navigate('/')
             } catch {
               console.log('Failed to register')
             }
@@ -115,8 +138,13 @@ export const Register: FC = () => {
               errorMessage='올바른 이메일을 입력해주세요'
               required
               css={RegisterStyle.complexInput}
+              onChange={({ target: { value } }) => setEmail(value)}
+              readOnly={isEmailVerified}
             />
-            <button css={[subButton, RegisterStyle.complexInputSideButton]}>
+            <button
+              css={[subButton, RegisterStyle.complexInputSideButton]}
+              onClick={handleCertifyEmail}
+            >
               인증 요청
             </button>
           </div>
@@ -128,8 +156,13 @@ export const Register: FC = () => {
               errorMessage='인증번호가 일치하지 않습니다.'
               required
               css={RegisterStyle.complexInput}
+              onChange={({ target: { value } }) => setEmailConfirmCode(value)}
+              readOnly={isEmailVerified}
             />
-            <button css={[subButton, RegisterStyle.complexInputSideButton]}>
+            <button
+              css={[subButton, RegisterStyle.complexInputSideButton]}
+              onClick={handleVerifyEmailCode}
+            >
               인증번호 확인
             </button>
           </div>
@@ -179,7 +212,7 @@ export const Register: FC = () => {
           />
 
           <button
-            disabled={!validity}
+            disabled={!validity || !isEmailVerified}
             css={[mainButton, RegisterStyle.registerButton]}
           >
             가입 완료

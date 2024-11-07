@@ -6,6 +6,7 @@ import { fetcher } from '../api'
 import { TUser } from '../types'
 import { Color } from '../palette'
 import icon_search from '../assets/icon_search.svg'
+import { Pagination } from '../components/Pagination'
 
 const Style = {
   wrapper: css`
@@ -75,6 +76,9 @@ const Style = {
     font-size: 16px;
     color: #888;
   `,
+  paginationContainer: css`
+    margin-top: 20px;
+  `,
 }
 
 const Admin: React.FC = () => {
@@ -84,7 +88,7 @@ const Admin: React.FC = () => {
   const [keyword, setKeyword] = useState('')
   const [debouncedKeyword, setDebouncedKeyword] = useState('')
   const [page, setPage] = useState(0)
-  const size = 10
+  const size = 5
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -95,7 +99,7 @@ const Admin: React.FC = () => {
   }, [keyword])
 
   const { data: studentRequestList, error: studentRequestError } = useSWR(
-    'admin',
+    `admin?page=${page}&size=${size}`,
     fetcher
   )
 
@@ -135,13 +139,19 @@ const Admin: React.FC = () => {
       <div css={Style.tabContainer}>
         <div
           css={[Style.tab, activeTab === 'joinRequest' && Style.activeTab]}
-          onClick={() => setActiveTab('joinRequest')}
+          onClick={() => {
+            setActiveTab('joinRequest')
+            setPage(0)
+          }}
         >
           가입 신청 관리
         </div>
         <div
           css={[Style.tab, activeTab === 'userInfo' && Style.activeTab]}
-          onClick={() => setActiveTab('userInfo')}
+          onClick={() => {
+            setActiveTab('userInfo')
+            setPage(0)
+          }}
         >
           유저 정보 조회
         </div>
@@ -158,6 +168,17 @@ const Admin: React.FC = () => {
         </div>
       )}
       <div css={Style.userList}>{renderUsers()}</div>
+      <div css={Style.paginationContainer}>
+        <Pagination
+          totalPages={
+            activeTab === 'userInfo'
+              ? studentList?.data?.totalPages
+              : studentRequestList?.data?.totalPages
+          }
+          currentPage={page}
+          setCurrentPage={setPage}
+        />
+      </div>
     </div>
   )
 }

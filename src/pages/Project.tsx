@@ -11,6 +11,7 @@ import { CustomPlusButton } from '../components/CustomPlusButton'
 import { Header } from '../common/Header'
 import { ProjectCard } from '../components/ProjectCard'
 import { TProject } from '../types'
+import userStore from '../store/User'
 
 const containerStyle = css`
   display: flex;
@@ -86,6 +87,8 @@ const Project: FC = () => {
     setActiveCategory(category)
   }
 
+  const { user } = userStore()
+
   const { data, error } = useSWR('project', fetcher)
 
   if (error) return <div>Failed to load profile</div>
@@ -133,6 +136,7 @@ const Project: FC = () => {
         <CustomPlusButton
           onClick={() => navigate('/newproject')}
           text='새 프로젝트'
+          disabled={Boolean(!user)}
         />
       </div>
 
