@@ -39,6 +39,7 @@ const NewProject: React.FC = () => {
   )
   const [selectedRole, setSelectedRole] = useState<keyof Roles>('PM')
   const [name, setName] = useState<string>('')
+  const [studentNumber, setStudentNumber] = useState<string>('')
   const [title, setTitle] = useState<string>('')
   const [files, setFiles] = useState<
     { name: string | null; preview: string | null }[]
@@ -70,14 +71,15 @@ const NewProject: React.FC = () => {
   }
 
   const handleAdd = () => {
-    if (name) {
+    if (name && studentNumber) {
       setRoles((prevRoles) => ({
         ...prevRoles,
-        [selectedRole]: [...prevRoles[selectedRole], name],
+        [selectedRole]: [...prevRoles[selectedRole], { name, studentNumber }],
       }))
       setName('')
+      setStudentNumber('')
     } else {
-      alert('이름을 입력해주세요.')
+      alert('이름과 학번을 입력해주세요.')
     }
   }
 
@@ -133,12 +135,17 @@ const NewProject: React.FC = () => {
     setName(e.target.value)
   }
 
+  const handleStudentNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setStudentNumber(e.target.value)
+  }
+
   const handleSubmit = async () => {
     console.log(roles)
-    const participants = Object.entries(roles).flatMap(([role, names]) =>
-      names.map((name: string) => ({
+    const participants = Object.entries(roles).flatMap(([role, users]) =>
+      users.map((user: { name: string; studentNumber: string }) => ({
         part: role.toUpperCase(),
-        username: name,
+        username: user.name,
+        studentNumber: user.studentNumber,
         major: role,
       }))
     )
@@ -316,31 +323,45 @@ const NewProject: React.FC = () => {
         <div css={NewProjectStyle.linkBox}>
           <span>참여자</span>
           <div css={NewProjectStyle.roleBox}>
-            <select
-              name='role'
-              id='role'
-              value={selectedRole}
-              onChange={handleRoleChange}
-            >
-              <option value='PM'>PM</option>
-              <option value='FRONT'>Front-End</option>
-              <option value='BACK'>Back-end</option>
-              <option value='DESIGNER'>Designer</option>
-            </select>
-            <input
-              type='text'
-              id='nameInput'
-              value={name}
-              onChange={handleNameChange}
-              placeholder='이름'
-            />
-            <button
-              type='button'
-              onClick={handleAdd}
-              css={NewProjectStyle.plusButton}
-            >
-              <img src={icon_plus_btn} alt='+' />
-            </button>
+            <div>
+              <select
+                name='role'
+                id='role'
+                value={selectedRole}
+                onChange={handleRoleChange}
+              >
+                <option value='PM'>PM</option>
+                <option value='FRONT'>Front-End</option>
+                <option value='BACK'>Back-end</option>
+                <option value='DESIGNER'>Designer</option>
+              </select>
+            </div>
+            {/**!TODO: 참여자 추가 기능 구현 */}
+            <div css={NewProjectStyle.nameInputBox}>
+              <input
+                type='text'
+                id='nameInput'
+                value={name}
+                onChange={handleNameChange}
+                placeholder='이름'
+              />
+              <input
+                type='text'
+                id='studentNumberInput'
+                value={studentNumber}
+                onChange={handleStudentNumberChange}
+                placeholder='학번'
+              />
+            </div>
+            <div css={NewProjectStyle.plusButtonBox}>
+              <button
+                type='button'
+                onClick={handleAdd}
+                css={NewProjectStyle.plusButton}
+              >
+                <img src={icon_plus_btn} alt='+' />
+              </button>
+            </div>
           </div>
 
           <div css={NewProjectStyle.previewBox}>
@@ -352,7 +373,7 @@ const NewProject: React.FC = () => {
                 </p>
                 <div>
                   {roles.PM.map((item, idx) => (
-                    <div key={idx}>{item}</div>
+                    <div key={idx}>{item.name}</div>
                   ))}
                 </div>
               </div>
@@ -362,7 +383,7 @@ const NewProject: React.FC = () => {
                 </p>
                 <div>
                   {roles.FRONT.map((item, idx) => (
-                    <div key={idx}>{item}</div>
+                    <div key={idx}>{item.name}</div>
                   ))}
                 </div>
               </div>
@@ -372,7 +393,7 @@ const NewProject: React.FC = () => {
                 </p>
                 <div>
                   {roles.BACK.map((item, idx) => (
-                    <div key={idx}>{item}</div>
+                    <div key={idx}>{item.name}</div>
                   ))}
                 </div>
               </div>
@@ -386,7 +407,7 @@ const NewProject: React.FC = () => {
                 </p>
                 <div>
                   {roles.DESIGNER.map((item, idx) => (
-                    <div key={idx}>{item}</div>
+                    <div key={idx}>{item.name}</div>
                   ))}
                 </div>
               </div>
@@ -613,7 +634,7 @@ const NewProjectStyle = {
       border: 0;
       border-bottom: 1px solid ${Color.Gray300};
       margin-right: 10px;
-      padding: 5px 8px;
+      padding: 6.5px 8px;
     }
 
     select ~ input {
@@ -663,7 +684,8 @@ const NewProjectStyle = {
   `,
 
   roleBox: css`
-    margin-right: 33px;
+    display: flex;
+    height: 100%;
   `,
 
   previewBox: css`
@@ -783,6 +805,26 @@ const NewProjectStyle = {
   `,
   activeRole: css`
     color: ${Color.Gray400} !important;
+  `,
+  nameInputBox: css`
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    input {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid ${Color.Gray300};
+      padding: 5px 8px;
+    }
+  `,
+  plusButtonBox: css`
+    height: 100%;
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   `,
 }
 
