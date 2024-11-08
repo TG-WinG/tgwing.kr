@@ -14,13 +14,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { uploadImageApi } from '../api/post'
 import { uploadProjectApi } from '../api/project'
 import { useLocation } from 'wouter'
-
-interface Roles {
-  PM: string[]
-  FRONT: string[]
-  BACK: string[]
-  DESIGNER: string[]
-}
+import { Roles } from '../types'
 
 const descriptions = ['Github', 'Notion', 'Homepage', 'PlayStore', 'AppStore']
 
@@ -87,7 +81,6 @@ const NewProject: React.FC = () => {
     if (files.length < 5) {
       setFiles((prevFiles) => [...prevFiles, { name: null, preview: null }])
     }
-    console.log(files)
   }
 
   // 파일이 변경될 때 배열의 특정 인덱스를 업데이트하는 함수
@@ -140,7 +133,6 @@ const NewProject: React.FC = () => {
   }
 
   const handleSubmit = async () => {
-    console.log(roles)
     const participants = Object.entries(roles).flatMap(([role, users]) =>
       users.map((user: { name: string; studentNumber: string }) => ({
         part: role.toUpperCase(),
@@ -162,9 +154,6 @@ const NewProject: React.FC = () => {
         })
       )
 
-      // 모든 파일의 이미지 URL이 담긴 배열
-      console.log(uploadedUrls)
-
       const data = {
         title,
         description,
@@ -181,8 +170,6 @@ const NewProject: React.FC = () => {
             description: descriptions[index] || `링크 ${index + 1}`,
           })),
       }
-
-      console.log(data)
 
       await uploadProjectApi(data)
       navigate('/project')
