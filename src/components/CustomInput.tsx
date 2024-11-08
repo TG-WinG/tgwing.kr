@@ -36,7 +36,6 @@ export const CustomInput = ({
   }, [keyword])
 
   const { data } = useSWR(`hashtag?keyword=${keyword.substring(1)} `, fetcher)
-  console.log(data)
 
   const handleTagClick = (tagName: string) => {
     if (selectedTags.length === 2) {

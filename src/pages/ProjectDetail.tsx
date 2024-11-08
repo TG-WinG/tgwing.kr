@@ -201,8 +201,6 @@ const ProjectDetail: React.FC = () => {
 
   const projectInfo: TProject = data.data
 
-  console.log(data.data)
-
   const goToSlide = (index: number) => {
     if (swiperRef.current && swiperRef.current) {
       swiperRef.current.slideTo(index) // Move to the specified index

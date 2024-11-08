@@ -149,8 +149,6 @@ export const Comment = ({
     mutate,
   } = useGetReplies(String(post_id)!, id!)
 
-  console.log(replies?.data.content)
-
   const handleReplySubmit = async () => {
     if (
       !replyInputRef.current ||
@@ -174,7 +172,6 @@ export const Comment = ({
 
   return (
     <div css={CommentStyle.wrapper}>
-
       <div css={CommentStyle.title}>
         <img
           src={writer.profilePicture ?? icon_default_profile}
@@ -251,7 +248,6 @@ export const Comment = ({
           </button>
         </div>
       )}
-
     </div>
   )
 }

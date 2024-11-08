@@ -26,7 +26,6 @@ const Control = ({ setKeyword, setHashtag }: ControlProps) => {
   const { user } = userStore()
 
   const clickHandler = () => {
-    console.log(searchTag)
     if (inputRef.current && setKeyword) {
       setKeyword(inputRef.current.value)
       setHashtag(searchTag)

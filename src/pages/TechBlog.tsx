@@ -22,7 +22,6 @@ const TechBlog: React.FC = () => {
     keyword,
     hashtag: hashtag.join(','),
   }).toString()
-  console.log(params)
 
   const { data, isLoading, error } = useGetPostList(params)
 
@@ -31,14 +30,6 @@ const TechBlog: React.FC = () => {
       setTotalPages(Math.ceil(data.totalElements / 7))
     }
   }, [data])
-
-  useEffect(() => {
-    if (keyword.startsWith('#')) {
-      console.log('태그 검색!')
-      return
-    }
-    console.log('태그 검색 아님!')
-  }, [keyword])
 
   if (isLoading) return <div>Failed to load profiles</div>
   if (error) return <div>Error!</div>
