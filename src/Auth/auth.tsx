@@ -50,7 +50,6 @@ export function useLogin(): (
         addAccessTokenToServer(token)
       }
       const credential = await response.text()
-      console.log(response)
 
       setCredential(credential)
       window.location.reload()

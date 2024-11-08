@@ -207,10 +207,6 @@ const Post: React.FC = () => {
 
   const comments: TComment[] = commentsData.content
 
-  // console.log(post)
-
-  // console.log(post?.writer.studentNumber === user?.studentNumber)
-
   const commentUpload = async () => {
     if (!inputRef.current || inputRef.current.value.trim() === '') {
       alert('댓글을 입력하세요!')
@@ -218,11 +214,11 @@ const Post: React.FC = () => {
     }
 
     try {
-      const result = await uploadComment(post_id!, {
+      await uploadComment(post_id!, {
         content: inputRef.current.value,
       })
-      console.log(result)
       commentMutate()
+      inputRef.current.value = ''
     } catch {
       console.log('errr')
     }
@@ -230,8 +226,7 @@ const Post: React.FC = () => {
 
   const deleteClick = async () => {
     try {
-      const res = await deletePostApi(String(post?.id))
-      console.log(res)
+      await deletePostApi(String(post?.id))
       mutate((key) => Array.isArray(key) && key[0] === 'post')
       navigate('/blog')
     } catch (err) {
@@ -241,8 +236,8 @@ const Post: React.FC = () => {
 
   const likeClick = async () => {
     try {
-      const res = await postLikeApi(String(post?.id))
-      console.log(res)
+      await postLikeApi(String(post?.id))
+
       postMutate()
     } catch (err) {
       console.log(err)
@@ -251,9 +246,8 @@ const Post: React.FC = () => {
 
   const replyUpload = async (commentId: number, content: string) => {
     try {
-      const result = await uploadReplyComment(post_id!, commentId, { content })
+      await uploadReplyComment(post_id!, commentId, { content })
       commentMutate()
-      console.log(result)
     } catch (err) {
       console.log('Reply upload error:', err)
     }

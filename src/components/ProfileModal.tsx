@@ -33,10 +33,9 @@ export const ProfileModal = ({ user, onClose }: ProfileModalProps) => {
   }, [onClose])
 
   const handleLogout = async () => {
-    const res = await logout()
+    await logout()
     navigate('/')
     window.location.reload()
-    console.log(res)
   }
 
   return (

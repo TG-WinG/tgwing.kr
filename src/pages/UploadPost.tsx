@@ -62,7 +62,6 @@ const Posting: FC = () => {
         thumbnail: imgurl,
         hashtags: tags,
       }
-      console.log(postData)
 
       await uploadPostAPi(postData)
       navigate('/blog')

@@ -23,4 +23,15 @@ type TLinks = {
   description: string
 }
 
-export type { TProject }
+type RoleItem = {
+  name: string
+  studentNumber: string
+}
+type Roles = {
+  PM: RoleItem[]
+  FRONT: RoleItem[]
+  BACK: RoleItem[]
+  DESIGNER: RoleItem[]
+}
+
+export type { TProject, Roles, RoleItem }

@@ -97,10 +97,8 @@ export const Register: FC = () => {
               formData.delete('email-confirm-code')
 
               const data = Object.fromEntries(formData.entries())
-              console.log(data)
 
               await register(data)
-              console.log('Success to register')
               navigate('/')
             } catch {
               console.log('Failed to register')

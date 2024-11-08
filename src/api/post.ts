@@ -2,7 +2,6 @@ import { Server } from '.'
 
 export const uploadImageApi = async (body: FormData) => {
   const res = await Server.post('file/image', body)
-  console.log(res)
 
   return res.data
 }

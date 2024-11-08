@@ -192,7 +192,6 @@ const Profile: React.FC = () => {
     }
     try {
       if (profileData) {
-        console.log('Updated profile:', profileData, uploadProfileImage)
         if (uploadProfileImage) {
           const formdata = new FormData()
           formdata.append('image', uploadProfileImage)
@@ -253,7 +252,6 @@ const Profile: React.FC = () => {
   if (isLoading || postLoading || !profileData) return <div>Loading...</div>
 
   const profiles: TUser = profileData
-  console.log(profiles)
 
   const postList = myPosts.data.content
 

@@ -12,6 +12,7 @@ import { Header } from '../common/Header'
 import { ProjectCard } from '../components/ProjectCard'
 import { TProject } from '../types'
 import userStore from '../store/User'
+import { Pagination } from '../components/Pagination'
 
 const containerStyle = css`
   display: flex;
@@ -64,6 +65,10 @@ const underlineStyle = css`
   transition: transform 0.3s ease;
 `
 
+const paginationContainerStyle = css`
+  margin: 20px auto;
+`
+
 const categories = ['ALL', 'WEB', 'APP']
 
 const Project: FC = () => {
@@ -73,6 +78,9 @@ const Project: FC = () => {
   const [underlinePosition, setUnderlinePosition] = useState(0)
   const [underlineWidth, setUnderlineWidth] = useState(53)
   const categoryRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  const [currentPage, setCurrentPage] = useState<number>(0)
+  const [totalPages, setTotalPages] = useState<number>(0)
 
   useEffect(() => {
     const activeIndex = categories.indexOf(activeCategory)
@@ -89,14 +97,29 @@ const Project: FC = () => {
 
   const { user } = userStore()
 
-  const { data, error } = useSWR('project', fetcher)
+  const params = new URLSearchParams({
+    page: String(currentPage),
+    size: '7',
+  }).toString()
+
+  const { data, error } = useSWR(`project?${params}`, fetcher)
+
+  useEffect(() => {
+    if (data) {
+      setTotalPages(Math.ceil(data.data.totalElements / 7))
+    }
+  }, [data])
 
   if (error) return <div>Failed to load profile</div>
-  if (!data) return <div>hi</div>
-
-  console.log(data.data.content)
+  if (!data) return <div>Loading...</div>
 
   const projectList: TProject[] = data.data.content
+
+  // Filter project list based on active category
+  const filteredProjectList =
+    activeCategory === 'ALL'
+      ? projectList
+      : projectList.filter((project) => project.devType === activeCategory)
 
   return (
     <>
@@ -104,7 +127,7 @@ const Project: FC = () => {
       <Banner
         background={Background}
         title='Project'
-        subTitle='혁신적인 스타트업 아이디오: 성공을 위한 핵심 전략'
+        subTitle='혁신적인 스타트업 아이디어: 성공을 위한 핵심 전략'
       />
 
       <div css={topContainerStyle}>
@@ -120,7 +143,7 @@ const Project: FC = () => {
                   `,
               ]}
               onClick={() => handleCategoryClick(category)}
-              ref={(el) => (categoryRefs.current[index] = el)} // ref 할당
+              ref={(el) => (categoryRefs.current[index] = el)}
             >
               <span>{category}</span>
             </div>
@@ -128,8 +151,8 @@ const Project: FC = () => {
           <span
             css={underlineStyle}
             style={{
-              width: `${underlineWidth}px`, // underline의 너비 설정
-              transform: `translateX(${underlinePosition}px)`, // underline의 위치 설정
+              width: `${underlineWidth}px`,
+              transform: `translateX(${underlinePosition}px)`,
             }}
           />
         </div>
@@ -141,7 +164,7 @@ const Project: FC = () => {
       </div>
 
       <div css={containerStyle}>
-        {projectList.map((item) => (
+        {filteredProjectList.map((item) => (
           <ProjectCard
             id={item.id}
             key={item.id}
@@ -152,6 +175,13 @@ const Project: FC = () => {
             devType={item.devType}
           />
         ))}
+      </div>
+      <div css={paginationContainerStyle}>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </div>
     </>
   )
