@@ -7,6 +7,7 @@ import { TUser } from '../types'
 import { Color } from '../palette'
 import icon_search from '../assets/icon_search.svg'
 import { Pagination } from '../components/Pagination'
+import { useLocation } from 'wouter'
 
 const Style = {
   wrapper: css`
@@ -89,6 +90,17 @@ const Admin: React.FC = () => {
   const [debouncedKeyword, setDebouncedKeyword] = useState('')
   const [page, setPage] = useState(0)
   const size = 5
+
+  const [, navigate] = useLocation()
+
+  useEffect(() => {
+    // sessionStorage에서 isAdmin 값을 가져와 Boolean으로 변환
+    const isAdmin = sessionStorage.getItem('isAdmin') === 'true'
+
+    if (!isAdmin) {
+      navigate('/') // isAdmin이 false면 홈으로 리다이렉트
+    }
+  }, [navigate])
 
   useEffect(() => {
     const timer = setTimeout(() => {

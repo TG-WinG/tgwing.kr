@@ -21,6 +21,7 @@ export const getUserInfo = async (): Promise<TUser> => {
 export const logout = async () => {
   const res = await Server.post('logout')
   localStorage.removeItem('accessToken')
+  sessionStorage.removeItem('isAdmin')
 
   return res
 }

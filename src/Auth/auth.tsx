@@ -3,6 +3,8 @@ import { createContext, useContext, FC, ReactNode, useState } from 'react'
 import { StudentId } from './User.ts'
 
 import { addAccessTokenToServer } from '../api/index.ts'
+import userStore from '../store/User.ts'
+import { useLocation } from 'wouter'
 
 //@TODO: Refactor this when React 19 release.
 const Auth = createContext<
@@ -28,35 +30,50 @@ export function useCredential() {
 
 //@TODO: Discriminate login failures.
 export function useLogin(): (
-  studentId: StudentId,
+  studentId: StudentId | string,
   password: string
 ) => Promise<boolean> {
   const [, setCredential] = useContext(Auth)
+  const [, navigate] = useLocation()
 
   return async (studentId, password) => {
     const loginInfo = new FormData()
-
     loginInfo.set('username', studentId)
     loginInfo.set('password', password)
 
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      body: loginInfo,
-    })
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: loginInfo,
+      })
 
-    if (response.ok) {
-      const token = response.headers.get('Authorization')?.split(' ')[1]
-      if (token) {
-        addAccessTokenToServer(token)
+      const data = await response.json()
+
+      if (data) {
+        // isAdmin 값을 sessionStorage에 저장
+        sessionStorage.setItem('isAdmin', data.isAdmin.toString())
+        console.log('어드민인가요?', data.isAdmin)
+
+        // isAdmin이 true일 경우 /admin 페이지로 이동
+        if (data.isAdmin) {
+          navigate('/admin')
+        }
       }
-      const credential = await response.text()
 
-      setCredential(credential)
-      window.location.reload()
-
-      return true
-    } else {
-      return false
+      if (response.ok) {
+        const token = response.headers.get('Authorization')?.split(' ')[1]
+        if (token) {
+          addAccessTokenToServer(token)
+        }
+        setCredential(data.credential)
+        window.location.reload()
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.error('Login request failed:', error)
+      throw error
     }
   }
 }
