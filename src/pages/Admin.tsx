@@ -7,7 +7,6 @@ import { TUser } from '../types'
 import { Color } from '../palette'
 import icon_search from '../assets/icon_search.svg'
 import { Pagination } from '../components/Pagination'
-import { useLocation } from 'wouter'
 
 const Style = {
   wrapper: css`
@@ -89,18 +88,18 @@ const Admin: React.FC = () => {
   const [keyword, setKeyword] = useState('')
   const [debouncedKeyword, setDebouncedKeyword] = useState('')
   const [page, setPage] = useState(0)
-  const size = 5
+  const [isAuthorized, setIsAuthorized] = useState(true) // 접근 허용 여부를 위한 상태
 
-  const [, navigate] = useLocation()
+  const size = 5
 
   useEffect(() => {
     // sessionStorage에서 isAdmin 값을 가져와 Boolean으로 변환
     const isAdmin = sessionStorage.getItem('isAdmin') === 'true'
 
     if (!isAdmin) {
-      navigate('/') // isAdmin이 false면 홈으로 리다이렉트
+      setIsAuthorized(false) // 접근이 허용되지 않음을 설정
     }
-  }, [navigate])
+  }, [])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -144,6 +143,10 @@ const Admin: React.FC = () => {
   }
 
   if (studentRequestError || studentListError) return <div>Error</div>
+
+  if (!isAuthorized) {
+    return <div>관리자만 접근 가능한 페이지입니다.</div>
+  }
 
   return (
     <div css={Style.wrapper}>

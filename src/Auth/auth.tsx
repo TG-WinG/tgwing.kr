@@ -3,7 +3,6 @@ import { createContext, useContext, FC, ReactNode, useState } from 'react'
 import { StudentId } from './User.ts'
 
 import { addAccessTokenToServer } from '../api/index.ts'
-import userStore from '../store/User.ts'
 import { useLocation } from 'wouter'
 
 //@TODO: Refactor this when React 19 release.
