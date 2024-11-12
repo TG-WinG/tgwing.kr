@@ -23,14 +23,17 @@ interface Props {
   value?: string
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
   readOnly?: boolean // Add readOnly prop here
+  login?: boolean
 }
 
 const InputBoxStyle = {
   inputBoxContainer: css`
     display: flex;
     flex-direction: column;
-
     position: relative;
+  `,
+  mb: css`
+    margin-top: 10px;
   `,
   labelParagraph: css`
     margin-bottom: 5px;
@@ -121,12 +124,15 @@ const InputBoxStyle = {
       content: url(${successIcon});
     }
   `,
-  errorMessage: (inputId: string) => css`
-    opacity: 0;
+  errorMessage: (inputId: string, login: boolean) => css`
+    position: absolute;
+    bottom: -22px;
+    font-size: 14px;
 
-    #${inputId}:invalid:not(:focus)[data-is-touched='true'] ~ &:not(:empty) {
-      display: inline;
-      opacity: 1;
+    ${login ? 'opacity: 0;' : 'display: none;'}
+
+    #${inputId}:invalid:not(:focus)[data-is-touched='true'] ~ & {
+      ${login ? 'opacity: 1;' : 'display: inline;'}
       color: ${Color.Red};
     }
   `,
@@ -141,13 +147,17 @@ export const InputBox: FC<Props> = ({
   errorMessage,
   onChange,
   readOnly = false,
+  login = false,
   ...props
 }) => {
   const [input, setInput] = useState('')
   const [isTouched, setIsTouched] = useState(false)
 
   return (
-    <label css={InputBoxStyle.inputBoxContainer} className={className}>
+    <label
+      css={[InputBoxStyle.inputBoxContainer, login && InputBoxStyle.mb]}
+      className={className}
+    >
       <p css={InputBoxStyle.labelParagraph}>
         <span css={InputBoxStyle.label}>{label}</span>
         <span css={InputBoxStyle.detailedLabel}>{detailedLabel}</span>
@@ -174,7 +184,7 @@ export const InputBox: FC<Props> = ({
         onClick={() => setInput('')}
         disabled={readOnly} // Disable discard button when readOnly
       />
-      <span css={InputBoxStyle.errorMessage(name)}>{errorMessage}</span>
+      <span css={InputBoxStyle.errorMessage(name, login)}>{errorMessage}</span>
     </label>
   )
 }

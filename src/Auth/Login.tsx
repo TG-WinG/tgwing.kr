@@ -105,6 +105,7 @@ export const LoginModal: FC<Props> = ({ context, ...props }) => {
             css={css`
               margin-bottom: 20px;
             `}
+            login
           />
           <InputBox
             name='password'
@@ -116,6 +117,7 @@ export const LoginModal: FC<Props> = ({ context, ...props }) => {
             css={css`
               margin-bottom: 40px;
             `}
+            login
           />
 
           <button
