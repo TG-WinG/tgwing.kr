@@ -24,6 +24,7 @@ import {
 import icon_default_profile from '../assets/icon_default_profile.svg'
 import userStore from '../store/User'
 import { mutate } from 'swr'
+import { ServerError } from './error/ServerError'
 
 const PostStyle = {
   wrapper: css`
@@ -202,8 +203,8 @@ const Post: React.FC = () => {
     mutate: commentMutate,
   } = useGetComments(post_id!)
 
-  if (isLoading || isCommentsLoading) return <>Loading..</>
-  if (error || commentsError) return <>Error occured!</>
+  if (isLoading || isCommentsLoading) return <></>
+  if (error || commentsError) return <ServerError />
 
   const comments: TComment[] = commentsData.content
 

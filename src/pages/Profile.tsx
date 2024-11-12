@@ -17,6 +17,7 @@ import { CustomPlusButton } from '../components/CustomPlusButton'
 import { useLocation } from 'wouter'
 
 import { CustomInput } from '../components/CustomInput'
+import { ServerError } from './error/ServerError'
 
 const Style = {
   wrapper: css`
@@ -248,8 +249,8 @@ const Profile: React.FC = () => {
     }
   }, [data])
 
-  if (error || postsError) return <div>로그인 후 이용해주세요!</div>
-  if (isLoading || postLoading || !profileData) return <div>Loading...</div>
+  if (isLoading || postLoading || !profileData) return <div></div>
+  if (error || postsError) return <ServerError />
 
   const profiles: TUser = profileData
 

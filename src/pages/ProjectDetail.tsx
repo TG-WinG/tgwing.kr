@@ -12,6 +12,7 @@ import 'swiper/css/effect-fade'
 import { SwiperBullets } from '../components/SwiperBullets'
 import { Swiper as SwiperClass } from 'swiper/types' // Swiper 인스턴스 타입
 import { Header } from '../common/Header'
+import { ServerError } from './error/ServerError'
 
 const Style = {
   wrapper: css`
@@ -197,7 +198,8 @@ const ProjectDetail: React.FC = () => {
   const [, navigate] = useLocation()
 
   const { data, isLoading, error } = useSWR(`project/${project_id!}`, fetcher)
-  if (isLoading || error) return <div>Error</div>
+  if (isLoading) return <div></div>
+  if (error) return <ServerError />
 
   const projectInfo: TProject = data.data
 

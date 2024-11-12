@@ -13,6 +13,7 @@ import { ProjectCard } from '../components/ProjectCard'
 import { TProject } from '../types'
 import userStore from '../store/User'
 import { Pagination } from '../components/Pagination'
+import { ServerError } from './error/ServerError'
 
 const containerStyle = css`
   display: flex;
@@ -102,7 +103,7 @@ const Project: FC = () => {
     size: '7',
   }).toString()
 
-  const { data, error } = useSWR(`project?${params}`, fetcher)
+  const { data, error, isLoading } = useSWR(`project?${params}`, fetcher)
 
   useEffect(() => {
     if (data) {
@@ -110,8 +111,8 @@ const Project: FC = () => {
     }
   }, [data])
 
-  if (error) return <div>Failed to load profile</div>
-  if (!data) return <div>Loading...</div>
+  if (isLoading) return <div></div>
+  if (error) return <ServerError />
 
   const projectList: TProject[] = data.data.content
 

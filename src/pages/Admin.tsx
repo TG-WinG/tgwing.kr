@@ -7,6 +7,7 @@ import { TUser } from '../types'
 import { Color } from '../palette'
 import icon_search from '../assets/icon_search.svg'
 import { Pagination } from '../components/Pagination'
+import { ServerError } from './error/ServerError'
 
 const Style = {
   wrapper: css`
@@ -142,7 +143,7 @@ const Admin: React.FC = () => {
     ))
   }
 
-  if (studentRequestError || studentListError) return <div>Error</div>
+  if (studentRequestError || studentListError) return <ServerError />
 
   if (!isAuthorized) {
     return <div>관리자만 접근 가능한 페이지입니다.</div>
