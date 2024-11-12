@@ -10,7 +10,6 @@ import verticalBar from '../assets/verticalBar.png'
 import { Link } from 'wouter'
 import { z } from 'zod'
 import { useLogin } from './auth.tsx'
-import { StudentId } from './User.ts'
 
 interface Props {
   onClose: () => void
@@ -79,13 +78,16 @@ export const LoginModal: FC<Props> = ({ context, ...props }) => {
             try {
               const loginForm = new FormData(event.currentTarget)
 
-              const studentId = StudentId.parse(loginForm.get('schoolId'))
-              const password = z.string().parse(loginForm.get('password'))
+              const studentId = loginForm.get('schoolId')?.toString()
+              const password = loginForm.get('password')?.toString()
 
-              await login(studentId, password)
+              const parsedPassword = z.string().parse(password)
+
+              console.log('login try')
+
+              await login(studentId!, parsedPassword)
               props.onClose()
             } catch {
-              //@TODO inform user that login has failed
               console.log('Failed to login')
             }
           }}
@@ -97,7 +99,7 @@ export const LoginModal: FC<Props> = ({ context, ...props }) => {
             name='schoolId'
             label='학번'
             placeholder='학번을 입력해주세요'
-            pattern={/\d{10}/}
+            pattern={/^admin$|^\d{10}$/}
             errorMessage='학번은 숫자 열 자리여야 합니다'
             required
             css={css`

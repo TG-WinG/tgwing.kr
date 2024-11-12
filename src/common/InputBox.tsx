@@ -122,10 +122,11 @@ const InputBoxStyle = {
     }
   `,
   errorMessage: (inputId: string) => css`
-    display: none;
+    opacity: 0;
 
     #${inputId}:invalid:not(:focus)[data-is-touched='true'] ~ &:not(:empty) {
       display: inline;
+      opacity: 1;
       color: ${Color.Red};
     }
   `,

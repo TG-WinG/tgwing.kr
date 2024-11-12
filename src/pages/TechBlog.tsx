@@ -8,6 +8,7 @@ import { Header } from '../common/Header'
 import { TPost } from '../types'
 import { useGetPostList } from '../hooks/query/post.api'
 import { Pagination } from '../components/Pagination'
+import { ServerError } from './error/ServerError'
 
 const TechBlog: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
@@ -31,8 +32,8 @@ const TechBlog: React.FC = () => {
     }
   }, [data])
 
-  if (isLoading) return <div>Failed to load profiles</div>
-  if (error) return <div>Error!</div>
+  if (isLoading) return <div></div>
+  if (error) return <ServerError />
 
   const postList: TPost[] = data.content
 

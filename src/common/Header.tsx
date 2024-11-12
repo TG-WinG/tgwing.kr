@@ -90,7 +90,9 @@ export const Header: FC<HeaderProps> = ({ num }) => {
     <>
       <header css={HeaderStyle.header}>
         <div css={HeaderStyle.logoBox}>
-          <img src={logo} css={HeaderStyle.logo} />
+          <Link href='/'>
+            <img src={logo} css={HeaderStyle.logo} />
+          </Link>
         </div>
 
         <nav css={HeaderStyle.navBox(num)}>
