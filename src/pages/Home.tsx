@@ -160,6 +160,7 @@ const HistorySection = css`
 
 const HistoryContainer = css`
   display: flex;
+  /* height: 100%; */
   flex-direction: column;
   z-index: 999;
 `
@@ -169,7 +170,7 @@ const HistoryTitle = css`
   line-height: 38.4px;
   font-weight: 900;
   color: ${Color.Gray100};
-  margin-bottom: 136px;
+  margin-bottom: 11vh;
 `
 
 const HistorySubtitle = css`
@@ -194,7 +195,7 @@ const HistoryBold = css`
 
 const HistoryContentContainer = css`
   position: relative;
-  padding-top: 167px;
+  padding-top: 14vh;
   margin-left: 70px;
 `
 
@@ -214,7 +215,7 @@ const HistoryContents = css`
   display: flex;
   flex-direction: column;
   margin-left: 30px;
-  gap: 200px;
+  gap: 16vh;
 `
 
 const HistoryContent = css`
