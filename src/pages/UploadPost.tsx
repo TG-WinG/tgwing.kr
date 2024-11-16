@@ -158,6 +158,12 @@ const Posting: FC = () => {
                 value={tagInput}
                 maxLength={10}
                 onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    addTag(tagInput)
+                  }
+                }}
               />
               <button
                 css={css`

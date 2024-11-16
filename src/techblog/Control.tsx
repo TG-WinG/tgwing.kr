@@ -46,7 +46,7 @@ const Control = ({ setKeyword, setHashtag }: ControlProps) => {
         <CustomInput
           inputRef={inputRef}
           clickHandler={clickHandler}
-          placeholder='검색'
+          placeholder='검색어를 입력하세요 (#태그)'
           setHashtag={setSearchTag}
         />
         <CustomPlusButton

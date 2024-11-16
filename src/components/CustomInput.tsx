@@ -68,6 +68,12 @@ export const CustomInput = ({
           placeholder={placeholder}
           onChange={handleChange}
           value={keyword}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              clickHandler()
+            }
+          }}
         />
         <button onClick={clickHandler}>
           <img className='SearchIcon' src={icon_search} alt='' />
