@@ -25,12 +25,8 @@ const NewProject: React.FC = () => {
     BACK: [],
     DESIGNER: [],
   })
-  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(
-    new Date()
-  )
-  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(
-    new Date()
-  )
+  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null)
+  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null)
   const [selectedRole, setSelectedRole] = useState<keyof Roles>('PM')
   const [name, setName] = useState<string>('')
   const [studentNumber, setStudentNumber] = useState<string>('')
@@ -164,13 +160,19 @@ const NewProject: React.FC = () => {
         devType,
         participants,
         links: links
-          .filter((url) => url.trim() !== '')
-          .map((url, index) => ({
-            url,
-            description: descriptions[index] || `링크 ${index + 1}`,
-          })),
+          .map((url, index) =>
+            url.trim() !== ''
+              ? {
+                  url,
+                  description: descriptions[index],
+                }
+              : null
+          )
+          .filter(
+            (item): item is { url: string; description: string } =>
+              item !== null
+          ),
       }
-
       await uploadProjectApi(data)
       navigate('/project')
     } catch (err) {
@@ -210,11 +212,13 @@ const NewProject: React.FC = () => {
             <CustomDatePicker
               selectedDate={selectedStartDate}
               setSelectedDate={setSelectedStartDate}
+              maxDate={selectedEndDate || undefined}
             />
             <div className='div' />
             <CustomDatePicker
               selectedDate={selectedEndDate}
               setSelectedDate={setSelectedEndDate}
+              minDate={selectedStartDate || undefined}
             />
           </div>
         </div>

@@ -8,30 +8,38 @@ import { getMonth, getYear } from 'date-fns'
 import icon_left_arrow from '../assets/icon_left_arrow.svg'
 import icon_right_arrow from '../assets/icon_right_arrow.svg'
 
-type CustomDatePickerProps = {
+interface CustomDatePickerProps {
   selectedDate: Date | null
   setSelectedDate: (date: Date | null) => void
+  minDate?: Date
+  maxDate?: Date
 }
 
 export const CustomDatePicker = ({
   selectedDate,
   setSelectedDate,
+  minDate,
+  maxDate,
 }: CustomDatePickerProps) => {
   return (
     <DatePicker
-      css={CustomDatePickerStyle.datePickerInput}
+      selected={selectedDate}
+      onChange={setSelectedDate}
+      minDate={minDate}
+      maxDate={maxDate}
+      placeholderText={new Date().toLocaleDateString('ko-KR').slice(0, -1)}
+      css={css`
+        ${CustomDatePickerStyle.datePickerInput}
+        color: ${selectedDate ? Color.Black : Color.Gray400};
+      `}
       dayClassName={(d) =>
-        d.getDate() === selectedDate!.getDate()
+        selectedDate && d.getDate() === selectedDate.getDate()
           ? 'selectedDay'
           : 'unselectedDay'
       }
       dateFormat={'yyyy. MM. dd'}
       formatWeekDay={(nameOfDay) => nameOfDay.substring(0, 1)}
       shouldCloseOnSelect
-      minDate={new Date('2023-01-01')}
-      maxDate={new Date()}
-      selected={selectedDate}
-      onChange={(date) => setSelectedDate(date)}
       renderCustomHeader={({
         date,
         changeYear,
@@ -144,7 +152,6 @@ const CustomDatePickerStyle = {
     font-size: 18px;
     font-weight: 500;
     line-height: 21.6px;
-    color: ${Color.Gray400};
     cursor: pointer;
   `,
 }
