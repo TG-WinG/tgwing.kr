@@ -15,6 +15,7 @@ import userStore from './store/User.ts'
 import Home from './pages/Home'
 import Admin from './pages/Admin.tsx'
 import { NotFound } from './pages/error/NotFound.tsx'
+import { UpdatePost } from './pages/UpdatePost.tsx'
 
 function App() {
   const [location] = useLocation()
@@ -45,6 +46,7 @@ function App() {
       <Route path='/newproject' component={UploadProject} />
       <Route path='/project/:project_id' component={ProjectDetail} />
       <Route path='/post/:post_id' component={PostDetail} />
+      <Route path='/post/:post_id/update' component={UpdatePost} />
       <Route path='/profile' component={Profile} />
       <Route path='/admin' component={Admin} />
       <Route path='*' component={NotFound} />
