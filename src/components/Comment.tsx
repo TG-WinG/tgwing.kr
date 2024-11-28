@@ -2,11 +2,11 @@ import { css } from '@emotion/react'
 import { TComment } from '../types'
 import { Color } from '../palette'
 import { dateFormat } from '../utils/dateFormat'
-import icon_default_profile from '../assets/icon_default_profile.svg'
-import icon_new_comment from '../assets/icon_new_comment.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
+import icon_new_comment from '../assets/icons/icon_new_comment.svg'
 import { useRef, useState } from 'react'
 import { useGetReplies } from '../hooks/query/comment.api'
-import icon_line from '../assets/reply.svg'
+import icon_line from '../assets/icons/reply.svg'
 
 interface CommentProps extends TComment {
   onReplySubmit: (commentId: number, content: string) => Promise<void>

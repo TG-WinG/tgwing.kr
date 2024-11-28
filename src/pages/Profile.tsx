@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { Color } from '../palette'
 
-import icon_default_profile from '../assets/icon_default_profile.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
 
 import useSWR from 'swr'
 import { fetcher } from '../api'

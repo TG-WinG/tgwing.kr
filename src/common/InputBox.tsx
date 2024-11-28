@@ -4,9 +4,9 @@ import { css } from '@emotion/react'
 
 import { imageButtonBase } from './ImageButton.tsx'
 import { Color } from '../platte.ts'
-import discardIcon from '../assets/discard.png'
-import successIcon from '../assets/success.png'
-import errorIcon from '../assets/error.png'
+import discardIcon from '../assets/images/discard.png'
+import successIcon from '../assets/images/success.png'
+import errorIcon from '../assets/images/error.png'
 
 interface Props {
   name: string

@@ -6,7 +6,7 @@ import { Panel } from './Panel.tsx'
 
 import { imageButtonBase } from './ImageButton.tsx'
 import { Color } from '../platte.ts'
-import closeIcon from '../assets/close.png'
+import closeIcon from '../assets/images/close.png'
 
 interface Props {
   onClose?: () => void

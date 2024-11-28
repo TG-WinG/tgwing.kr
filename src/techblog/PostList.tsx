@@ -1,11 +1,11 @@
 import { css } from '@emotion/react'
 import { Color } from '../palette'
 
-import Heart from '../assets/heart.png'
-import Comment from '../assets/comment.png'
+import Heart from '../assets/images/heart.png'
+import Comment from '../assets/images/comment.png'
 import { TPost } from '../types'
 import { useLocation } from 'wouter'
-import icon_default_profile from '../assets/icon_default_profile.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
 
 const PostList = ({
   id,

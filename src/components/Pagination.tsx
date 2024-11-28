@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
-import icon_left from '../assets/icon_left_arrow.svg'
-import icon_right from '../assets/icon_right_arrow.svg'
+import icon_left from '../assets/icons/icon_left_arrow.svg'
+import icon_right from '../assets/icons/icon_right_arrow.svg'
 import { Color } from '../palette'
 
 const Style = {

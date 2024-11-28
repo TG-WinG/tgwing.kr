@@ -2,16 +2,16 @@ import { css } from '@emotion/react'
 import React, { useRef, useState } from 'react'
 import { Color } from '../palette'
 
-import Heart from '../assets/heart.svg'
+import Heart from '../assets/icons/heart.svg'
 
-import icon_comment from '../assets/comment.png'
+import icon_comment from '../assets/images/comment.png'
 import { useLocation, useParams } from 'wouter'
 import { useGetPostDetail } from '../hooks/query/post.api'
 import { Header } from '../common/Header'
 import { useGetComments } from '../hooks/query/comment.api'
 import { TComment } from '../types'
 import { Comment } from '../components/Comment'
-import icon_new_comment from '../assets/icon_new_comment.svg'
+import icon_new_comment from '../assets/icons/icon_new_comment.svg'
 import DOMPurify from 'dompurify'
 
 import {
@@ -21,7 +21,7 @@ import {
   uploadReplyComment,
 } from '../api/post'
 
-import icon_default_profile from '../assets/icon_default_profile.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
 import userStore from '../store/User'
 import { mutate } from 'swr'
 import { ServerError } from './error/ServerError'

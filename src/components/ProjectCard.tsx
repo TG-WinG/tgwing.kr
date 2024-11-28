@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { TProject } from '../types'
 import { Color } from '../palette'
-import icon_proejct_detail from '../assets/icon_project_detail.svg'
+import icon_proejct_detail from '../assets/icons/icon_project_detail.svg'
 import { useLocation } from 'wouter'
 
 type ProjectCardProps = Omit<

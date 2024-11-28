@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import main_image from '../../assets/main_image.svg'
+import main_image from '../../assets/icons/main_image.svg'
 import { Link } from 'wouter'
 import { Color } from '../../palette'
 

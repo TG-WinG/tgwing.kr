@@ -1,7 +1,8 @@
 import { css } from '@emotion/react'
 import { Header } from '../common/Header'
-import main_image from '../assets/main_image.svg'
-import history_background from '../assets/history_background.png'
+import main_image from '../assets/icons/main_image.svg'
+import history_background from '../assets/images/history_background.png'
+import main_intro_members from '../assets/images/main_intro_members1.png'
 import { Color } from '../palette'
 import AnimatedNumber from '../components/AnimatedNumber'
 import { motion } from 'framer-motion'
@@ -13,69 +14,73 @@ const Home = () => {
   const [, setCurrentPage] = useState<number>(1)
   const scrollingRef = useRef(false)
 
-  useEffect(() => {
-    const wheelHandler = (e: WheelEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
+  // useEffect(() => {
+  //   const wheelHandler = (e: WheelEvent) => {
+  //     const { scrollTop } = outerRef.current!
+  //     const pageHeight = window.innerHeight
+  //     const totalHeight = pageHeight * 2 + DIVIDER_HEIGHT * 2 // 첫 두 섹션의 총 높이
 
-      if (scrollingRef.current) return
-      scrollingRef.current = true
+  //     // 세 번째 섹션에서는 일반 스크롤 허용
+  //     if (scrollTop >= totalHeight && e.deltaY > 0) {
+  //       scrollingRef.current = false
+  //       return // 기본 스크롤 동작 허용
+  //     }
 
-      const { deltaY } = e
-      console.log(e)
-      const { scrollTop } = outerRef.current!
-      const pageHeight = window.innerHeight
+  //     e.preventDefault()
+  //     e.stopPropagation()
 
-      let targetScrollTop
-      let nextPage
+  //     if (scrollingRef.current) return
+  //     scrollingRef.current = true
 
-      if (deltaY > 0) {
-        // 스크롤 내릴 때
-        if (scrollTop < pageHeight) {
-          targetScrollTop = pageHeight + DIVIDER_HEIGHT
-          nextPage = 2
-        } else if (scrollTop < pageHeight * 2) {
-          targetScrollTop = pageHeight * 2 + DIVIDER_HEIGHT * 2
-          nextPage = 3
-        } else {
-          targetScrollTop = pageHeight * 2 + DIVIDER_HEIGHT * 2
-          nextPage = 3
-        }
-      } else {
-        // 스크롤 올릴 때
-        if (scrollTop < pageHeight) {
-          targetScrollTop = 0
-          nextPage = 1
-        } else if (scrollTop < pageHeight * 2) {
-          targetScrollTop = 0
-          nextPage = 1
-        } else {
-          targetScrollTop = pageHeight + DIVIDER_HEIGHT
-          nextPage = 2
-        }
-      }
+  //     const { deltaY } = e
+  //     let targetScrollTop
+  //     let nextPage
 
-      outerRef.current?.scrollTo({
-        top: targetScrollTop,
-        left: 0,
-        behavior: 'smooth',
-      })
+  //     if (deltaY > 0) {
+  //       // 스크롤 내릴 때
+  //       if (scrollTop < pageHeight) {
+  //         targetScrollTop = pageHeight + DIVIDER_HEIGHT
+  //         nextPage = 2
+  //       } else {
+  //         targetScrollTop = pageHeight * 2 + DIVIDER_HEIGHT * 2
+  //         nextPage = 3
+  //       }
+  //     } else {
+  //       // 스크롤 올릴 때
+  //       if (scrollTop < pageHeight) {
+  //         targetScrollTop = 0
+  //         nextPage = 1
+  //       } else if (scrollTop < pageHeight * 2 + DIVIDER_HEIGHT * 2) {
+  //         targetScrollTop = pageHeight + DIVIDER_HEIGHT
+  //         nextPage = 2
+  //       } else {
+  //         // 세 번째 섹션에서 위로 스크롤할 때
+  //         targetScrollTop = pageHeight * 2 + DIVIDER_HEIGHT * 2
+  //         nextPage = 3
+  //       }
+  //     }
 
-      setCurrentPage(nextPage)
+  //     outerRef.current?.scrollTo({
+  //       top: targetScrollTop,
+  //       left: 0,
+  //       behavior: 'smooth',
+  //     })
 
-      setTimeout(() => {
-        scrollingRef.current = false
-      }, 1000) // 스크롤 애니메이션 시간과 일치시키세요
-    }
+  //     setCurrentPage(nextPage)
 
-    const outerDivRefCurrent = outerRef.current
-    outerDivRefCurrent?.addEventListener('wheel', wheelHandler, {
-      passive: false,
-    })
-    return () => {
-      outerDivRefCurrent?.removeEventListener('wheel', wheelHandler)
-    }
-  }, [])
+  //     setTimeout(() => {
+  //       scrollingRef.current = false
+  //     }, 1000)
+  //   }
+
+  //   const outerDivRefCurrent = outerRef.current
+  //   outerDivRefCurrent?.addEventListener('wheel', wheelHandler, {
+  //     passive: false,
+  //   })
+  //   return () => {
+  //     outerDivRefCurrent?.removeEventListener('wheel', wheelHandler)
+  //   }
+  // }, [])
 
   const animations = {
     initial: {
@@ -174,7 +179,12 @@ const Home = () => {
           </div>
         </div>
 
-        <div css={Section}>hi</div>
+        <div css={ThirdSection}>
+          <span css={ThirdSectionTitle}>WHAT WE DO</span>
+          <div>
+            <img src={main_intro_members} alt='main_intro_members' />
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -204,6 +214,13 @@ const Section = css`
 
   display: flex;
   justify-content: center;
+  align-items: center;
+`
+
+const ThirdSection = css`
+  height: 200vh;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 `
 
@@ -335,6 +352,13 @@ const Size28 = css`
   font-size: 28px;
   font-weight: 600;
   line-height: 24px;
+`
+
+const ThirdSectionTitle = css`
+  font-size: 32px;
+  line-height: 38.4px;
+  font-weight: 900;
+  color: ${Color.Gray900};
 `
 
 export default Home

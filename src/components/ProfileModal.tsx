@@ -3,7 +3,7 @@ import { css } from '@emotion/react'
 import { Color } from '../palette'
 import { useLocation } from 'wouter'
 import { TUser } from '../types'
-import icon_default_profile from '../assets/icon_default_profile.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
 import { logout } from '../api/auth'
 
 type ProfileModalProps = {

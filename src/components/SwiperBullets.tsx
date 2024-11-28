@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { Color } from '../palette'
-import icon_arrow_left from '../assets/icon_left_arrow.svg'
-import icon_arrow_right from '../assets/icon_right_arrow.svg'
+import icon_arrow_left from '../assets/icons/icon_left_arrow.svg'
+import icon_arrow_right from '../assets/icons/icon_right_arrow.svg'
 
 const Style = {
   swiperBullets: css`

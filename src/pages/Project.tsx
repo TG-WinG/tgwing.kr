@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { css } from '@emotion/react'
 import Banner from '../components/Banner'
 
-import Background from '../assets/project_background.png'
+import Background from '../assets/images/project_background.png'
 import { fetcher } from '../api'
 import useSWR from 'swr'
 import { useLocation } from 'wouter'

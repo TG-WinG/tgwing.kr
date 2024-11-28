@@ -6,7 +6,7 @@ import { InputBox } from '../common/InputBox.tsx'
 
 import { Color } from '../platte.ts'
 import { mainButton } from '../common/ButtonStyle.ts'
-import verticalBar from '../assets/verticalBar.png'
+import verticalBar from '../assets/images/verticalBar.png'
 import { Link } from 'wouter'
 import { z } from 'zod'
 import { useLogin } from './auth.tsx'

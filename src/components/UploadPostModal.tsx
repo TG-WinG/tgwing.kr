@@ -8,7 +8,7 @@ import { TUser } from '../types'
 import { getCurrentDate } from '../utils/dateFormat'
 import { removeHTMLTags } from '../utils/removeTags'
 import Button from './Button'
-import icon_delete from '../assets/icon_delete_tag.svg'
+import icon_delete from '../assets/icons/icon_delete_tag.svg'
 import { useEffect } from 'react'
 
 type UploadPostModalProps = {

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { Color } from '../palette'
 import { RefObject, useEffect, useState } from 'react'
-import icon_search from '../assets/icon_search.svg'
+import icon_search from '../assets/icons/icon_search.svg'
 import useSWR from 'swr'
 import { fetcher } from '../api'
 import { Loading } from './Loading'

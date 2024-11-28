@@ -1,7 +1,7 @@
 import { useRef, ChangeEvent } from 'react'
 import { css } from '@emotion/react'
 import { Color } from '../palette'
-import icon_delete from '../assets/icon_delete_tag.svg'
+import icon_delete from '../assets/icons/icon_delete_tag.svg'
 
 interface PostThumbnailUploadProps {
   fileName: string | null

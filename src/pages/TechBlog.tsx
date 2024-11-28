@@ -3,7 +3,7 @@ import Banner from '../components/Banner'
 import PostLists from '../techblog/PostLists'
 import Control from '../techblog/Control'
 
-import Background from '../assets/blog_background.png'
+import Background from '../assets/images/blog_background.png'
 import { Header } from '../common/Header'
 import { TPost } from '../types'
 import { useGetPostList } from '../hooks/query/post.api'

@@ -5,8 +5,8 @@ import '../css/datepicker.css'
 import { Color } from '../palette'
 import { getMonth, getYear } from 'date-fns'
 
-import icon_left_arrow from '../assets/icon_left_arrow.svg'
-import icon_right_arrow from '../assets/icon_right_arrow.svg'
+import icon_left_arrow from '../assets/icons/icon_left_arrow.svg'
+import icon_right_arrow from '../assets/icons/icon_right_arrow.svg'
 
 interface CustomDatePickerProps {
   selectedDate: Date | null
