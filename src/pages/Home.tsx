@@ -5,8 +5,78 @@ import history_background from '../assets/history_background.png'
 import { Color } from '../palette'
 import AnimatedNumber from '../components/AnimatedNumber'
 import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 
 const Home = () => {
+  const DIVIDER_HEIGHT = 0
+  const outerRef = useRef<HTMLDivElement>(null)
+  const [, setCurrentPage] = useState<number>(1)
+  const scrollingRef = useRef(false)
+
+  useEffect(() => {
+    const wheelHandler = (e: WheelEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      if (scrollingRef.current) return
+      scrollingRef.current = true
+
+      const { deltaY } = e
+      console.log(e)
+      const { scrollTop } = outerRef.current!
+      const pageHeight = window.innerHeight
+
+      let targetScrollTop
+      let nextPage
+
+      if (deltaY > 0) {
+        // 스크롤 내릴 때
+        if (scrollTop < pageHeight) {
+          targetScrollTop = pageHeight + DIVIDER_HEIGHT
+          nextPage = 2
+        } else if (scrollTop < pageHeight * 2) {
+          targetScrollTop = pageHeight * 2 + DIVIDER_HEIGHT * 2
+          nextPage = 3
+        } else {
+          targetScrollTop = pageHeight * 2 + DIVIDER_HEIGHT * 2
+          nextPage = 3
+        }
+      } else {
+        // 스크롤 올릴 때
+        if (scrollTop < pageHeight) {
+          targetScrollTop = 0
+          nextPage = 1
+        } else if (scrollTop < pageHeight * 2) {
+          targetScrollTop = 0
+          nextPage = 1
+        } else {
+          targetScrollTop = pageHeight + DIVIDER_HEIGHT
+          nextPage = 2
+        }
+      }
+
+      outerRef.current?.scrollTo({
+        top: targetScrollTop,
+        left: 0,
+        behavior: 'smooth',
+      })
+
+      setCurrentPage(nextPage)
+
+      setTimeout(() => {
+        scrollingRef.current = false
+      }, 1000) // 스크롤 애니메이션 시간과 일치시키세요
+    }
+
+    const outerDivRefCurrent = outerRef.current
+    outerDivRefCurrent?.addEventListener('wheel', wheelHandler, {
+      passive: false,
+    })
+    return () => {
+      outerDivRefCurrent?.removeEventListener('wheel', wheelHandler)
+    }
+  }, [])
+
   const animations = {
     initial: {
       opacity: 0,
@@ -20,14 +90,14 @@ const Home = () => {
         delay: 0.6,
       },
     },
-    viewport: { amount: 0.5 },
+    viewport: { amount: 0.5, once: true },
   }
 
   return (
-    <>
+    <div ref={outerRef} css={Outer}>
       <Header num={0} />
       <div css={Wrapper}>
-        <motion.div css={Section} {...animations}>
+        <motion.div css={[Section, FirstSection]} {...animations}>
           <div css={MainContainer}>
             <img
               src={main_image}
@@ -35,8 +105,8 @@ const Home = () => {
               css={MainImage}
             />
             <span css={MainIntro}>
-              Since 1992 Lorem ipsum dolor sit amet consectetur. Vestibulum urna
-              et quis netus mauris.
+              {/* Since 1992 Lorem ipsum dolor sit amet consectetur. Vestibulum urna
+              et quis netus mauris. */}
             </span>
           </div>
         </motion.div>
@@ -108,12 +178,25 @@ const Home = () => {
 
         <div css={Section}>hi</div>
       </div>
-    </>
+    </div>
   )
 }
 
+const Outer = css`
+  height: 100vh;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
 const Wrapper = css`
   width: 100%;
+`
+
+const FirstSection = css`
+  margin-top: -60px;
 `
 
 const Section = css`
