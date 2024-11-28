@@ -90,6 +90,11 @@ const Style = {
     position: absolute;
     top: 30px;
     right: 30px;
+    transition: all 0.2s ease-in-out;
+    :hover {
+      color: ${Color.Main700};
+      font-weight: 600;
+    }
   `,
 
   posts: css``,

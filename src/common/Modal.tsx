@@ -16,49 +16,54 @@ interface Props {
 
 const ModalStyle = {
   background: css`
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+    overflow: hidden;
 
     backdrop-filter: opacity(20%) blur(1px) brightness(70%);
   `,
   popup: css`
     position: absolute;
-    top: 250px;
-    left: 50vw;
-    transform: translateX(-50%);
-    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     padding: 80px 120px;
-    
+
     background-color: ${Color.White};
   `,
   closeButton: css`
     ${imageButtonBase(closeIcon)}
-  
+
     position: absolute;
     top: 32px;
     right: 32px;
-    
+
     width: 16px;
     height: 16px;
-  `
+  `,
 }
 
 // We may use <dialog> but it may hurt performance.
 // In addition, it is tricky to use <dialog> well in React.
 
-export const Modal: FC<Props> = ({ onClose, children, className }) => createPortal(
-  // We can't use Event#eventPhase since React incorrectly implemented it in SyntheticEvents: https://github.com/facebook/react/issues/9783
-  <div
-    css={ModalStyle.background}
-    onClick={onClose && (event => event.currentTarget === event.target && onClose())}
-  >
-    <Panel css={ModalStyle.popup} className={className}>
-      <button css={ModalStyle.closeButton} onClick={onClose} />
-      { children }
-    </Panel>
-  </div>,
-  document.getElementById('modal')!
-)
+export const Modal: FC<Props> = ({ onClose, children, className }) =>
+  createPortal(
+    // We can't use Event#eventPhase since React incorrectly implemented it in SyntheticEvents: https://github.com/facebook/react/issues/9783
+    <div
+      css={ModalStyle.background}
+      onClick={
+        onClose &&
+        ((event) => event.currentTarget === event.target && onClose())
+      }
+    >
+      <Panel css={ModalStyle.popup} className={className}>
+        <button css={ModalStyle.closeButton} onClick={onClose} />
+        {children}
+      </Panel>
+    </div>,
+    document.getElementById('modal')!
+  )

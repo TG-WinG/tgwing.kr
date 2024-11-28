@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+import { useEffect } from 'react'
 
 interface DeleteConfirmModalProps {
   isOpen: boolean
@@ -11,6 +12,15 @@ export const SelectModal = ({
   onClose,
   children,
 }: DeleteConfirmModalProps) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen]) // isOpen을 의존성 배열에 추가
+
   if (!isOpen) return null
 
   return (
@@ -40,5 +50,18 @@ const styles = {
     padding: 48px;
     border-radius: 8px;
     min-width: 360px;
+
+    animation: modalFadeIn 0.3s ease-out;
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   `,
 }
