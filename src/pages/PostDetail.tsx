@@ -333,7 +333,7 @@ const Post: React.FC = () => {
               <span>{post.modDate}</span>
               {post?.writer.studentNumber === user?.studentNumber && (
                 <div css={PostStyle.buttonBox}>
-                  <button>
+                  <button onClick={() => navigate(`${post_id}/update`)}>
                     <span>수정</span>
                   </button>
                   <button onClick={() => setIsDeleteModalOpen(true)}>
