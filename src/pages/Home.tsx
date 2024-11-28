@@ -128,14 +128,14 @@ const Home = () => {
                   <div css={HistoryContent}>
                     <span css={[Bold, HistoryBold]}>최대의</span>
                     <div css={[LineHeight, HistoryCenter]}>
-                      회원 수 1234명 <br />
+                      회원 수 173명 <br />
                       컴퓨터공학과 최대규모의 학술 동아리
                     </div>
                     <div css={DashedLine} />
                     <div css={HistoryNumber}>
                       회원수
                       <div css={Size28}>
-                        <AnimatedNumber targetNumber={250} duration={2} />
+                        <AnimatedNumber targetNumber={173} duration={2} />
                       </div>
                       명
                     </div>
@@ -143,31 +143,29 @@ const Home = () => {
                   <div css={HistoryContent}>
                     <span css={[Bold, HistoryBold]}>최고의</span>
                     <div css={[LineHeight, HistoryCenter]}>
-                      프로젝트 진행 횟수 누적 1234회 <br />
-                      최대 크기 이만큼만 해주세용 글씨 박스 여기까지입니
+                      TGWinG Github organization을 통한 협업
                     </div>
                     <div css={DashedLine} />
                     <div css={HistoryNumber}>
-                      프로젝트
+                      레포지토리
                       <div css={Size28}>
-                        <AnimatedNumber targetNumber={155} duration={2} />
+                        <AnimatedNumber targetNumber={27} duration={2} />
                       </div>
-                      회
+                      개
                     </div>
                   </div>
                   <div css={HistoryContent}>
                     <span css={[Bold, HistoryBold]}>최선의</span>
                     <div css={[LineHeight, HistoryCenter]}>
-                      스터디 진행횟수 1234회 <br />이 글 박스랑 점선 사이 간격
-                      최소 28이용
+                      매 학기 참여식, 강의식 스터디 진행
                     </div>
                     <div css={DashedLine} />
                     <div css={HistoryNumber}>
-                      스터디
+                      연 평균
                       <div css={Size28}>
-                        <AnimatedNumber targetNumber={28} duration={2} />
+                        <AnimatedNumber targetNumber={16} duration={2} />
                       </div>
-                      개
+                      회
                     </div>
                   </div>
                 </div>

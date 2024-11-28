@@ -128,7 +128,7 @@ const Project: FC = () => {
       <Banner
         background={Background}
         title='Project'
-        subTitle='혁신적인 스타트업 아이디어: 성공을 위한 핵심 전략'
+        subTitle='동아리원들의 포트폴리오 저장소'
       />
 
       <div css={topContainerStyle}>

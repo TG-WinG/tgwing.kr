@@ -43,7 +43,7 @@ const TechBlog: React.FC = () => {
       <Banner
         background={Background}
         title='Tech-Blog'
-        subTitle='짧은 설명 한 줄 짜리 어쩌고 효과적인 의사소통을 위한 비언어적 신호'
+        subTitle='동아리원들의 스터디 공유 아고라'
       />
       <Control setKeyword={setKeyword} setHashtag={setHashtag} />
       <PostLists postList={postList} />
