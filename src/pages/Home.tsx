@@ -8,7 +8,7 @@ import main_intro_tgthon from '../assets/images/main_intro_tgthon.jpeg'
 import { Color } from '../palette'
 import AnimatedNumber from '../components/AnimatedNumber'
 import { motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import logo from '../assets/images/logo.png'
 
 import icon_instagram from '../assets/icons/icon_instagram.svg'
@@ -16,10 +16,7 @@ import icon_github from '../assets/icons/icon_github.svg'
 import icon_notion from '../assets/icons/icon_notion.svg'
 
 const Home = () => {
-  const DIVIDER_HEIGHT = 0
   const outerRef = useRef<HTMLDivElement>(null)
-  const [, setCurrentPage] = useState<number>(1)
-  const scrollingRef = useRef(false)
 
   // useEffect(() => {
   //   const wheelHandler = (e: WheelEvent) => {
