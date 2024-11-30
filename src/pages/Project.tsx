@@ -5,15 +5,14 @@ import Banner from '../components/Banner'
 import Background from '../assets/images/project_background.png'
 import { fetcher } from '../api'
 import useSWR from 'swr'
-import { useLocation } from 'wouter'
 
-import { CustomPlusButton } from '../components/CustomPlusButton'
 import { Header } from '../common/Header'
 import { ProjectCard } from '../components/ProjectCard'
 import { TProject } from '../types'
-import userStore from '../store/User'
 import { Pagination } from '../components/Pagination'
 import { ServerError } from './error/ServerError'
+import Control from '../techblog/Control'
+import { EmptyDataText } from '../components/EmptyDataText'
 
 const containerStyle = css`
   display: flex;
@@ -26,10 +25,10 @@ const containerStyle = css`
 const topContainerStyle = css`
   display: flex;
   width: 944px;
-  margin: 20px auto;
+  margin: -20px auto 20px;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 0;
+  padding: 0 0 16px 0;
 `
 
 const categoriesStyle = css`
@@ -73,8 +72,6 @@ const paginationContainerStyle = css`
 const categories = ['ALL', 'WEB', 'APP']
 
 const Project: FC = () => {
-  const [, navigate] = useLocation()
-
   const [activeCategory, setActiveCategory] = useState('ALL')
   const [underlinePosition, setUnderlinePosition] = useState(0)
   const [underlineWidth, setUnderlineWidth] = useState(53)
@@ -82,6 +79,7 @@ const Project: FC = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(0)
   const [totalPages, setTotalPages] = useState<number>(0)
+  const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
     const activeIndex = categories.indexOf(activeCategory)
@@ -96,11 +94,10 @@ const Project: FC = () => {
     setActiveCategory(category)
   }
 
-  const { user } = userStore()
-
   const params = new URLSearchParams({
     page: String(currentPage),
     size: '7',
+    keyword,
   }).toString()
 
   const { data, error, isLoading } = useSWR(`project?${params}`, fetcher)
@@ -131,6 +128,8 @@ const Project: FC = () => {
         subTitle='동아리원들의 포트폴리오 저장소'
       />
 
+      <Control setKeyword={setKeyword} project />
+
       <div css={topContainerStyle}>
         <div css={categoriesStyle}>
           {categories.map((category, index) => (
@@ -157,25 +156,24 @@ const Project: FC = () => {
             }}
           />
         </div>
-        <CustomPlusButton
-          onClick={() => navigate('/newproject')}
-          text='새 프로젝트'
-          disabled={Boolean(!user)}
-        />
       </div>
 
       <div css={containerStyle}>
-        {filteredProjectList.map((item) => (
-          <ProjectCard
-            id={item.id}
-            key={item.id}
-            title={item.title}
-            thumbnail={item.thumbnail}
-            description={item.description}
-            devStatus={item.devStatus}
-            devType={item.devType}
-          />
-        ))}
+        {filteredProjectList.length > 0 ? (
+          filteredProjectList.map((item) => (
+            <ProjectCard
+              id={item.id}
+              key={item.id}
+              title={item.title}
+              thumbnail={item.thumbnail}
+              description={item.description}
+              devStatus={item.devStatus}
+              devType={item.devType}
+            />
+          ))
+        ) : (
+          <EmptyDataText text='프로젝트가 없습니다' />
+        )}
       </div>
       <div css={paginationContainerStyle}>
         <Pagination
