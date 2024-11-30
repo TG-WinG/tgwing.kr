@@ -43,6 +43,12 @@ const Style = {
     border: 1px solid ${Color.Primary};
     color: ${Color.Primary};
   `,
+  dots: css`
+    cursor: default;
+    &:hover {
+      background: transparent;
+    }
+  `,
 }
 
 type PaginationProps = {
@@ -56,6 +62,34 @@ export const Pagination = ({
   currentPage,
   setCurrentPage,
 }: PaginationProps) => {
+  const getPageNumbers = () => {
+    const numbers = []
+
+    numbers.push(0)
+
+    if (currentPage > 1) {
+      numbers.push('...')
+    }
+
+    for (
+      let i = Math.max(1, currentPage - 1);
+      i <= Math.min(totalPages - 2, currentPage + 1);
+      i++
+    ) {
+      numbers.push(i)
+    }
+
+    if (currentPage < totalPages - 3) {
+      numbers.push('...')
+    }
+
+    if (totalPages > 1) {
+      numbers.push(totalPages - 1)
+    }
+
+    return numbers
+  }
+
   return (
     <div css={Style.wrapper}>
       <button
@@ -69,13 +103,22 @@ export const Pagination = ({
         />
       </button>
       <div css={Style.pagesContainer}>
-        {Array.from({ length: totalPages }, (_, index) => (
+        {getPageNumbers().map((pageNum, index) => (
           <button
             key={index}
-            css={[Style.pageBox, currentPage === index && Style.currentBox]}
-            onClick={() => setCurrentPage(index)}
+            css={[
+              Style.pageBox,
+              pageNum === currentPage && Style.currentBox,
+              pageNum === '...' && Style.dots,
+            ]}
+            onClick={() => {
+              if (typeof pageNum === 'number') {
+                setCurrentPage(pageNum)
+              }
+            }}
+            disabled={pageNum === '...'}
           >
-            {index + 1}
+            {typeof pageNum === 'number' ? pageNum + 1 : pageNum}
           </button>
         ))}
       </div>

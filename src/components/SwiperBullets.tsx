@@ -57,7 +57,7 @@ export const SwiperBullets = ({
     <div css={Style.swiperBullets}>
       <button
         css={Style.button}
-        onClick={() => goToSlide(activeSlideIndex - 1)}
+        onClick={() => activeSlideIndex > 0 && goToSlide(activeSlideIndex - 1)}
       >
         <img
           css={[Style.arrowIcon, activeSlideIndex === 0 && Style.disabled]}
@@ -76,12 +76,14 @@ export const SwiperBullets = ({
       ))}
       <button
         css={Style.button}
-        onClick={() => goToSlide(activeSlideIndex + 1)}
+        onClick={() =>
+          activeSlideIndex < slideLength - 1 && goToSlide(activeSlideIndex + 1)
+        }
       >
         <img
           css={[
             Style.arrowIcon,
-            activeSlideIndex === slideLength - 1 && Style.disabled,
+            activeSlideIndex >= slideLength - 1 && Style.disabled,
           ]}
           src={icon_arrow_right}
           alt='>'

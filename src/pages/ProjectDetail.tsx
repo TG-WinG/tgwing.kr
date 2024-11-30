@@ -222,8 +222,8 @@ const ProjectDetail: React.FC = () => {
             <div>
               <p>프로젝트 기간</p>
               <span>
-                {projectInfo.start.replace(/-/g, '.')} ~{' '}
-                {projectInfo.end.replace(/-/g, '.')}
+                {projectInfo.start && projectInfo.start.replace(/-/g, '.')} ~{' '}
+                {projectInfo.end && projectInfo.end.replace(/-/g, '.')}
               </span>
             </div>
             <div>
