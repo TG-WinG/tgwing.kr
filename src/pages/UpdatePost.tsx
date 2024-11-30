@@ -31,7 +31,13 @@ export const UpdatePost = () => {
   useEffect(() => {
     if (post) {
       setTitle(post.title)
-      setContent(post.content)
+
+      // 코드 블록 사이에 강제로 구분자 추가
+      const cleanContent = post.content
+        .replace(/<\/pre>/g, '</pre><p><br></p><p>\u200B</p>') // 보이지 않는 문자 추가
+        .replace(/<pre/g, '<p><br></p><pre')
+
+      setContent(cleanContent)
       setTags(post.hashtags)
       setImgPreview(post.thumbnail)
       setThumbnail(post.thumbnail)
