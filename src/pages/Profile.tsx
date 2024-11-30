@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { Color } from '../palette'
 
 import icon_default_profile from '../assets/icons/icon_default_profile.svg'
@@ -10,14 +10,15 @@ import PostLists from '../techblog/PostLists'
 import { Pagination } from '../components/Pagination'
 import Button from '../components/Button'
 import { updateUserInfo } from '../api/auth'
-import { TUser } from '../types'
+import { TProject, TUser } from '../types'
 import { uploadImageApi } from '../api/post'
 import { Header } from '../common/Header'
-import { CustomPlusButton } from '../components/CustomPlusButton'
-import { useLocation } from 'wouter'
 
 import { CustomInput } from '../components/CustomInput'
 import { ServerError } from './error/ServerError'
+import { NotFound } from './error/NotFound'
+import userStore from '../store/User'
+import { ProjectCard } from '../components/ProjectCard'
 
 const Style = {
   wrapper: css`
@@ -173,11 +174,19 @@ const Style = {
         brightness(101%) contrast(96%);
     }
   `,
+
+  projectList: css`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+  `,
 }
 
 const Profile: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
+  const [projectCurrentPage, setProjectCurrentPage] = useState<number>(0)
   const [totalPages, setTotalPages] = useState<number>(0)
+  const [projectTotalPages, setProjectTotalPages] = useState<number>(0)
   const [isEditMode, setIsEditMode] = useState<boolean>(false)
   const [uploadProfileImage, setUploadProfileImage] = useState<File | null>(
     null
@@ -185,11 +194,55 @@ const Profile: React.FC = () => {
   const [profileData, setProfileData] = useState<TUser | null>(null)
   const [preview, setPreview] = useState<string | undefined>(undefined)
   const [keyword, setKeyword] = useState<string>('')
+  const [projectKeyword, setProjectKeyword] = useState<string>('')
+  const [hashtag, setHashtag] = useState<string[]>([])
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const projectInputRef = useRef<HTMLInputElement>(null)
 
-  const [, navigate] = useLocation()
+  const scrollPositionRef = useRef<number>(0)
+  const projectScrollPositionRef = useRef<number>(0)
+
+  const [isLoadingUser, setIsLoadingUser] = useState<boolean>(true)
+
+  const { user } = userStore()
+  const { data, isLoading, error, mutate } = useSWR('profile', fetcher)
+
+  const params = new URLSearchParams({
+    page: String(currentPage),
+    size: '3',
+    sort: 'modDate,desc',
+    keyword,
+    hashtag: hashtag.join(','),
+  }).toString()
+
+  const {
+    data: myPosts,
+    isLoading: postLoading,
+    error: postsError,
+    mutate: postMutate,
+  } = useSWR(`profile/blog?${params}`, fetcher)
+
+  const projectParams = new URLSearchParams({
+    page: String(projectCurrentPage),
+    size: '6',
+    sort: 'modDate,desc',
+    keyword: projectKeyword,
+  }).toString()
+
+  const {
+    data: myProjects,
+    isLoading: projectLoading,
+    // error: projectError,
+    mutate: projectMutate,
+  } = useSWR(`profile/project?${projectParams}`, fetcher)
+
+  useEffect(() => {
+    if (user !== null) {
+      setIsLoadingUser(false)
+    }
+  }, [user])
 
   const handleEditMode = async () => {
     if (!isEditMode) {
@@ -216,6 +269,7 @@ const Profile: React.FC = () => {
         }
         mutate()
         postMutate()
+        projectMutate()
         setPreview(undefined)
       }
       setIsEditMode(false)
@@ -224,29 +278,17 @@ const Profile: React.FC = () => {
     }
   }
 
-  const { data, isLoading, error, mutate } = useSWR('profile', fetcher)
-
-  const params = new URLSearchParams({
-    page: String(currentPage),
-    size: '5',
-    sort: 'modDate,desc',
-    ...(keyword.startsWith('#')
-      ? { hashtag: keyword.substring(1) }
-      : { keyword }),
-  }).toString()
-
-  const {
-    data: myPosts,
-    isLoading: postLoading,
-    error: postsError,
-    mutate: postMutate,
-  } = useSWR(`profile/blog?${params}`, fetcher)
-
   useEffect(() => {
-    if (myPosts) {
-      setTotalPages(Math.ceil(myPosts.data.totalElements / 5))
+    if (myPosts?.data) {
+      setTotalPages(Math.ceil(myPosts.data.totalElements / 3))
     }
   }, [myPosts])
+
+  useEffect(() => {
+    if (myProjects?.data) {
+      setProjectTotalPages(Math.ceil(myProjects.data.totalElements / 6))
+    }
+  }, [myProjects])
 
   useEffect(() => {
     if (data && data.data) {
@@ -254,12 +296,54 @@ const Profile: React.FC = () => {
     }
   }, [data])
 
-  if (isLoading || postLoading || !profileData) return <div></div>
+  const clickHandler = () => {
+    if (inputRef.current) {
+      scrollPositionRef.current = window.scrollY
+      setKeyword(inputRef.current.value)
+      inputRef.current.value = ''
+    }
+  }
+
+  const projectClickHandler = () => {
+    if (projectInputRef.current) {
+      projectScrollPositionRef.current = window.scrollY
+      setProjectKeyword(projectInputRef.current.value)
+      projectInputRef.current.value = ''
+    }
+  }
+
+  const handlePageChange = (newPage: number) => {
+    scrollPositionRef.current = window.scrollY
+    setCurrentPage(newPage)
+  }
+
+  const handleProjectPageChange = (newPage: number) => {
+    projectScrollPositionRef.current = window.scrollY
+    setProjectCurrentPage(newPage)
+  }
+
+  useLayoutEffect(() => {
+    if (!postLoading && myPosts?.data) {
+      window.scrollTo(0, scrollPositionRef.current)
+    }
+  }, [postLoading, myPosts, keyword])
+
+  useLayoutEffect(() => {
+    if (!projectLoading && myProjects?.data) {
+      window.scrollTo(0, projectScrollPositionRef.current)
+    }
+  }, [projectLoading, myProjects, projectKeyword])
+
+  if (isLoadingUser) return <div></div>
+  if (user === null) return <NotFound />
+  if (isLoading || !profileData || !myPosts?.data || !myProjects?.data)
+    return <div></div>
   if (error || postsError) return <ServerError />
 
   const profiles: TUser = profileData
 
   const postList = myPosts.data.content
+  const projectList = myProjects.data.content
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -271,13 +355,6 @@ const Profile: React.FC = () => {
 
   const handleUploadClick = () => {
     fileInputRef.current?.click()
-  }
-
-  const clickHandler = () => {
-    if (inputRef.current) {
-      setKeyword(inputRef.current.value)
-      inputRef.current.value = ''
-    }
   }
 
   return (
@@ -365,12 +442,7 @@ const Profile: React.FC = () => {
               inputRef={inputRef}
               clickHandler={clickHandler}
               placeholder='검색'
-              setHashtag={() => console.log('')}
-            />
-
-            <CustomPlusButton
-              onClick={() => navigate('/posting')}
-              text='글쓰기'
+              setHashtag={setHashtag}
             />
           </div>
         </div>
@@ -378,8 +450,38 @@ const Profile: React.FC = () => {
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
+          setCurrentPage={handlePageChange}
         />
+
+        <div css={Style.posts}>
+          <p css={Style.subTitle}>내 프로젝트</p>
+          <div css={Style.control}>
+            <CustomInput
+              inputRef={projectInputRef}
+              clickHandler={projectClickHandler}
+              placeholder='검색'
+            />
+          </div>
+          <div css={Style.projectList}>
+            {projectList.map((item: TProject) => (
+              <ProjectCard
+                id={item.id}
+                key={item.id}
+                title={item.title}
+                thumbnail={item.thumbnail}
+                description={item.description}
+                devStatus={item.devStatus}
+                devType={item.devType}
+              />
+            ))}
+          </div>
+
+          <Pagination
+            totalPages={projectTotalPages}
+            currentPage={projectCurrentPage}
+            setCurrentPage={handleProjectPageChange}
+          />
+        </div>
       </div>
     </>
   )
