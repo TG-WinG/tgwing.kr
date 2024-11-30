@@ -9,6 +9,7 @@ import { TPost } from '../types'
 import { useGetPostList } from '../hooks/query/post.api'
 import { Pagination } from '../components/Pagination'
 import { ServerError } from './error/ServerError'
+import { EmptyDataText } from '../components/EmptyDataText'
 
 const TechBlog: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
@@ -46,7 +47,11 @@ const TechBlog: React.FC = () => {
         subTitle='동아리원들의 스터디 공유 아고라'
       />
       <Control setKeyword={setKeyword} setHashtag={setHashtag} />
-      <PostLists postList={postList} />
+      {postList.length > 0 ? (
+        <PostLists postList={postList} />
+      ) : (
+        <EmptyDataText text='게시글이 없습니다' />
+      )}
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage}
