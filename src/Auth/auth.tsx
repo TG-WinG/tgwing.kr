@@ -48,6 +48,14 @@ export function useLogin(): (
 
       const data = await response.json()
 
+      if (response.status === 401) {
+        // 관리자가 승인되지 않은 계정일 경우
+        if (data.message) {
+          alert('관리자가 아직 해당 계정을 승인하지 않았습니다.') // 또는 다른 방식으로 메시지 처리
+          return false
+        }
+      }
+
       if (data) {
         // isAdmin 값을 sessionStorage에 저장
         sessionStorage.setItem('isAdmin', data.isAdmin.toString())

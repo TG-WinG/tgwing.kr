@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { css } from '@emotion/react'
 
 import { Modal } from '../common/Modal.tsx'
@@ -25,8 +25,7 @@ const LoginModalStyle = {
   title: css`
     font-size: 32px;
     font-weight: 700;
-
-    margin-bottom: 7px;
+    margin-bottom: 2px;
 
     :has(+ h2:empty) {
       margin-bottom: 50px;
@@ -35,7 +34,7 @@ const LoginModalStyle = {
   context: css`
     font-size: 16px;
     font-weight: 400;
-    color: ${Color.Gray500};
+    color: ${Color.Red};
 
     margin-bottom: 24px;
 
@@ -67,6 +66,8 @@ const LoginModalStyle = {
 export const LoginModal: FC<Props> = ({ context, ...props }) => {
   const login = useLogin()
 
+  const [isError, setIsError] = useState(false)
+
   return (
     <Modal {...props}>
       <main>
@@ -89,12 +90,15 @@ export const LoginModal: FC<Props> = ({ context, ...props }) => {
               props.onClose()
             } catch {
               console.log('Failed to login')
+              setIsError(true)
             }
           }}
         >
           <h1 css={LoginModalStyle.title}>환영합니다!</h1>
-          <h2 css={LoginModalStyle.context}>{context}</h2>
-
+          <h2 css={LoginModalStyle.context}>
+            {isError && '학번 혹은 비밀번호를 다시 확인해주세요.'}
+            {context}
+          </h2>
           <InputBox
             name='schoolId'
             label='학번'
@@ -119,7 +123,6 @@ export const LoginModal: FC<Props> = ({ context, ...props }) => {
             `}
             login
           />
-
           <button
             css={[
               mainButton,
@@ -131,7 +134,6 @@ export const LoginModal: FC<Props> = ({ context, ...props }) => {
           >
             로그인
           </button>
-
           <nav css={LoginModalStyle.navBox}>
             <Link href='/reset-password'>비밀번호 재설정</Link>
             <img src={verticalBar} css={LoginModalStyle.verticalBar} />

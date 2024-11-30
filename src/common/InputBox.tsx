@@ -27,6 +27,7 @@ interface Props {
   onEnter?: () => void
   isError?: boolean
   maxLength?: number
+  successMessage?: string
 }
 
 const InputBoxStyle = {
@@ -145,6 +146,12 @@ const InputBoxStyle = {
       ${login ? 'opacity: 1;' : 'display: inline;'}
     }
   `,
+  successMessage: css`
+    position: absolute;
+    bottom: -22px;
+    font-size: 14px;
+    color: #008000;
+  `,
 }
 
 export const InputBox: FC<Props> = ({
@@ -159,6 +166,7 @@ export const InputBox: FC<Props> = ({
   readOnly = false,
   login = false,
   isError = false,
+  successMessage,
   maxLength,
   ...props
 }) => {
@@ -208,6 +216,12 @@ export const InputBox: FC<Props> = ({
         style={{ display: isError ? 'inline' : undefined }}
       >
         {errorMessage}
+      </span>
+      <span
+        css={InputBoxStyle.successMessage}
+        style={{ display: successMessage ? 'inline' : undefined }}
+      >
+        {successMessage}
       </span>
     </label>
   )

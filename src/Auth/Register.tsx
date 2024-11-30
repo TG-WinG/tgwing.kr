@@ -167,6 +167,11 @@ export const Register: FC = () => {
               placeholder='ex) tgwing@khu.ac.kr'
               pattern={/.+@khu\.ac\.kr/}
               errorMessage='올바른 이메일을 입력해주세요'
+              successMessage={
+                emailSendStatus === 'sent' && emailVerifyStatus !== 'success'
+                  ? '이메일을 확인해주세요'
+                  : undefined
+              }
               required
               css={RegisterStyle.complexInput}
               onChange={({ target: { value } }) => {
