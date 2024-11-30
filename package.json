@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
+    "@types/highlight.js": "^10.1.0",
     "axios": "^1.7.7",
     "date-fns": "^4.1.0",
     "dompurify": "^3.1.7",
     "framer-motion": "^11.11.10",
+    "highlight.js": "^11.10.0",
     "react": "^18.2.0",
     "react-datepicker": "^7.3.0",
     "react-dom": "^18.2.0",

@@ -1,6 +1,8 @@
 import { css } from '@emotion/react'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Color } from '../palette'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github-dark.css'
 
 import Heart from '../assets/icons/heart.svg'
 
@@ -91,6 +93,30 @@ const PostStyle = {
   post: css`
     margin-top: 65px;
     margin-bottom: 100px;
+
+    pre {
+      background: ${Color.Gray900};
+      border-radius: 4px;
+      padding: 16px;
+      margin: 16px 0;
+      overflow-x: auto;
+      color: ${Color.Gray100};
+    }
+
+    pre code {
+      background: transparent !important;
+      padding: 0 !important;
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    /* 인라인 코드 스타일 */
+    :not(pre) > code {
+      background: #f0f0f0;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
   `,
 
   heart: css`
@@ -248,11 +274,18 @@ const Post: React.FC = () => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
+  useEffect(() => {
+    if (post?.content) {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block as HTMLElement)
+      })
+    }
+  }, [post?.content])
+
   if (isLoading || isCommentsLoading) return <></>
   if (error || commentsError) return <ServerError />
 
   const comments: TComment[] = commentsData.content
-  console.log('commentsData.content.length : ', commentsData.content.length)
 
   const commentUpload = async () => {
     if (isUploading) return // Prevent multiple submissions
@@ -346,7 +379,7 @@ const Post: React.FC = () => {
             <div css={PostStyle.line} />
 
             <div
-              css={PostStyle.post}
+              css={[PostStyle.post, css``]}
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(String(post.content)),
               }}

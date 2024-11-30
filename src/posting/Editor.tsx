@@ -1,6 +1,8 @@
 import React, { useMemo, useRef } from 'react'
 import ReactQuill from 'react-quill'
 import { uploadImageApi } from '../api/post'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github-dark.css'
 
 interface EditorProps {
   value: string
@@ -33,13 +35,22 @@ const Editor = React.memo(({ value, onChange }: EditorProps) => {
     }
   }
 
+  hljs.configure({
+    languages: ['javascript', 'ruby', 'python', 'java', 'cpp', 'kotlin', 'sql'],
+  })
+
   const modules = useMemo(() => {
     return {
+      syntax: {
+        highlight: (text: string) => hljs.highlightAuto(text).value,
+      },
       toolbar: {
         container: [
           ['image'],
           [{ header: [1, 2, 3, 4, 5, false] }],
           ['bold', 'italic', 'underline', 'strike', 'code-block'],
+          ['link'],
+          [{ indent: '-1' }, { indent: '+1' }],
           [{ color: [] }],
         ],
         handlers: {
