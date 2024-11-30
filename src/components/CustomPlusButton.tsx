@@ -1,4 +1,4 @@
-import PlusButtonIcon from '../assets/icon_plus_btn.svg'
+import PlusButtonIcon from '../assets/icons/icon_plus_btn.svg'
 import { css } from '@emotion/react'
 import { Color } from '../palette'
 

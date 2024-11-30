@@ -3,26 +3,20 @@ import React from 'react'
 import { Color } from '../palette'
 
 interface TextBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  value?: string
   height?: string
   margin?: string
   fontSize?: string
   padding?: string
-  placeholder?: string
   position?: string
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const TextBox: React.FC<TextBoxProps> = ({
-  value,
   height,
   margin,
   fontSize,
   padding,
-  placeholder,
   position,
-  onChange,
-  maxLength,
+  ...props
 }) => {
   return (
     <input
@@ -41,10 +35,7 @@ const TextBox: React.FC<TextBoxProps> = ({
           border-color: ${Color.PrimaryBorder};
         }
       `}
-      value={value}
-      maxLength={maxLength}
-      placeholder={placeholder}
-      onChange={onChange}
+      {...props}
     />
   )
 }

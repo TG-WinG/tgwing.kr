@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { Color } from '../palette'
 import { RefObject, useEffect, useState } from 'react'
-import icon_search from '../assets/icon_search.svg'
+import icon_search from '../assets/icons/icon_search.svg'
 import useSWR from 'swr'
 import { fetcher } from '../api'
 import { Loading } from './Loading'
@@ -10,7 +10,7 @@ type CustomInputProps = {
   inputRef: RefObject<HTMLInputElement>
   clickHandler: () => void
   placeholder?: string
-  setHashtag: (hashtag: string[]) => void
+  setHashtag?: (hashtag: string[]) => void
 }
 
 export const CustomInput = ({
@@ -28,16 +28,18 @@ export const CustomInput = ({
   }
 
   useEffect(() => {
-    if (keyword.startsWith('#')) {
+    if (keyword.startsWith('#') && setHashtag) {
       setIsTagSearch(true)
       return
     }
     setIsTagSearch(false)
-  }, [keyword])
+  }, [keyword, setHashtag])
 
   const { data } = useSWR(`hashtag?keyword=${keyword.substring(1)} `, fetcher)
 
   const handleTagClick = (tagName: string) => {
+    if (!setHashtag) return
+
     if (selectedTags.length === 2) {
       alert('태그는 한 번에 두 개만 등록할 수 있습니다.')
       return
@@ -54,26 +56,33 @@ export const CustomInput = ({
   return (
     <div css={Wrapper}>
       <div css={Style}>
-        {selectedTags.map((item, idx) => (
-          <div key={idx} css={TagCard}>
-            {item}
-            <button css={TagDeleteBtn} onClick={() => handleTagRemove(item)}>
-              X
-            </button>
-          </div>
-        ))}
+        {setHashtag &&
+          selectedTags.map((item, idx) => (
+            <div key={idx} css={TagCard}>
+              {item}
+              <button css={TagDeleteBtn} onClick={() => handleTagRemove(item)}>
+                X
+              </button>
+            </div>
+          ))}
         <input
           ref={inputRef}
           type='text'
-          placeholder={placeholder}
+          placeholder={setHashtag ? placeholder : '검색어를 입력하세요'}
           onChange={handleChange}
           value={keyword}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+              e.preventDefault()
+              clickHandler()
+            }
+          }}
         />
         <button onClick={clickHandler}>
           <img className='SearchIcon' src={icon_search} alt='' />
         </button>
       </div>
-      {isTagSearch && (
+      {isTagSearch && setHashtag && (
         <div css={TagLists}>
           {data ? (
             data.content.map((item: { id: number; name: string }) => (
@@ -139,6 +148,7 @@ const TagLists = css`
   min-height: 40px;
   max-height: 250px;
   overflow-y: auto;
+  z-index: 10000;
 `
 
 const TagItem = css`

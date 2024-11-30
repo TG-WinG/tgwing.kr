@@ -2,16 +2,16 @@ import { css } from '@emotion/react'
 import { TComment } from '../types'
 import { Color } from '../palette'
 import { dateFormat } from '../utils/dateFormat'
-import icon_default_profile from '../assets/icon_default_profile.svg'
-
-import icon_new_comment from '../assets/icon_new_comment.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
+import icon_new_comment from '../assets/icons/icon_new_comment.svg'
 import { useRef, useState } from 'react'
 import { useGetReplies } from '../hooks/query/comment.api'
-import icon_line from '../assets/reply.svg'
+import icon_line from '../assets/icons/reply.svg'
 
 interface CommentProps extends TComment {
   onReplySubmit: (commentId: number, content: string) => Promise<void>
   post_id: number
+  postMutate: () => void
 }
 
 const CommentStyle = {
@@ -138,10 +138,12 @@ export const Comment = ({
   id,
   onReplySubmit,
   post_id,
+  postMutate,
 }: CommentProps) => {
   const [showReplyInput, setShowReplyInput] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const replyInputRef = useRef<HTMLInputElement>(null)
+  const [isReplyUploading, setIsReplyUploading] = useState(false)
 
   const {
     data: replies,
@@ -153,20 +155,24 @@ export const Comment = ({
     if (
       !replyInputRef.current ||
       replyInputRef.current.value.trim() === '' ||
-      !id
+      !id ||
+      isReplyUploading
     ) {
       alert('댓글을 입력하세요!')
       return
     }
 
+    setIsReplyUploading(true)
     try {
       await onReplySubmit(id, replyInputRef.current.value)
-      // 성공적으로 제출되면 입력창 초기화
+      postMutate()
       replyInputRef.current.value = ''
       setShowReplyInput(false)
       mutate()
     } catch (err) {
       console.log('Reply submit error:', err)
+    } finally {
+      setIsReplyUploading(false)
     }
   }
 
@@ -186,7 +192,12 @@ export const Comment = ({
 
       <div
         css={CommentStyle.babyComment}
-        onClick={() => setShowReplyInput((prev) => !prev)}
+        onClick={() => {
+          setShowReplyInput((prev) => !prev)
+          setTimeout(() => {
+            replyInputRef.current?.focus()
+          }, 0)
+        }}
       >
         댓글달기
       </div>
@@ -227,13 +238,20 @@ export const Comment = ({
             placeholder='댓글을 입력하세요'
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !isReplyUploading) {
+                e.preventDefault()
                 handleReplySubmit()
               }
             }}
           />
-          <button onClick={handleReplySubmit}>
+          <button
+            type='button'
+            onClick={(e) => {
+              e.preventDefault()
+              handleReplySubmit()
+            }}
+          >
             <img
               src={icon_new_comment}
               alt='>'

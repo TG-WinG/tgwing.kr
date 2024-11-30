@@ -17,6 +17,7 @@ import { ServerError } from './error/ServerError'
 const Style = {
   wrapper: css`
     padding-top: 80px;
+    padding-bottom: 100px;
     width: 944px;
     margin: 0 auto;
 
@@ -221,8 +222,8 @@ const ProjectDetail: React.FC = () => {
             <div>
               <p>프로젝트 기간</p>
               <span>
-                {projectInfo.start.replace(/-/g, '.')} ~{' '}
-                {projectInfo.end.replace(/-/g, '.')}
+                {projectInfo.start && projectInfo.start.replace(/-/g, '.')} ~{' '}
+                {projectInfo.end && projectInfo.end.replace(/-/g, '.')}
               </span>
             </div>
             <div>
@@ -238,7 +239,7 @@ const ProjectDetail: React.FC = () => {
               <div css={Style.linkBox}>
                 {projectInfo.links.map((item) => (
                   <a
-                    key={item.url}
+                    key={`${item.description}-${item.url}`}
                     href={
                       item.url.startsWith('http')
                         ? item.url
@@ -260,8 +261,8 @@ const ProjectDetail: React.FC = () => {
                   <div css={Style.roleName}>
                     {projectInfo.participants
                       .filter((item) => item.part === 'PM')
-                      .map((item, idx) => (
-                        <div key={idx}>{item.username}</div>
+                      .map((item) => (
+                        <div key={`pm-${item.username}`}>{item.username}</div>
                       ))}
                   </div>
                 </div>
@@ -270,8 +271,10 @@ const ProjectDetail: React.FC = () => {
                   <div css={Style.roleName}>
                     {projectInfo.participants
                       .filter((item) => item.part === 'FRONT')
-                      .map((item, idx) => (
-                        <div key={idx}>{item.username}</div>
+                      .map((item) => (
+                        <div key={`front-${item.username}`}>
+                          {item.username}
+                        </div>
                       ))}
                   </div>
                 </div>
@@ -280,8 +283,8 @@ const ProjectDetail: React.FC = () => {
                   <div css={Style.roleName}>
                     {projectInfo.participants
                       .filter((item) => item.part === 'BACK')
-                      .map((item, idx) => (
-                        <div key={idx}>{item.username}</div>
+                      .map((item) => (
+                        <div key={`back-${item.username}`}>{item.username}</div>
                       ))}
                   </div>
                 </div>
@@ -290,8 +293,10 @@ const ProjectDetail: React.FC = () => {
                   <div css={Style.roleName}>
                     {projectInfo.participants
                       .filter((item) => item.part === 'DESIGNER')
-                      .map((item, idx) => (
-                        <div key={idx}>{item.username}</div>
+                      .map((item) => (
+                        <div key={`designer-${item.username}`}>
+                          {item.username}
+                        </div>
                       ))}
                   </div>
                 </div>
@@ -307,7 +312,7 @@ const ProjectDetail: React.FC = () => {
               slidesPerView={1}
               navigation
               pagination={{ clickable: true }}
-              loop
+              loop={projectInfo.imageUrls.length > 1}
               css={Style.swiperContainer}
               onActiveIndexChange={(swiper) => {
                 setActiveSlideIndex(swiper.activeIndex)

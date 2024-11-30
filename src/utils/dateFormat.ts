@@ -17,3 +17,17 @@ export const getCurrentDate = () => {
   const day = String(now.getDate()).padStart(2, '0')
   return `${year}. ${month}. ${day}`
 }
+
+export const formatBirthDate = (value: string) => {
+  const numbers = value.replace(/[^\d]/g, '')
+  if (numbers.length <= 4) return numbers
+  if (numbers.length <= 6) return `${numbers.slice(0, 4)}-${numbers.slice(4)}`
+  return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(6, 8)}`
+}
+
+export const formatPhoneNumber = (value: string) => {
+  const numbers = value.replace(/[^\d]/g, '')
+  if (numbers.length <= 3) return numbers
+  if (numbers.length <= 7) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`
+  return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`
+}

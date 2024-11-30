@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import { fetcher } from '../api'
 import { TUser } from '../types'
 import { Color } from '../palette'
-import icon_search from '../assets/icon_search.svg'
+import icon_search from '../assets/icons/icon_search.svg'
 import { Pagination } from '../components/Pagination'
 import { ServerError } from './error/ServerError'
 

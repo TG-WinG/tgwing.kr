@@ -3,7 +3,7 @@ import { css } from '@emotion/react'
 import { Color } from '../palette'
 import { useLocation } from 'wouter'
 import { TUser } from '../types'
-import icon_default_profile from '../assets/icon_default_profile.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
 import { logout } from '../api/auth'
 
 type ProfileModalProps = {
@@ -51,6 +51,8 @@ export const ProfileModal = ({ user, onClose }: ProfileModalProps) => {
         border-radius: 8px;
         display: flex;
         flex-direction: column;
+        z-index: 1000;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
       `}
     >
       <div
@@ -116,6 +118,10 @@ export const ProfileModal = ({ user, onClose }: ProfileModalProps) => {
           css={css`
             font-size: 14px;
             flex: 1;
+            transition: all 0.2s ease-in-out;
+            :hover {
+              font-weight: 600;
+            }
           `}
           onClick={() => navigate('/profile')}
         >

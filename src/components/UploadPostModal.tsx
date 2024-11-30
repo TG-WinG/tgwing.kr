@@ -8,7 +8,8 @@ import { TUser } from '../types'
 import { getCurrentDate } from '../utils/dateFormat'
 import { removeHTMLTags } from '../utils/removeTags'
 import Button from './Button'
-import icon_delete from '../assets/icon_delete_tag.svg'
+import icon_delete from '../assets/icons/icon_delete_tag.svg'
+import { useEffect } from 'react'
 
 type UploadPostModalProps = {
   onClose: () => void
@@ -30,6 +31,15 @@ export const UploadPostModal = ({
   img,
 }: UploadPostModalProps) => {
   const { data, isLoading, error } = useSWR('profile', fetcher)
+
+  // 모달이 열릴 때 스크롤 막기
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
+
   if (isLoading || error) return <div>error</div>
   const userInfo: TUser = data.data
 
@@ -38,11 +48,14 @@ export const UploadPostModal = ({
       css={css`
         width: 100vw;
         height: 100vh;
-        position: absolute;
+        position: fixed;
         top: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 0;
         background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
       `}
     >
       <div
@@ -50,7 +63,6 @@ export const UploadPostModal = ({
           position: relative;
           width: 1080px;
           height: 531px;
-          margin: 214px auto 0 auto;
           border: 1px solid #dadce2;
           border-radius: 24px;
           padding: 0 72px;
@@ -58,6 +70,18 @@ export const UploadPostModal = ({
           flex-direction: column;
           align-items: center;
           background: #fff;
+          animation: modalFadeIn 0.3s ease-out;
+
+          @keyframes modalFadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
         `}
       >
         <button

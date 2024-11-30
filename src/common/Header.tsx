@@ -3,12 +3,12 @@ import { FC, useState } from 'react'
 import { css } from '@emotion/react'
 import { Link } from 'wouter'
 
-import logo from '../assets/logo.png'
+import logo from '../assets/images/logo.png'
 import { Color } from '../platte.ts'
 import { LoginModal } from '../Auth/Login.tsx'
 import { ProfileModal } from '../components/ProfileModal.tsx'
 import userStore from '../store/User.ts'
-import icon_default_profile from '../assets/icon_default_profile.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
 
 type HeaderProps = {
   num: number

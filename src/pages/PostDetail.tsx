@@ -1,17 +1,19 @@
 import { css } from '@emotion/react'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Color } from '../palette'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github-dark.css'
 
-import Heart from '../assets/heart.svg'
+import Heart from '../assets/icons/heart.svg'
 
-import icon_comment from '../assets/comment.png'
+import icon_comment from '../assets/images/comment.png'
 import { useLocation, useParams } from 'wouter'
 import { useGetPostDetail } from '../hooks/query/post.api'
 import { Header } from '../common/Header'
 import { useGetComments } from '../hooks/query/comment.api'
 import { TComment } from '../types'
 import { Comment } from '../components/Comment'
-import icon_new_comment from '../assets/icon_new_comment.svg'
+import icon_new_comment from '../assets/icons/icon_new_comment.svg'
 import DOMPurify from 'dompurify'
 
 import {
@@ -21,10 +23,11 @@ import {
   uploadReplyComment,
 } from '../api/post'
 
-import icon_default_profile from '../assets/icon_default_profile.svg'
+import icon_default_profile from '../assets/icons/icon_default_profile.svg'
 import userStore from '../store/User'
 import { mutate } from 'swr'
 import { ServerError } from './error/ServerError'
+import { SelectModal } from '../components/SelectModal'
 
 const PostStyle = {
   wrapper: css`
@@ -90,6 +93,30 @@ const PostStyle = {
   post: css`
     margin-top: 65px;
     margin-bottom: 100px;
+
+    pre {
+      background: ${Color.Gray900};
+      border-radius: 4px;
+      padding: 16px;
+      margin: 16px 0;
+      overflow-x: auto;
+      color: ${Color.Gray100};
+    }
+
+    pre code {
+      background: transparent !important;
+      padding: 0 !important;
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    /* 인라인 코드 스타일 */
+    :not(pre) > code {
+      background: #f0f0f0;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
   `,
 
   heart: css`
@@ -177,6 +204,47 @@ const PostStyle = {
   liked: css`
     color: ${Color.Red};
   `,
+  modal: css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  `,
+  buttonContainer: css`
+    margin-top: 16px;
+    display: flex;
+    gap: 16px;
+    width: 100%;
+  `,
+  modalButton: css`
+    padding: 8px 16px;
+    border-radius: 4px;
+    flex: 1;
+    transition: all 0.2s ease-in-out;
+  `,
+  cancelButton: css`
+    border: 1px solid ${Color.Gray400};
+
+    :hover {
+      background: ${Color.Gray100};
+    }
+
+    :active {
+      background: ${Color.Gray200};
+    }
+  `,
+  confirmButton: css`
+    background: ${Color.Primary};
+    color: white;
+
+    :hover {
+      background: ${Color.Main700};
+    }
+
+    :active {
+      background: ${Color.Main800};
+    }
+  `,
 }
 
 const Post: React.FC = () => {
@@ -184,6 +252,7 @@ const Post: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [isFocused, setIsFocused] = useState(false)
+  const [isUploading, setIsUploading] = useState(false) // Track if a comment is being uploaded
 
   const [, navigate] = useLocation()
 
@@ -203,29 +272,46 @@ const Post: React.FC = () => {
     mutate: commentMutate,
   } = useGetComments(post_id!)
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (post?.content) {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block as HTMLElement)
+      })
+    }
+  }, [post?.content])
+
   if (isLoading || isCommentsLoading) return <></>
   if (error || commentsError) return <ServerError />
 
   const comments: TComment[] = commentsData.content
 
   const commentUpload = async () => {
+    if (isUploading) return // Prevent multiple submissions
     if (!inputRef.current || inputRef.current.value.trim() === '') {
       alert('댓글을 입력하세요!')
       return
     }
 
+    setIsUploading(true) // Set uploading flag to true
     try {
+      console.log('Uploading comment:', inputRef.current.value)
       await uploadComment(post_id!, {
         content: inputRef.current.value,
       })
+      console.log('Comment uploaded')
       commentMutate()
+      postMutate()
       inputRef.current.value = ''
-    } catch {
-      console.log('errr')
+    } catch (err) {
+      console.error('Error uploading comment:', err)
+    } finally {
+      setIsUploading(false) // Reset uploading flag
     }
   }
 
-  const deleteClick = async () => {
+  const handleDelete = async () => {
     try {
       await deletePostApi(String(post?.id))
       mutate((key) => Array.isArray(key) && key[0] === 'post')
@@ -280,10 +366,10 @@ const Post: React.FC = () => {
               <span>{post.modDate}</span>
               {post?.writer.studentNumber === user?.studentNumber && (
                 <div css={PostStyle.buttonBox}>
-                  <button>
+                  <button onClick={() => navigate(`${post_id}/update`)}>
                     <span>수정</span>
                   </button>
-                  <button onClick={deleteClick}>
+                  <button onClick={() => setIsDeleteModalOpen(true)}>
                     <span>삭제</span>
                   </button>
                 </div>
@@ -293,7 +379,7 @@ const Post: React.FC = () => {
             <div css={PostStyle.line} />
 
             <div
-              css={PostStyle.post}
+              css={[PostStyle.post, css``]}
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(String(post.content)),
               }}
@@ -332,6 +418,7 @@ const Post: React.FC = () => {
                   id={item.id}
                   onReplySubmit={replyUpload}
                   post_id={post.id}
+                  postMutate={postMutate}
                 />
               ))}
 
@@ -348,8 +435,22 @@ const Post: React.FC = () => {
                   placeholder='댓글 작성'
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      commentUpload()
+                    }
+                  }}
                 />
-                <button onClick={commentUpload}>
+                <button
+                  type='button'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    commentUpload()
+                  }}
+                >
                   <img
                     src={icon_new_comment}
                     alt='>'
@@ -367,6 +468,29 @@ const Post: React.FC = () => {
           </>
         )}
       </div>
+      <SelectModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
+        <div css={PostStyle.modal}>
+          <h2>게시글 삭제</h2>
+          <p>정말 삭제하시겠습니까?</p>
+          <div css={PostStyle.buttonContainer}>
+            <button
+              onClick={() => setIsDeleteModalOpen(false)}
+              css={[PostStyle.cancelButton, PostStyle.modalButton]}
+            >
+              아니오
+            </button>
+            <button
+              onClick={handleDelete}
+              css={[PostStyle.confirmButton, PostStyle.modalButton]}
+            >
+              예
+            </button>
+          </div>
+        </div>
+      </SelectModal>
     </>
   )
 }

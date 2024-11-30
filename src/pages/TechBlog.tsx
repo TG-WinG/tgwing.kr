@@ -3,12 +3,13 @@ import Banner from '../components/Banner'
 import PostLists from '../techblog/PostLists'
 import Control from '../techblog/Control'
 
-import Background from '../assets/blog_background.png'
+import Background from '../assets/images/blog_background.png'
 import { Header } from '../common/Header'
 import { TPost } from '../types'
 import { useGetPostList } from '../hooks/query/post.api'
 import { Pagination } from '../components/Pagination'
 import { ServerError } from './error/ServerError'
+import { EmptyDataText } from '../components/EmptyDataText'
 
 const TechBlog: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(0)
@@ -43,10 +44,14 @@ const TechBlog: React.FC = () => {
       <Banner
         background={Background}
         title='Tech-Blog'
-        subTitle='짧은 설명 한 줄 짜리 어쩌고 효과적인 의사소통을 위한 비언어적 신호'
+        subTitle='동아리원들의 스터디 공유 아고라'
       />
       <Control setKeyword={setKeyword} setHashtag={setHashtag} />
-      <PostLists postList={postList} />
+      {postList.length > 0 ? (
+        <PostLists postList={postList} />
+      ) : (
+        <EmptyDataText text='게시글이 없습니다' />
+      )}
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage}

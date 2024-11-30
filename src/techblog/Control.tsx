@@ -14,10 +14,11 @@ const ControlStyle = {
 
 type ControlProps = {
   setKeyword?: (keyword: string) => void
-  setHashtag: (hashtag: string[]) => void
+  setHashtag?: (hashtag: string[]) => void
+  project?: boolean
 }
 
-const Control = ({ setKeyword, setHashtag }: ControlProps) => {
+const Control = ({ setKeyword, setHashtag, project }: ControlProps) => {
   const [searchTag, setSearchTag] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -26,11 +27,17 @@ const Control = ({ setKeyword, setHashtag }: ControlProps) => {
   const { user } = userStore()
 
   const clickHandler = () => {
-    if (inputRef.current && setKeyword) {
+    if (!inputRef.current) return
+
+    if (setKeyword) {
       setKeyword(inputRef.current.value)
-      setHashtag(searchTag)
-      inputRef.current.value = ''
     }
+
+    if (setHashtag && searchTag.length > 0) {
+      setHashtag(searchTag)
+    }
+
+    inputRef.current.value = ''
   }
 
   return (
@@ -46,12 +53,12 @@ const Control = ({ setKeyword, setHashtag }: ControlProps) => {
         <CustomInput
           inputRef={inputRef}
           clickHandler={clickHandler}
-          placeholder='검색'
-          setHashtag={setSearchTag}
+          placeholder='검색어를 입력하세요'
+          setHashtag={setHashtag ? setSearchTag : undefined}
         />
         <CustomPlusButton
-          onClick={() => navigate('/posting')}
-          text='글쓰기'
+          onClick={() => navigate(project ? '/newproject' : '/posting')}
+          text={project ? '새 프로젝트' : '글쓰기'}
           disabled={Boolean(!user)}
         />
       </div>

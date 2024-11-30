@@ -4,9 +4,9 @@ import { css } from '@emotion/react'
 
 import { imageButtonBase } from './ImageButton.tsx'
 import { Color } from '../platte.ts'
-import discardIcon from '../assets/discard.png'
-import successIcon from '../assets/success.png'
-import errorIcon from '../assets/error.png'
+import discardIcon from '../assets/images/discard.png'
+import successIcon from '../assets/images/success.png'
+import errorIcon from '../assets/images/error.png'
 
 interface Props {
   name: string
@@ -22,8 +22,12 @@ interface Props {
   required?: boolean
   value?: string
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
-  readOnly?: boolean // Add readOnly prop here
+  readOnly?: boolean
   login?: boolean
+  onEnter?: () => void
+  isError?: boolean
+  maxLength?: number
+  successMessage?: string
 }
 
 const InputBoxStyle = {
@@ -77,6 +81,11 @@ const InputBoxStyle = {
       border-width: 1.5px;
     }
 
+    &[data-is-error='true'] {
+      border-width: 1.5px;
+      border-color: ${Color.Red};
+    }
+
     :invalid:not(:focus)[data-is-touched='true'] {
       border-width: 1.5px;
       border-color: ${Color.Red};
@@ -128,13 +137,20 @@ const InputBoxStyle = {
     position: absolute;
     bottom: -22px;
     font-size: 14px;
+    color: ${Color.Red};
 
     ${login ? 'opacity: 0;' : 'display: none;'}
 
-    #${inputId}:invalid:not(:focus)[data-is-touched='true'] ~ & {
+    #${inputId}:invalid:not(:focus)[data-is-touched='true'] ~ &,
+    [data-is-error='true'] ~ & {
       ${login ? 'opacity: 1;' : 'display: inline;'}
-      color: ${Color.Red};
     }
+  `,
+  successMessage: css`
+    position: absolute;
+    bottom: -22px;
+    font-size: 14px;
+    color: #008000;
   `,
 }
 
@@ -146,8 +162,12 @@ export const InputBox: FC<Props> = ({
   pattern,
   errorMessage,
   onChange,
+  onEnter,
   readOnly = false,
   login = false,
+  isError = false,
+  successMessage,
+  maxLength,
   ...props
 }) => {
   const [input, setInput] = useState('')
@@ -170,21 +190,39 @@ export const InputBox: FC<Props> = ({
         css={InputBoxStyle.input(readOnly)}
         onChange={(event) => {
           setInput(event.target.value)
-
           if (onChange) onChange(event)
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            if (onEnter) onEnter()
+          }
         }}
         onFocus={() => setIsTouched(true)}
         data-is-touched={isTouched}
-        readOnly={readOnly} // Apply readOnly prop
+        data-is-error={isError}
+        readOnly={readOnly}
+        maxLength={maxLength}
         {...props}
       />
       <img css={InputBoxStyle.statusIcon(name)} />
       <button
         css={InputBoxStyle.discardButton(name)}
         onClick={() => setInput('')}
-        disabled={readOnly} // Disable discard button when readOnly
+        disabled={readOnly}
       />
-      <span css={InputBoxStyle.errorMessage(name, login)}>{errorMessage}</span>
+      <span
+        css={InputBoxStyle.errorMessage(name, login)}
+        style={{ display: isError ? 'inline' : undefined }}
+      >
+        {errorMessage}
+      </span>
+      <span
+        css={InputBoxStyle.successMessage}
+        style={{ display: successMessage ? 'inline' : undefined }}
+      >
+        {successMessage}
+      </span>
     </label>
   )
 }

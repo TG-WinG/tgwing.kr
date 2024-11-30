@@ -16,6 +16,12 @@ export const uploadPostAPi = async (body: object) => {
   return res
 }
 
+export const updatePostApi = async (postId: string, body: object) => {
+  const res = await Server.put(`post/${postId}`, body)
+
+  return res
+}
+
 export const uploadComment = async (postId: string, body: object) => {
   const token = localStorage.getItem('accessToken')
   if (token) {
